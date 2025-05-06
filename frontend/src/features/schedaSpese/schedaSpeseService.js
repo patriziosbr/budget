@@ -1,10 +1,10 @@
 import axios from 'axios'
 
-const API_URL = '/api/schedaSpese/' // OK
+// const API_URL = '/api/schedaSpese/' // OK
 
-// const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
-//   ? process.env.REACT_APP_SECRET_NAME
-//   : '/api/event/';
+const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
+  ? process.env.REACT_APP_SECRET_NAME
+  : '/api/schedaSpese/';
 
 // Get
 const getSchedaSpese = async (token) => {

@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
 
-const API_URL = '/api/notaSpese/' // OK
+// const API_URL = '/api/notaSpese/' // OK
 
-// const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
-//   ? process.env.REACT_APP_SECRET_NAME
-//   : '/api/event/';
+const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
+  ? process.env.REACT_APP_SECRET_NAME
+  : '/api/notaSpese/';
 
 // Get
 const getNotaSpese = async (token) => {
