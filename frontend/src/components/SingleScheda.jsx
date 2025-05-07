@@ -13,6 +13,7 @@ import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import useLongPress from "./utils/useLongPress.js";
 import { useDispatch } from 'react-redux'
+import RandomColorCircle from './utils/RandomColorCircle.js';
 import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 
 
@@ -100,18 +101,29 @@ function SingleScheda({scheda}) {
         return formattedDate
     }  
 
+    const sharedUserLetter = scheda.condivisoCon.map((userMail) => userMail[0].toUpperCase())
+    const sharedUserMail = scheda.condivisoCon.map((userMail) => userMail)
+
 
     return (
         <>
             <div className='d-flex justify-content-between align-items-center'>
-                {longPressCount < 1 && <h5 role="button" className='mb-0 align-self-center'  {...longPressEvent} >{scheda.titolo}</h5>}
-                {longPressCount > 0 && 
+                <div className="d-flex align-items-end">
+                    {longPressCount < 1 && 
+                    <h5 role="button" className='mb-0 align-self-center' {...longPressEvent}> 
+                        {scheda.titolo} 
+                        {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-2"/> )}
+                    </h5>
+                    }
+                    {longPressCount > 0 && 
                     <div>
                         <input name="titolo" type='text' value={titolo} onChange={onChange}/> 
                         <span className='mx-4'><FaRegCheckCircle size={30} onClick={()=> updateSchedataTitolo()}/></span>
                         <span><FaRegTimesCircle size={30} onClick={() => setlongPressCount(longPressCount - 1)} /></span>
                     </div>
                     }
+                    {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter}/> )} */}
+                </div>
                 <Dropdown>
                 <Dropdown.Toggle as={CustomToggle} />
                     <Dropdown.Menu size="sm" title="">

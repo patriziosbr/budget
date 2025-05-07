@@ -8,9 +8,10 @@ import { createNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 
 function NotaSpeseForm({ onSuccess, schedaId }) {
+  const today = new Date().toISOString().split('T')[0]
   const [formData, setFormData] = useState({
     testo: '',
-    inserimentoData: '',
+    inserimentoData: today,
     importo: '',
     categoria_id: [],
   })

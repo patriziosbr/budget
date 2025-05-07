@@ -34,7 +34,7 @@ function DashboardSchedaSpese() {
       <div className='d-flex justify-content-between mb-4'>
         <h2 className='mb-0 align-self-center'>Dashboard note spese</h2>
 
-        <Button variant="secondary" className='d-flex align-items-center' onClick={handleShow}>
+        <Button variant="outline-secondary" className='d-flex align-items-center' onClick={handleShow}>
           <FaPlus className="me-2"/>
           Scheda
         </Button>

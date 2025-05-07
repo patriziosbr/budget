@@ -3,12 +3,8 @@ import { toast } from 'react-toastify'
 
 // const API_URL = '/api/notaSpese/' // OK
 
-const API_URL = "https://budget-7ehi.onrender.com/api/notaSpese/"; //OK!!!
-
-
-// const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
-//   ? process.env.REACT_APP_SECRET_NAME
-//   : '/api/notaSpese/';
+// const API_URL = "https://budget-7ehi.onrender.com/api/notaSpese/"; //OK!!!
+const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.REACT_APP_BASE_URL + '/api/notaSpese/' : '/api/notaSpese/'; 
 
 // Get
 const getNotaSpese = async (token) => {
