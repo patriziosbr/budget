@@ -14,13 +14,23 @@ connectDB()
 
 const app = express();
 
-app.use(cors(
-    {
-    origin: 'https://budget-7ehi.onrender.com/', // Replace with your frontend URL
+const allowedOrigins = [
+    'https://budget-7ehi.onrender.com',
+    'https://budget-fe.onrender.com',
+    'http://localhost:3000', // Add local development URL
+];
+
+app.use(cors({
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
-    }
-)); // Use the cors middleware
+})); // Use the cors middleware
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
