@@ -2,7 +2,7 @@ import axios from 'axios'
 
 // const API_URL = '/api/schedaSpese/' // OK
 
-const API_URL = "https://budget-fe.onrender.com/api/schedaSpese/"; //OK!!!
+const API_URL = "https://budget-7ehi.onrender.com/api/schedaSpese/"; //OK!!!
 
 // const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
 //   ? process.env.REACT_APP_SECRET_NAME
