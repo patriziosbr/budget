@@ -16,7 +16,7 @@ const app = express();
 
 app.use(cors(
     {
-    origin: 'https://budget-fe.onrender.com/', // Replace with your frontend URL
+    origin: 'https://budget-7ehi.onrender.com/', // Replace with your frontend URL
     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
     credentials: true,
     }
