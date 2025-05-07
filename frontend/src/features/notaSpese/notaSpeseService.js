@@ -3,7 +3,7 @@ import { toast } from 'react-toastify'
 
 // const API_URL = '/api/notaSpese/' // OK
 
-const API_URL = "https://budget.onrender.com/api/notaSpese/"; //OK!!!
+const API_URL = "https://budget-fe.onrender.com/api/notaSpese/"; //OK!!!
 
 
 // const API_URL = process.env.REACT_APP_NODE_ENV === 'production'
