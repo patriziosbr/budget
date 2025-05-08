@@ -110,9 +110,9 @@ function SingleScheda({scheda}) {
             <div className='d-flex justify-content-between align-items-center'>
                 <div className="d-flex align-items-end">
                     {longPressCount < 1 && 
-                    <h5 role="button" className='mb-0 align-self-center' {...longPressEvent}> 
+                    <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent}> 
                         {scheda.titolo} 
-                        {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-2"/> )}
+                        {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )}
                     </h5>
                     }
                     {longPressCount > 0 && 

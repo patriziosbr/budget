@@ -34,10 +34,6 @@ function RandomColorCircle({ letter = "X", tooltip = "", className, ...props }) 
         style={{ 
           backgroundColor: randomColor,
           color: textColor,
-          textAlign: "center",
-          lineHeight: "20px",
-          fontSize: "12px",
-          fontWeight: "bold",
 
         }}
         onMouseEnter={() => setShowTooltip(true)}

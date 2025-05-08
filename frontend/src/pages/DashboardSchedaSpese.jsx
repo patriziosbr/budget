@@ -15,24 +15,10 @@ function DashboardSchedaSpese() {
     setShow(false); // Reset Redux state when closing the modal
   };
 
-  // const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-  //   <a
-  //     href=""
-  //     ref={ref}
-  //     onClick={e => {
-  //       e.preventDefault();
-  //       onClick(e);
-  //     }}
-  //   >
-  //     {children}
-  //     <span className="threedots" />
-  //   </a>
-  // ));
-
   return (
     <>
       <div className='d-flex justify-content-between mb-4'>
-        <h2 className='mb-0 align-self-center'>Dashboard note spese</h2>
+        <h2 className='mb-0 align-self-center'>Expence list</h2>
 
         <Button variant="outline-secondary" className='d-flex align-items-center' onClick={handleShow}>
           <FaPlus className="me-2"/>

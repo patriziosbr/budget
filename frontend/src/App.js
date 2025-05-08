@@ -16,7 +16,7 @@ function App() {
       <Router>
         <Header />
         <div>
-        <Container style={{marginTop:"80px"}}>
+        <Container style={{marginTop:"10px"}}>
           <Routes>
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/register' element={<Register />} />

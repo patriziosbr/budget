@@ -1,3 +1,65 @@
+/* -------------------header */
+
+.header-container {
+  display: grid;
+  grid-template-rows: auto;
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+  background-color: var(--bs-body-bg);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Desktop styles */
+@media (min-width: 768px) {
+  .header-container {
+    top: 0;
+    bottom: auto;
+  }
+  
+  .nav-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .nav-item svg {
+    margin-right: 5px;
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 767px) {
+  .header-container {
+    top: auto;
+    bottom: 0;
+    padding-bottom: 10px;
+    padding-top: 5px;
+  }
+  
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .nav-item svg {
+    margin-bottom: 5px;
+    font-size: 1.2rem;
+  }
+  
+  /* For mobile bottom navigation */
+  .mobile-nav {
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    margin-top: 5px;
+  }
+}
+
+/* -------------------header */
+
 .active {
   border-bottom: 1px solid; 
 }
@@ -42,16 +104,16 @@ a:has(.threedots) {
 }
 
 .circle {
-  width: 20px;
-  height: 20px;
+  width: 35px;
+  height: 35px;
   border-radius: 50%;
   display: inline-block;
   margin-right: 5px;
   text-align: center;
-  line-height: 20px;
+  vertical-align: middle;
+  line-height: 35px;
   font-size: 12px;
   font-weight: bold;
   color: #fff;
   border: 0.5px solid #bbb;
-
 }

@@ -15,23 +15,25 @@ connectDB()
 const app = express();
 
 const allowedOrigins = [
-    'https://budget-7ehi.onrender.com',
-    'https://budget-fe.onrender.com',
+    // 'https://budget-7ehi.onrender.com',
+    // 'https://budget-fe.onrender.com',
     'http://localhost:3000', // Add local development URL
+    'http://localhost:5000', // Add local development URL
 ];
-
-app.use(cors({
-    origin: (origin, callback) => {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-    credentials: true,
-})); // Use the cors middleware
-
+// ----------------- CORS -----------------
+// app.use(cors({
+//     origin: (origin, callback) => {
+//         if (!origin || allowedOrigins.includes(origin)) {
+//             callback(null, true);
+//         } else {
+//             callback(new Error('Not allowed by CORS'));
+//         }
+//     },
+//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+//     credentials: true,
+// })); // Use the cors middleware
+app.use(cors());
+// ----------------- CORS -----------------
 app.use(express.json());
 app.use(express.urlencoded({extended:false}))
 
