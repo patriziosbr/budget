@@ -17,7 +17,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const userExists = await User.findOne({ email });
     if(userExists) {
         res.status(400)
-        throw new Error("user exist") //restituisce l'errore in html per ricevere un json vedere ./middleware 
+        throw new Error("email exists") //restituisce l'errore in html per ricevere un json vedere ./middleware 
     }
 
     //hash password

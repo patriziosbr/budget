@@ -3,6 +3,7 @@ const SchedaSpese = require("../model/schedaSpeseModel")
 const User = require("../model/userModel")
 const NotaSpese = require("../model/notaSpeseModel")
 const nodemailer = require("nodemailer");
+const { all } = require('axios');
 const baseUrl = process.env.NODE_ENV === "development"? process.env.DEV_BASE_URL : process.env.PORDUCTION_BASE_URL; 
 
 //@desc get goals
@@ -11,12 +12,18 @@ const baseUrl = process.env.NODE_ENV === "development"? process.env.DEV_BASE_URL
 const getSchedaSpese = asyncHandler(async (req, res) => {
     // Find all schedaSpese for the current user
     const schedaSpese = await SchedaSpese.find({ user: req.user.id });
-  
+    const allSchedaSpese = await SchedaSpese.find();
+    const user = await User.findById(req.user.id);
+
+    allSchedaSpese.forEach((scheda) => {
+        if (scheda.condivisoCon.includes(user.email)) {
+            schedaSpese.push(scheda);
+        }
+    })
+
     // Map over each scheda and resolve the promises for each notaSpese
     const schedaSpeseWithNota = await Promise.all(
       schedaSpese.map(async (scheda) => {
-        // console.log(scheda.notaSpese, "scheda.notaSpese"); // Debugging
-        
         // Resolve all the NotaSpese promises for the current scheda
         const notaSpeseResolved = await Promise.all(
           scheda.notaSpese.map((notaId) => {
@@ -29,7 +36,13 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
       })
     );
 
-    res.status(200).json(schedaSpeseWithNota.reverse());
+    // Sort by createdAt descending (newest first)
+    schedaSpeseWithNota.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+    res.status(200).json(schedaSpeseWithNota);
+
+    //sort standard
+    // res.status(200).json(schedaSpeseWithNota.reverse());
   });
 
 //@desc set schedaSpese
