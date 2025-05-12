@@ -11,10 +11,10 @@ function SchedaSpeseForm({onSuccess}) {
   const [formData, setFormData] = useState({
     titolo: '',
     inserimentoData: '',
-    condivisoCon: []
+    condivisoConList: []
   })
   
-  const { titolo, inserimentoData, condivisoCon } = formData
+  const { titolo, inserimentoData, condivisoConList } = formData
 
   const dispatch = useDispatch()
 
@@ -34,7 +34,9 @@ function SchedaSpeseForm({onSuccess}) {
       const schedaSpeseFormData = {
         titolo,
         inserimentoData: inserimentoData || new Date().toISOString(),
-        condivisoCon
+        condivisoConList: [
+            { email: condivisoConList, role: 'write' },
+        ]
       }
 
       dispatch(createSchedaSpese(schedaSpeseFormData))
@@ -80,9 +82,9 @@ function SchedaSpeseForm({onSuccess}) {
           <Form.Label>Condiviso con</Form.Label>
           <Form.Control
             type="text"
-            id="condivisoCon"
-            name="condivisoCon"
-            value={condivisoCon}
+            id="condivisoConList"
+            name="condivisoConList"
+            value={condivisoConList}
             placeholder="Condiviso con"
             onChange={onChange}
           />

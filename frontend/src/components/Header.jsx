@@ -1,4 +1,4 @@
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaDollarSign, FaList } from 'react-icons/fa'
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaDollarSign, FaList, FaHome } from 'react-icons/fa'
 import { useNavigate, NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
@@ -68,8 +68,8 @@ function Header() {
             
             <div className="mobile-nav">
               <NavLink to='/' style={{ textDecoration: "none" }} className="nav-item">
-                <FaDollarSign />
-                <span>Budget</span>
+                <FaHome />
+                <span>Home</span>
               </NavLink>
               
               {user && (

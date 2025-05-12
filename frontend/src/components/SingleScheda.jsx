@@ -2,6 +2,7 @@ import { FaPlus } from 'react-icons/fa';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa";
+import { FaUserFriends } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 
 import Button from 'react-bootstrap/Button'
@@ -101,8 +102,8 @@ function SingleScheda({scheda}) {
         return formattedDate
     }  
 
-    const sharedUserLetter = scheda.condivisoCon.map((userMail) => userMail[0].toUpperCase())
-    const sharedUserMail = scheda.condivisoCon.map((userMail) => userMail)
+    const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
+    const sharedUserMail = scheda.condivisoConList.map((userMail) => userMail)
 
 
     return (
@@ -112,8 +113,10 @@ function SingleScheda({scheda}) {
                     {longPressCount < 1 && 
                     <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent}> 
                         {scheda.titolo} 
-                        {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )}
+                        {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
+                        {sharedUserLetter && ( <FaUserFriends /> )}
                     </h5>
+                    
                     }
                     {longPressCount > 0 && 
                     <div>

@@ -16,7 +16,7 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user.id);
 
     allSchedaSpese.forEach((scheda) => {
-        if (scheda.condivisoCon.includes(user.email)) {
+        if (scheda.condivisoConList.includes(user.email)) {
             schedaSpese.push(scheda);
         }
     })
@@ -59,11 +59,11 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
         titolo: req.body.titolo,
         inserimentoData: req.body.inserimentoData,
         notaSpese: req.body.notaSpese,
-        condivisoCon: req.body.condivisoCon,
+        condivisoConList: req.body.condivisoConList,
         user: req.user.id
     })
 
-    if(req.body.condivisoCon.length > 0) {
+    if(req.body.condivisoConList.length > 0) {
         // Create a test account or replace with real credentials.
         const transporter = nodemailer.createTransport({
             host: "smtp.gmail.com",
@@ -80,8 +80,8 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
         try {
             const info = await transporter.sendMail({
                 from: `${sender.name} <${sender.email}>`,  // Properly formatted sender
-                // to: req.body.condivisoCon.join(','),  // Array of emails joined by commas
-                to: req.body.condivisoCon,  // Array of emails joined by commas
+                // to: req.body.condivisoConList.join(','),  // Array of emails joined by commas
+                to: req.body.condivisoConList,  // Array of emails joined by commas
                 subject: "Shared Expense Sheet",
                 text: `An expense sheet "${req.body.titolo}" has been shared with you.`,
                 html: `<b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
