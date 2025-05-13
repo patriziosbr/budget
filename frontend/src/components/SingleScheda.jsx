@@ -14,7 +14,7 @@ import Table from 'react-bootstrap/Table';
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import useLongPress from "./utils/useLongPress.js";
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import RandomColorCircle from './utils/RandomColorCircle.js';
 import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 
@@ -26,6 +26,8 @@ function SingleScheda({scheda}) {
     // const handleClose = () => {
     //     setShow(false); // Reset Redux state when closing the modal
     // };
+
+    const { user } = useSelector((state) => state.auth)
 
     const [modalState, setModalState] = useState({
         creaNotaModal: false,
@@ -109,6 +111,7 @@ function SingleScheda({scheda}) {
 
     return (
         <>
+        {console.log("user", user)}
             <div className='d-flex justify-content-between align-items-center'>
                 <div className="d-flex align-items-end">
                     {longPressCount < 1 && 
@@ -156,6 +159,7 @@ function SingleScheda({scheda}) {
                         <>
                             <thead>
                                 <tr>
+                                    <th>Utente</th>
                                     <th>Titolo</th>
                                     <th>Data</th>
                                     <th>Importo</th>
@@ -165,10 +169,10 @@ function SingleScheda({scheda}) {
                                 {scheda.notaSpese.map((notaSpesa) => (
                                     notaSpesa.testo && (
                                         <tr key={notaSpesa._id}>
+                                            <td>{notaSpesa.user}</td>
                                             <td>{notaSpesa.testo ? notaSpesa.testo : null}</td>
                                             <td>{parseDate(notaSpesa.inserimentoData)}</td>
                                             <td>{notaSpesa.importo}</td>
-  
                                         </tr>
                                     )
                                 ))}

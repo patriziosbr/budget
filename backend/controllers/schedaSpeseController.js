@@ -16,9 +16,11 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
     const user = await User.findById(req.user.id);
 
     allSchedaSpese.forEach((scheda) => {
-        if (scheda.condivisoConList.includes(user.email)) {
-            schedaSpese.push(scheda);
-        }
+        scheda.condivisoConList.forEach((sharedUser)=>{
+            if (sharedUser.email === user.email) {
+                schedaSpese.push(scheda);
+            }
+        })
     })
 
     // Map over each scheda and resolve the promises for each notaSpese
@@ -118,9 +120,14 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
     }
 
     // Check if the user is the owner
-    if (scheda.user.toString() !== req.user.id) {
-        res.status(403);
-        throw new Error("User not authorized");
+    const isOwner = scheda.user.toString() === req.user.id;
+    const isSharedUser = scheda.condivisoConList?.some(
+    (entry) => entry.email === req.user.email && entry.role === 'write'
+    );
+
+    if (!isOwner && !isSharedUser) {
+    res.status(403);
+    throw new Error("User not authorized");
     }
 
     // Construct the update object dynamically
