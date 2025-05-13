@@ -5,6 +5,7 @@ import { FaUserPlus } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
 
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button'
 import { useState } from 'react'
 import Modal from 'react-bootstrap/Modal';
@@ -114,7 +115,7 @@ function SingleScheda({scheda}) {
                     <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent}> 
                         {scheda.titolo} 
                         {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
-                        {sharedUserLetter && ( <FaUserFriends /> )}
+                        {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
                     </h5>
                     
                     }
@@ -194,11 +195,35 @@ function SingleScheda({scheda}) {
 
             <Modal show={modalState.shareModal} onHide={() => handleClose("shareModal")}>
                 <Modal.Header closeButton>
-                <Modal.Title><b>Aggiungi utente in {scheda.titolo}</b></Modal.Title>
+                    <Modal.Title><b>Condividi "{scheda.titolo}"</b></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>            
                     {/* TODO SINGLE SCHEDA CONDIVISA */}
                     {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
+                    <h6>Utenti con accesso</h6>
+                    <div >
+                        {scheda.condivisoConList.map((userMail) => (
+                            // <ul key={userMail._id}>
+                            //     <li>{userMail.email} <br/>Permessi/Ruolo: {userMail.role === "write" && 'Lettura e scrittura/Editor'} </li>
+                            // </ul>
+                            <div className="d-flex justify-content-between align-items-center" key={userMail._id}>
+                                <div className="d-flex align-items-center">
+                                    <RandomColorCircle letter={userMail.email[0]} /> 
+                                    <p className='m-0'>{userMail.email}</p>
+                                </div>
+                                <div>
+                                    <Form.Select aria-label="Default select example">
+                                            <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
+                                            <option className="text-danger"value="1">Rimuovi</option>
+                                    </Form.Select>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                    <div className='d-flex align-item-center justify-content-end mt-4'> 
+                        <Button>Fine</Button>
+                        {/* <Button>Salva</Button> */}
+                    </div>
                 </Modal.Body>
             </Modal>
 

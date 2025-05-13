@@ -5,6 +5,8 @@ import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { createSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import ListGroup from 'react-bootstrap/ListGroup'
+import { FaPlus } from 'react-icons/fa';
 
 function SchedaSpeseForm({onSuccess}) {
 
@@ -34,11 +36,14 @@ function SchedaSpeseForm({onSuccess}) {
       const schedaSpeseFormData = {
         titolo,
         inserimentoData: inserimentoData || new Date().toISOString(),
-        condivisoConList: [
-            { email: condivisoConList, role: 'write' },
-        ]
+        condivisoConList: condivisoConList
       }
 
+      // condivisoConList.forEach((email) => {
+      //   console.log(`Email: ${email}`); // Debugging
+      //   debugger
+      // })
+      debugger
       dispatch(createSchedaSpese(schedaSpeseFormData))
       .unwrap()
       .then((response) => {
@@ -52,11 +57,39 @@ function SchedaSpeseForm({onSuccess}) {
     }
   }
 
+    const [emailToShare, setEmailToShare] = useState('')
+
+    const addEmail = () => {
+    if (!emailToShare.trim()) return
+
+    const email = emailToShare.trim().toLowerCase()
+
+    const alreadyAdded = condivisoConList.some((entry) => entry.email === email)
+
+    if (alreadyAdded) {
+      toast.warn('Email già aggiunta')
+      return
+    }
+
+    setFormData((prev) => ({
+      ...prev,
+      condivisoConList: [...prev.condivisoConList, { email, role: 'write' }],
+    }))
+    setEmailToShare('')
+  }
+
+  const removeEmail = (email) => {
+    setFormData((prev) => ({
+      ...prev,
+      condivisoConList: prev.condivisoConList.filter((entry) => entry.email !== email),
+    }))
+  }
+
   return (    
     <Container>
       <Form className="mb-3" onSubmit={onSubmit}>
         <Form.Group className="mb-3">
-          <Form.Label>titolo</Form.Label>
+          <Form.Label>Titolo *</Form.Label>
           <Form.Control
             type="text"
             id="titolo"
@@ -67,6 +100,7 @@ function SchedaSpeseForm({onSuccess}) {
             required
           />
         </Form.Group>
+
         {/* <Form.Group className="mb-3">
           <Form.Label>Inserimento Data</Form.Label>
           <Form.Control
@@ -77,8 +111,7 @@ function SchedaSpeseForm({onSuccess}) {
             onChange={onChange}
           />
         </Form.Group> */}
-
-        <Form.Group className="mb-3">
+        {/* <Form.Group className="mb-3">
           <Form.Label>Condiviso con</Form.Label>
           <Form.Control
             type="text"
@@ -88,7 +121,36 @@ function SchedaSpeseForm({onSuccess}) {
             placeholder="Condiviso con"
             onChange={onChange}
           />
+        </Form.Group> */}
+
+        <Form.Group className="mb-3">
+          <Form.Label>Condividi con (email)</Form.Label>
+          <div className="d-flex align-items-center  gap-2">
+            <Form.Control
+              type="email"
+              placeholder="user@example.com"
+              value={emailToShare}
+              onChange={(e) => setEmailToShare(e.target.value)}
+            />
+            <div role="button" className="d-flex align-items-center border-circle p-2">
+              <FaPlus onClick={() => addEmail()} />
+            </div>
+          </div>
         </Form.Group>
+
+        {condivisoConList.length > 0 && (
+          <ListGroup className="mb-3">
+            {condivisoConList.map((entry, index) => (
+              <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
+                {entry.email}
+                <Button variant="outline-danger" size="sm" onClick={() => removeEmail(entry.email)}>
+                  Rimuovi
+                </Button>
+              </ListGroup.Item>
+            ))}
+          </ListGroup>
+        )}
+
         <Button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
           Submit
         </Button>
