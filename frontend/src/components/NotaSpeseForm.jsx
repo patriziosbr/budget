@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { toast } from 'react-toastify'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
@@ -8,12 +8,13 @@ import { createNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 
 function NotaSpeseForm({ onSuccess, schedaId }) {
+  const { user } = useSelector((state) => state.auth)
   const today = new Date().toISOString().split('T')[0]
   const [formData, setFormData] = useState({
     testo: '',
     inserimentoData: today,
     importo: '',
-    categoria_id: [],
+    categoria_id: []
   })
 
   const { testo, inserimentoData, importo, categoria_id } = formData
@@ -40,6 +41,11 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
         inserimentoData: inserimentoData || new Date().toISOString(),
         importo: parseFloat(importo),
         categoria_id: categoriesArray ?? [],
+        inserimentoUser: {
+          id: user._id,
+          email:user.email,
+          name: user.name
+        }
       }
 
       fetchDispatch(notaSpeseData)

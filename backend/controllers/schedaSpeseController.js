@@ -102,8 +102,8 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
 // //@route PUT/PATCH /api/goals/:id
 // //@access Private
 const updateSchedaSpese = asyncHandler(async (req, res) => {
-    // console.log(req.body, '--------------updateSchedaSpese req.body'); // Debugging
-    const { notaSpese, titolo } = req.body;
+    console.log(req.body, '--------------updateSchedaSpese req.body'); // Debugging
+    const { notaSpese, titolo, condivisoConList, removedEmails } = req.body;
     const schedaId = req.params.id;
 
     // Find the schedaSpese by ID
@@ -135,8 +135,24 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
     if (notaSpese) {
         updateFields.$push = { notaSpese };
     }
+    // titolo and/or condivisoConList both use $set:
+    if (titolo || condivisoConList) {
+        updateFields.$set = {};      // <— make sure this exists
+    }
     if (titolo) {
-        updateFields.$set = { titolo };
+        updateFields.$set.titolo = titolo;
+    }
+    if (condivisoConList) {
+        // push one or more new entries onto the end
+        updateFields.$push = updateFields.$push || {};
+        updateFields.$push.condivisoConList = { $each: condivisoConList };
+    }
+    if (Array.isArray(removedEmails) && removedEmails.length) {
+        updateFields.$pull = {
+        ...(updateFields.$pull || {}),
+        // pulls any entry whose email is in the removedEmails array
+        condivisoConList: { email: { $in: removedEmails } },
+        };
     }
     // console.log(updateFields, '--------------updateFields'); // Debugging
     // Update and push the new notaSpese entry

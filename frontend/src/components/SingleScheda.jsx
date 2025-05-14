@@ -17,23 +17,62 @@ import useLongPress from "./utils/useLongPress.js";
 import { useSelector, useDispatch } from 'react-redux'
 import RandomColorCircle from './utils/RandomColorCircle.js';
 import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import EmailShareList from './utils/EmailShareList';
+
 
 
 function SingleScheda({scheda}) {
-    // const [show, setShow] = useState(false);
-    // const [showUser, setShowUser] = useState(false);
-    // const handleShow = (param) => param === "showUser" ? setShowUser(true) : setShow(true);
-    // const handleClose = () => {
-    //     setShow(false); // Reset Redux state when closing the modal
-    // };
-
     const { user } = useSelector((state) => state.auth)
-
     const [modalState, setModalState] = useState({
         creaNotaModal: false,
         shareModal: false,
         deleteModal: false,
     });
+    const [longPressCount, setlongPressCount] = useState(0)
+    const [formData, setFormData] = useState({titolo: scheda.titolo })
+    const { titolo } = formData
+    const dispatch = useDispatch()
+    const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
+
+    const [sharedUserUpdateForm, setSharedUserUpdateForm] = useState({
+        condivisoConList: [],
+        removedEmails: [],
+    })
+  
+    const { condivisoConList } = sharedUserUpdateForm
+
+
+    // Add a state to track if the form has been modified
+    const [isFormModified, setIsFormModified] = useState(false);
+    
+    // Track original list on modal open
+    const [originalEmailList, setOriginalEmailList] = useState([]);
+
+    const removeSharedUser = (email) => {
+        setSharedUserUpdateForm((f) => ({
+            removedEmails: [...f.removedEmails, email],
+        }));
+        setIsFormModified(true);
+    }
+
+    const addEmail = (newEmailEntry) => {
+        setSharedUserUpdateForm((prev) => {
+            const newList = [...prev.condivisoConList, newEmailEntry];
+            // Set the form as modified
+            setIsFormModified(true);
+            return {
+                ...prev,
+                condivisoConList: newList
+            };
+        });
+    };
+
+    const removeEmail = (email) => {
+        setSharedUserUpdateForm((prev) => ({
+        ...prev,
+        condivisoConList: prev.condivisoConList.filter((entry) => entry.email !== email),
+        }));
+    };
 
     const handleShow = (modalType) => {
         setModalState((prevState) => ({
@@ -47,16 +86,8 @@ function SingleScheda({scheda}) {
             ...prevState,
             [modalType]: false,
         }));
+        setIsFormModified(false); // Reset form modified state
     };
-
-    const [longPressCount, setlongPressCount] = useState(0)
-    const [formData, setFormData] = useState({
-    titolo: scheda.titolo,
-    })
-    
-    const { titolo } = formData
-
-    const dispatch = useDispatch()
 
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -103,15 +134,26 @@ function SingleScheda({scheda}) {
         const year = date.getUTCFullYear();
         const formattedDate = `${day}/${month}/${year}`;
         return formattedDate
-    }  
+    } 
 
-    const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
-    const sharedUserMail = scheda.condivisoConList.map((userMail) => userMail)
+    const editSharedUserSubmit = async (e) => {
+        e.preventDefault();
+        
+        const updatePayload = { 
+            condivisoConList: sharedUserUpdateForm.condivisoConList,
+            removedEmails: sharedUserUpdateForm.removedEmails  
+        };
+        debugger
+        await dispatch(updateSchedaSpese({schedaId: scheda._id, ...updatePayload})).unwrap();
+        // await dispatch(getSchedaSpese()).unwrap();
+        // handleClose("shareModal")
+    }
+
 
 
     return (
         <>
-        {console.log("user", user)}
+        {/* {console.log("user", user)} */}
             <div className='d-flex justify-content-between align-items-center'>
                 <div className="d-flex align-items-end">
                     {longPressCount < 1 && 
@@ -159,7 +201,7 @@ function SingleScheda({scheda}) {
                         <>
                             <thead>
                                 <tr>
-                                    <th>Utente</th>
+                                    <th>Inserito</th>
                                     <th>Titolo</th>
                                     <th>Data</th>
                                     <th>Importo</th>
@@ -169,7 +211,7 @@ function SingleScheda({scheda}) {
                                 {scheda.notaSpese.map((notaSpesa) => (
                                     notaSpesa.testo && (
                                         <tr key={notaSpesa._id}>
-                                            <td>{notaSpesa.user}</td>
+                                            <td>{notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""}</td>
                                             <td>{notaSpesa.testo ? notaSpesa.testo : null}</td>
                                             <td>{parseDate(notaSpesa.inserimentoData)}</td>
                                             <td>{notaSpesa.importo}</td>
@@ -202,32 +244,45 @@ function SingleScheda({scheda}) {
                     <Modal.Title><b>Condividi "{scheda.titolo}"</b></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>            
-                    {/* TODO SINGLE SCHEDA CONDIVISA */}
-                    {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
-                    <h6>Utenti con accesso</h6>
-                    <div >
-                        {scheda.condivisoConList.map((userMail) => (
-                            // <ul key={userMail._id}>
-                            //     <li>{userMail.email} <br/>Permessi/Ruolo: {userMail.role === "write" && 'Lettura e scrittura/Editor'} </li>
-                            // </ul>
-                            <div className="d-flex justify-content-between align-items-center" key={userMail._id}>
+                    <Form className="mb-3" onSubmit={editSharedUserSubmit}>
+                        <EmailShareList 
+                            emailList={condivisoConList}
+                            onAddEmail={addEmail}
+                            onRemoveEmail={removeEmail}
+                        />
+                        {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
+                        <h6>Utenti con accesso</h6>
+                        <div >
+                            {user._id === scheda.user && <div className="d-flex justify-content-between align-items-center my-3" >
                                 <div className="d-flex align-items-center">
-                                    <RandomColorCircle letter={userMail.email[0]} /> 
-                                    <p className='m-0'>{userMail.email}</p>
+                                    <RandomColorCircle letter={user.email[0]} /> 
+                                    <p className='m-0'>{user.email} (you)</p>
                                 </div>
                                 <div>
-                                    <Form.Select aria-label="Default select example">
-                                            <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
-                                            <option className="text-danger"value="1">Rimuovi</option>
-                                    </Form.Select>
+                                    <p className='m-0'>Admin</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                    <div className='d-flex align-item-center justify-content-end mt-4'> 
-                        <Button>Fine</Button>
-                        {/* <Button>Salva</Button> */}
-                    </div>
+                            }
+                            {scheda.condivisoConList.map((userMail) => (
+                                <div className="d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
+                                    <div className="d-flex align-items-center">
+                                        <RandomColorCircle letter={userMail.email[0]} /> 
+                                        <p className='m-0'>{userMail.email}</p>
+                                    </div>
+                                    <div>
+                                        <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail.email);}}}>
+                                                <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
+                                                <option className="text-danger" value="1">Rimuovi</option>
+                                        </Form.Select>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className='d-flex align-item-center justify-content-end mt-4'> 
+                            {!isFormModified && <Button className="btn btn-primary" onClick={()=>handleClose("shareModal")}>Fine</Button>}
+                            {isFormModified &&<Button type="submit" className="btn btn-primary" >Salva</Button>}
+                        </div>
+                    </Form>
                 </Modal.Body>
             </Modal>
 

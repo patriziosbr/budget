@@ -42,7 +42,7 @@ export const createSchedaSpese = createAsyncThunk(
 export const updateSchedaSpese = createAsyncThunk(
   'schedaSpese/update',
   async (data, thunkAPI) => {
-    // console.log(data, "-------------schedaSpeseschedaSpese----------"); // Debugging
+    console.log(data, "-------------schedaSpeseschedaSpese----------"); // Debugging
     try {
       const state = thunkAPI.getState();
       const token = state.auth.user.token;
@@ -51,7 +51,8 @@ export const updateSchedaSpese = createAsyncThunk(
       const updatePayload = {}
       if(data.notaSpeseData) updatePayload.notaSpese = data.notaSpeseData._id ;
       if(data.titolo) updatePayload.titolo = data.titolo;
-      
+      if(data.condivisoConList) updatePayload.condivisoConList = data.condivisoConList;
+      if(data.removedEmails) updatePayload.removedEmails = data.removedEmails;
       // Build the payload to push the new notaSpese ID into the array
       // const updatePayload = {
       //   notaSpese: newNotaSpeseId,

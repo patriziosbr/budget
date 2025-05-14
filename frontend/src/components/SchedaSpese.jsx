@@ -11,7 +11,7 @@ function SchedaSpese() {
   )
 
   useEffect(() => {
-    if (schedaSpese.length === 0) dispatch(getSchedaSpese());
+    dispatch(getSchedaSpese());
   }, []);
 
   if (isLoading) return <p>Loading...</p>;

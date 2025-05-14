@@ -3,10 +3,7 @@ const SchedaSpese = require("../model/schedaSpeseModel");
 
 const checkSpesaAccess = (accessType) => {
   return async (req, res, next) => {
-    console.log(req.user.id, '--------------id'); // Debugging
-    console.log(req.user.email, '--------------email'); // Debugging
-    console.log(req.params.id, '--------------params'); // Debugging
-    
+
     const userId = req.user.id;
     const userEmail = req.user.email;
     const spesaId = req.params.id;
