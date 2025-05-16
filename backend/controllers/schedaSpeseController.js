@@ -2,9 +2,10 @@ const asyncHandler = require('express-async-handler')
 const SchedaSpese = require("../model/schedaSpeseModel")
 const User = require("../model/userModel")
 const NotaSpese = require("../model/notaSpeseModel")
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
 const { all } = require('axios');
 const baseUrl = process.env.NODE_ENV === "development"? process.env.DEV_BASE_URL : process.env.PORDUCTION_BASE_URL; 
+const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTemplate/condivisioneSchedaSpese");
 
 //@desc get goals
 //@route GET /api/goals
@@ -65,35 +66,39 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
         user: req.user.id
     })
 
+    const emailList = req.body.condivisoConList.map((email) => email.email);
     if(req.body.condivisoConList.length > 0) {
-        // Create a test account or replace with real credentials.
-        const transporter = nodemailer.createTransport({
-            host: "smtp.gmail.com",
-            port: 465,
-            secure: true, // true for 465, false for other ports
-            auth: {
-                user: "tommasoversetto@gmail.com",
-                pass:  process.env.GOOGLE_SMTP_PASS,
-            },
-        });
-        // Get the sender's full user information to access their email
-        const sender = await User.findById(req.user.id);
-
-        try {
-            const info = await transporter.sendMail({
-                from: `${sender.name} <${sender.email}>`,  // Properly formatted sender
-                // to: req.body.condivisoConList.join(','),  // Array of emails joined by commas
-                to: req.body.condivisoConList,  // Array of emails joined by commas
-                subject: "Shared Expense Sheet",
-                text: `An expense sheet "${req.body.titolo}" has been shared with you.`,
-                html: `<b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
-            });
-            
-            console.log("Message sent:", info.messageId);
-        } catch (error) {
-            console.error("Error sending email:", error);
-        }
+        condivisioneSchedaSpese(req, User, emailList, baseUrl)
     }
+    // if(req.body.condivisoConList.length > 0) {
+    //     // Create a test account or replace with real credentials.
+    //     const transporter = nodemailer.createTransport({
+    //         host: "smtp.gmail.com",
+    //         port: 465,
+    //         secure: true, // true for 465, false for other ports
+    //         auth: {
+    //             user: "tommasoversetto@gmail.com",
+    //             pass:  process.env.GOOGLE_SMTP_PASS,
+    //         },
+    //     });
+    //     // Get the sender's full user information to access their email
+    //     const sender = await User.findById(req.user.id);
+
+    //     try {
+    //         const info = await transporter.sendMail({
+    //             from: `${sender.name} <${sender.email}>`,  // Properly formatted sender
+    //             // to: req.body.condivisoConList.join(','),  // Array of emails joined by commas
+    //             to: emailList,  // Array of emails joined by commas
+    //             subject: "Shared Expense Sheet",
+    //             text: `An expense sheet "${req.body.titolo}" has been shared with you.`,
+    //             html: `<b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
+    //         });
+            
+    //         console.log("Message sent:", info.messageId);
+    //     } catch (error) {
+    //         console.error("Error sending email:", error);
+    //     }
+    // }
 
     res.status(200).json(notaSpese)
 })
@@ -146,6 +151,7 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
         // push one or more new entries onto the end
         updateFields.$push = updateFields.$push || {};
         updateFields.$push.condivisoConList = { $each: condivisoConList };
+        condivisioneSchedaSpese(req, User, condivisoConList, baseUrl)
     }
     if (Array.isArray(removedEmails) && removedEmails.length) {
         updateFields.$pull = {
@@ -153,6 +159,7 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
         // pulls any entry whose email is in the removedEmails array
         condivisoConList: { email: { $in: removedEmails } },
         };
+        rimossoSchedaSpese(req, User, removedEmails)
     }
     // console.log(updateFields, '--------------updateFields'); // Debugging
     // Update and push the new notaSpese entry

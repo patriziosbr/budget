@@ -51,8 +51,14 @@ export const updateSchedaSpese = createAsyncThunk(
       const updatePayload = {}
       if(data.notaSpeseData) updatePayload.notaSpese = data.notaSpeseData._id ;
       if(data.titolo) updatePayload.titolo = data.titolo;
-      if(data.condivisoConList) updatePayload.condivisoConList = data.condivisoConList;
-      if(data.removedEmails) updatePayload.removedEmails = data.removedEmails;
+      if(data.condivisoConList) {
+        updatePayload.titolo = data.titolo
+        updatePayload.condivisoConList = data.condivisoConList;
+      }
+      if(data.removedEmails) {
+        updatePayload.titolo = data.titolo
+        updatePayload.removedEmails = data.removedEmails;
+      }
       // Build the payload to push the new notaSpese ID into the array
       // const updatePayload = {
       //   notaSpese: newNotaSpeseId,

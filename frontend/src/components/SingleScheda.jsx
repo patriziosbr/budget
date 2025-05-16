@@ -35,6 +35,7 @@ function SingleScheda({scheda}) {
     const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
 
     const [sharedUserUpdateForm, setSharedUserUpdateForm] = useState({
+        titolo: scheda.titolo,
         condivisoConList: [],
         removedEmails: [],
     })
@@ -140,6 +141,7 @@ function SingleScheda({scheda}) {
         e.preventDefault();
         
         const updatePayload = { 
+            titolo: sharedUserUpdateForm.titolo,
             condivisoConList: sharedUserUpdateForm.condivisoConList,
             removedEmails: sharedUserUpdateForm.removedEmails  
         };
@@ -267,7 +269,7 @@ function SingleScheda({scheda}) {
                                 <div className="d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
                                     <div className="d-flex align-items-center">
                                         <RandomColorCircle letter={userMail.email[0]} /> 
-                                        <p className='m-0'>{userMail.email}</p>
+                                        <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                     </div>
                                     <div>
                                         <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail.email);}}}>
