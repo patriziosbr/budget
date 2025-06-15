@@ -41,7 +41,7 @@ function EmailShareList({
 
       <Form.Group className="mb-3">
         <Form.Label>{label}</Form.Label>
-        <div className="d-flex align-items-center gap-2">
+        <div  className="d-flex align-items-center gap-2">
           <Form.Control
             type="email"
             placeholder="user@example.com"
@@ -49,13 +49,14 @@ function EmailShareList({
             onChange={(e) => setEmailToShare(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <div 
+          <Button
             role="button" 
+            style={{'border': "3px solid #0d6efd" }}
             className="d-flex align-items-center border-circle p-2"
             onClick={handleAddEmail}
           >
-            <FaPlus />
-          </div>
+          <FaPlus />
+          </Button>
         </div>
       </Form.Group>
 
