@@ -49,24 +49,42 @@ function SingleScheda({scheda}) {
     // Track original list on modal open
     const [originalEmailList, setOriginalEmailList] = useState([]);
 
-    const removeSharedUser = (email) => {
+    const removeSharedUser = (userMail) => {
         setSharedUserUpdateForm((f) => ({
-            removedEmails: [...f.removedEmails, email],
+            ...f,
+            removedEmails: [...f.removedEmails, {mail: userMail.email, mailId: userMail._id}],
         }));
+        // debugger
         setIsFormModified(true);
     }
 
     const addEmail = (newEmailEntry) => {
-        setSharedUserUpdateForm((prev) => {
-            const newList = [...prev.condivisoConList, newEmailEntry];
-            // Set the form as modified
-            setIsFormModified(true);
-            return {
-                ...prev,
-                condivisoConList: newList
-            };
-        });
+        setSharedUserUpdateForm((f) => ({
+            ...f,
+            condivisoConList: [...f.condivisoConList, newEmailEntry],
+        }));
+        console.log("newEmailEntry", newEmailEntry);
+        
+        setIsFormModified(true);
     };
+
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(String(email).toLowerCase());
+    }
+
+    // const addEmail = (newEmailEntry) => {
+    //     setSharedUserUpdateForm((prev) => {
+    //         debugger
+    //         const newList = [...prev.condivisoConList, newEmailEntry];
+    //         // Set the form as modified
+    //         setIsFormModified(true);
+    //         return {
+    //             ...prev,
+    //             condivisoConList: newList
+    //         };
+    //     });
+    // };
 
     const removeEmail = (email) => {
         setSharedUserUpdateForm((prev) => ({
@@ -145,9 +163,9 @@ function SingleScheda({scheda}) {
             condivisoConList: sharedUserUpdateForm.condivisoConList,
             removedEmails: sharedUserUpdateForm.removedEmails  
         };
-        debugger
-        await dispatch(updateSchedaSpese({schedaId: scheda._id, ...updatePayload})).unwrap();
-        // await dispatch(getSchedaSpese()).unwrap();
+        await dispatch(updateSchedaSpese({schedaId: scheda._id, ...updatePayload})).unwrap()
+        .then((payload) => console.log('fulfilled', payload))
+        await dispatch(getSchedaSpese()).unwrap();
         // handleClose("shareModal")
     }
 
@@ -248,9 +266,11 @@ function SingleScheda({scheda}) {
                 <Modal.Body>            
                     <Form className="mb-3" onSubmit={editSharedUserSubmit}>
                         <EmailShareList 
-                            emailList={condivisoConList}
+                            emailList_tmp={condivisoConList}
                             onAddEmail={addEmail}
+                            onValidateEmail={validateEmail}
                             onRemoveEmail={removeEmail}
+                            emailListParent={scheda.condivisoConList} 
                         />
                         {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
                         <h6>Utenti con accesso</h6>
@@ -272,7 +292,7 @@ function SingleScheda({scheda}) {
                                         <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                     </div>
                                     <div>
-                                        <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail.email);}}}>
+                                        <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail);}}}>
                                                 <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
                                                 <option className="text-danger" value="1">Rimuovi</option>
                                         </Form.Select>

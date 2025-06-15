@@ -1,7 +1,7 @@
 const nodemailer = require("nodemailer");
 
 const condivisioneSchedaSpese = async (req, userModel, emailList, baseUrl) => {   
-            console.log("emailList", emailList); // Debugging
+            console.log("emailList: ", emailList); // Debugging
             // Create a test account or replace with real credentials.
             const transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
@@ -26,16 +26,16 @@ const condivisioneSchedaSpese = async (req, userModel, emailList, baseUrl) => {
                     html: `Sei stato aggiunto a alla scheda spese "${req.body.titolo}"<br/><b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
                 });
                 
-                console.log("Message sent:", info.messageId);
+                console.log("Message sent condivisioneSchedaSpese:", info.messageId);
             } catch (error) {
-                console.error("Error sending email:", error);
+                console.error("Error sending email condivisioneSchedaSpese: ", error);
             }
         
 }
 
 
 const rimossoSchedaSpese = async (req, userModel, emailList) => {   
-            // console.log(req, '--------------rimossoSchedaSpese req.body'); // Debugging
+            console.log(emailList, '--------------rimossoSchedaSpese emailList'); // Debugging
             // Create a test account or replace with real credentials.
             const transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",
@@ -59,9 +59,9 @@ const rimossoSchedaSpese = async (req, userModel, emailList) => {
                     html: `Sei stato rimosso dalla scheda spese "${req.schedaSpesa.titolo}" <br/> <p>Conttatta <a href="mailto:${req.user.email}">${req.user.email}</a> per info</p>`,
                 });
                 
-                console.log("Message sent:", info.messageId);
+                console.log("Message sent rimossoSchedaSpese:", info.messageId);
             } catch (error) {
-                console.error("Error sending email:", error);
+                console.error("Error sending email rimossoSchedaSpese:", error);
             }
         
 }

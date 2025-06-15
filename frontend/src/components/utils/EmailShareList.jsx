@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Form, Button, ListGroup } from 'react-bootstrap';
 import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 function EmailShareList({ 
-  emailList = [], 
-  onAddEmail, 
-  onRemoveEmail, 
+  emailList_tmp = [], 
+  onAddEmail,
+  onValidateEmail, 
+  onRemoveEmail,
+  emailListParent= [],
   label = "Condividi con (email)" 
 }) {
   const [emailToShare, setEmailToShare] = useState('');
@@ -15,8 +17,8 @@ function EmailShareList({
     if (!emailToShare.trim()) return;
 
     const email = emailToShare.trim().toLowerCase();
-    const alreadyAdded = emailList.some((entry) => entry.email === email);
-
+    if(!onValidateEmail(email)) {toast.warn('Inserisci un indirizzo email valido'); return};
+    const alreadyAdded = emailList_tmp.some((entry) => entry.email === email) || emailListParent.some((m) => m.email === email);
     if (alreadyAdded) {
       toast.warn('Email già aggiunta');
       return;
@@ -32,9 +34,11 @@ function EmailShareList({
       handleAddEmail();
     }
   };
+  
 
   return (
     <>
+
       <Form.Group className="mb-3">
         <Form.Label>{label}</Form.Label>
         <div className="d-flex align-items-center gap-2">
@@ -55,9 +59,9 @@ function EmailShareList({
         </div>
       </Form.Group>
 
-      {emailList.length > 0 && (
+      {emailList_tmp.length > 0 && (
         <ListGroup className="mb-3">
-          {emailList.map((entry, index) => (
+          {emailList_tmp.map((entry, index) => (
             <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
               {entry.email}
               <Button 

@@ -3,6 +3,8 @@ const SchedaSpese = require("../model/schedaSpeseModel")
 const User = require("../model/userModel")
 const NotaSpese = require("../model/notaSpeseModel")
 // const nodemailer = require("nodemailer");
+const { Types } = require('mongoose');
+const ObjectId = Types.ObjectId;
 const { all } = require('axios');
 const baseUrl = process.env.NODE_ENV === "development"? process.env.DEV_BASE_URL : process.env.PORDUCTION_BASE_URL; 
 const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTemplate/condivisioneSchedaSpese");
@@ -70,35 +72,6 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
     if(req.body.condivisoConList.length > 0) {
         condivisioneSchedaSpese(req, User, emailList, baseUrl)
     }
-    // if(req.body.condivisoConList.length > 0) {
-    //     // Create a test account or replace with real credentials.
-    //     const transporter = nodemailer.createTransport({
-    //         host: "smtp.gmail.com",
-    //         port: 465,
-    //         secure: true, // true for 465, false for other ports
-    //         auth: {
-    //             user: "tommasoversetto@gmail.com",
-    //             pass:  process.env.GOOGLE_SMTP_PASS,
-    //         },
-    //     });
-    //     // Get the sender's full user information to access their email
-    //     const sender = await User.findById(req.user.id);
-
-    //     try {
-    //         const info = await transporter.sendMail({
-    //             from: `${sender.name} <${sender.email}>`,  // Properly formatted sender
-    //             // to: req.body.condivisoConList.join(','),  // Array of emails joined by commas
-    //             to: emailList,  // Array of emails joined by commas
-    //             subject: "Shared Expense Sheet",
-    //             text: `An expense sheet "${req.body.titolo}" has been shared with you.`,
-    //             html: `<b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
-    //         });
-            
-    //         console.log("Message sent:", info.messageId);
-    //     } catch (error) {
-    //         console.error("Error sending email:", error);
-    //     }
-    // }
 
     res.status(200).json(notaSpese)
 })
@@ -107,8 +80,7 @@ const setSchedaSpese = asyncHandler(async (req, res) => {
 // //@route PUT/PATCH /api/goals/:id
 // //@access Private
 const updateSchedaSpese = asyncHandler(async (req, res) => {
-    console.log(req.body, '--------------updateSchedaSpese req.body'); // Debugging
-    const { notaSpese, titolo, condivisoConList, removedEmails } = req.body;
+    const { notaSpese, titolo, condivisoConList = [], removedEmails = [] } = req.body;
     const schedaId = req.params.id;
 
     // Find the schedaSpese by ID
@@ -124,52 +96,52 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
         throw new Error("User not found");
     }
 
-    // Check if the user is the owner
+    // Check if the user is the owner or has write access
     const isOwner = scheda.user.toString() === req.user.id;
     const isSharedUser = scheda.condivisoConList?.some(
-    (entry) => entry.email === req.user.email && entry.role === 'write'
+        (entry) => entry.email === req.user.email && entry.role === 'write'
     );
-
     if (!isOwner && !isSharedUser) {
-    res.status(403);
-    throw new Error("User not authorized");
+        res.status(403);
+        throw new Error("User not authorized");
     }
 
-    // Construct the update object dynamically
+    // 1. Remove emails if needed
+    if (removedEmails.length > 0) {
+        const removedIds = removedEmails.map(e => e.mailId);
+        const removedEmailsClean = removedEmails.map(e => e.email);
+        await SchedaSpese.updateOne(
+            { _id: schedaId },
+            { $pull: { condivisoConList: { _id: { $in: removedIds.map(id => new ObjectId(id)) } } } }
+        );
+        await rimossoSchedaSpese(req, User, removedEmailsClean);
+    }
+
+    // 2. Build update object for additions/updates
     const updateFields = {};
     if (notaSpese) {
         updateFields.$push = { notaSpese };
     }
-    // titolo and/or condivisoConList both use $set:
-    if (titolo || condivisoConList) {
-        updateFields.$set = {};      // <— make sure this exists
-    }
     if (titolo) {
-        updateFields.$set.titolo = titolo;
+        updateFields.$set = { titolo };
     }
-    if (condivisoConList) {
-        // push one or more new entries onto the end
+    if (condivisoConList.length > 0) {
         updateFields.$push = updateFields.$push || {};
         updateFields.$push.condivisoConList = { $each: condivisoConList };
-        condivisioneSchedaSpese(req, User, condivisoConList, baseUrl)
+        await condivisioneSchedaSpese(req, User, condivisoConList, baseUrl);
     }
-    if (Array.isArray(removedEmails) && removedEmails.length) {
-        updateFields.$pull = {
-        ...(updateFields.$pull || {}),
-        // pulls any entry whose email is in the removedEmails array
-        condivisoConList: { email: { $in: removedEmails } },
-        };
-        rimossoSchedaSpese(req, User, removedEmails)
+
+    // 3. Apply additions/updates if any
+    let updatedScheda = null;
+    if (Object.keys(updateFields).length > 0) {
+        updatedScheda = await SchedaSpese.findByIdAndUpdate(
+            schedaId,
+            updateFields,
+            { new: true, runValidators: true }
+        );
+    } else {
+        updatedScheda = await SchedaSpese.findById(schedaId);
     }
-    // console.log(updateFields, '--------------updateFields'); // Debugging
-    // Update and push the new notaSpese entry
-    const updatedScheda = await SchedaSpese.findByIdAndUpdate(
-        schedaId,
-        updateFields,
-        { new: true, runValidators: true }
-    );
-    
-    // console.log(updatedScheda, '--------------updatedScheda'); // Debugging
 
     res.status(200).json(updatedScheda);
 });
@@ -179,7 +151,11 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
 // //@route DELETE /api/schedaSpese/:id
 // //@access Private
 const deleteSchedaSpese = asyncHandler(async (req, res) => {
-    const schedaSpese = await SchedaSpese.findById(req.params.id);
+    let schedaSpese = null;
+    if(req.params.id) {
+        schedaSpese = await SchedaSpese.findById(req.params.id);
+    }
+
     if(!schedaSpese) {
         throw new Error("goal not found")
     }
