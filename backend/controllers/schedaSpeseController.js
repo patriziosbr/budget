@@ -12,12 +12,32 @@ const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTe
 //@desc get goals
 //@route GET /api/goals
 //@access Private
+const singleSchedaSpeseGet = asyncHandler(async (req, res) => {
+    const schedaSpese = await SchedaSpese.findById(req.params.id);
+
+    const noteSpeseResolved = await Promise.all(
+        schedaSpese.notaSpese.map((notaId) => {
+        return NotaSpese.findById(notaId);
+        })
+    );
+    schedaSpese.notaSpese = noteSpeseResolved;
+    console.log('noteSpeseResolved noteSpeseResolved ------------------- controller', schedaSpese);
+
+    // da fare paginazione e filtri
+
+    res.status(200).json(schedaSpese);
+})
+
+//@desc get goals
+//@route GET /api/goals
+//@access Private
 const getSchedaSpese = asyncHandler(async (req, res) => {
     // Find all schedaSpese for the current user
     const schedaSpese = await SchedaSpese.find({ user: req.user.id });
     const allSchedaSpese = await SchedaSpese.find();
     const user = await User.findById(req.user.id);
 
+    //add la gli utenti condivisi alla schedaSpese
     allSchedaSpese.forEach((scheda) => {
         scheda.condivisoConList.forEach((sharedUser)=>{
             if (sharedUser.email === user.email) {
@@ -175,6 +195,7 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
 })
 
 module.exports = {
+    singleSchedaSpeseGet,
     getSchedaSpese,
     setSchedaSpese,
     updateSchedaSpese,

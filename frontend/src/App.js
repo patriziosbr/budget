@@ -9,6 +9,7 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import NotaSpese from './pages/NotaSpese.jsx'
 import DashboardNotaSpese from './pages/DashboardSchedaSpese.jsx'
+import SchedaSpesaDettaglio from './pages/SchedaSpesaDettaglio.jsx'
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route exact path='/' element={<Dashboard />} />
             <Route exact path='/notaSpese' element={<NotaSpese />} />
             <Route exact path='/DashboardNotaSpese' element={<DashboardNotaSpese />} />
+            <Route exact path='/DashboardNotaSpese/:id' element={<SchedaSpesaDettaglio />} />
           </Routes>
         </Container>
         </div>

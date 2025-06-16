@@ -6,6 +6,18 @@ import axios from 'axios'
 const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.REACT_APP_BASE_URL + "/api/schedaSpese/" : '/api/schedaSpese/'; 
 
 
+// Get single scheda spese
+const singleSchedaSpeseGet = async (schedaId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+
+  const response = await axios.get(API_URL+ schedaId, config)
+
+  return response.data
+}
 // Get
 const getSchedaSpese = async (token) => {
   const config = {
@@ -51,10 +63,12 @@ const deleteSchedaSpese = async (schedaId, token) => {
     },
   }
   const response = await axios.delete(API_URL + schedaId, config)
-  return response.data
+  // return response.data
+  return { id: schedaId };
 }
 
 const schedaSpeseService = {
+  singleSchedaSpeseGet,
   getSchedaSpese,
   createSchedaSpese,
   updateSchedaSpese,

@@ -16,12 +16,13 @@ import Dropdown from "react-bootstrap/Dropdown";
 import useLongPress from "./utils/useLongPress.js";
 import { useSelector, useDispatch } from 'react-redux'
 import RandomColorCircle from './utils/RandomColorCircle.js';
-import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese, singleSchedaSpeseGet } from '../features/schedaSpese/schedaSpeseSlice'
 import EmailShareList from './utils/EmailShareList';
-
+import { useNavigate, NavLink } from 'react-router-dom'
 
 
 function SingleScheda({scheda}) {
+    const navigate = useNavigate()
     const { user } = useSelector((state) => state.auth)
     const [modalState, setModalState] = useState({
         creaNotaModal: false,
@@ -169,19 +170,32 @@ function SingleScheda({scheda}) {
         // handleClose("shareModal")
     }
 
+    // const singleScheda = async (idUrl) => {
+    //     await dispatch(singleSchedaSpeseGet(idUrl)).unwrap()
 
+    //     .catch((error) => console.error('Error fetching single scheda:', error));
+    // }
+
+    const goToDettagolioScheda = (schedaID) => {
+        navigate(`/DashboardNotaSpese/${schedaID}`);
+
+    }
 
     return (
         <>
         {/* {console.log("user", user)} */}
             <div className='d-flex justify-content-between align-items-center'>
                 <div className="d-flex align-items-end">
-                    {longPressCount < 1 && 
-                    <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent}> 
+                    {longPressCount < 1 &&
+                    <>
+                    {/* <Button onClick={()=>singleScheda(scheda._id)}>Hello</Button> */}
+                    <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent} onClick={()=>goToDettagolioScheda(scheda._id)}> 
                         {scheda.titolo} 
                         {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
                         {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
                     </h5>
+                    
+                    </>
                     
                     }
                     {longPressCount > 0 && 
@@ -221,7 +235,7 @@ function SingleScheda({scheda}) {
                         <>
                             <thead>
                                 <tr>
-                                    <th>Inserito</th>
+                                    <th>Utente</th>
                                     <th>Titolo</th>
                                     <th>Data</th>
                                     <th>Importo</th>

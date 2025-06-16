@@ -76,6 +76,18 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
   return (
     <Container>
       <Form className="mb-3" onSubmit={onSubmit}>
+        
+        <Form.Group className="mb-3">
+          <Form.Label>Inserimento Data</Form.Label>
+          <Form.Control
+            type="date"
+            id="inserimentoData"
+            name="inserimentoData"
+            value={inserimentoData}
+            onChange={onChange}
+          />
+        </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>Testo</Form.Label>
           <Form.Control
@@ -88,16 +100,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
             required
           />
         </Form.Group>
-        <Form.Group className="mb-3">
-          <Form.Label>Inserimento Data</Form.Label>
-          <Form.Control
-            type="date"
-            id="inserimentoData"
-            name="inserimentoData"
-            value={inserimentoData}
-            onChange={onChange}
-          />
-        </Form.Group>
+
         <Form.Group className="mb-3">
           <Form.Label>Importo</Form.Label>
           <Form.Control

@@ -98,34 +98,6 @@ function SchedaSpeseForm({onSuccess}) {
           onRemoveEmail={removeEmail}
         />
 
-        {/* <Form.Group className="mb-3">
-          <Form.Label>Condividi con (email)</Form.Label>
-          <div className="d-flex align-items-center  gap-2">
-            <Form.Control
-              type="email"
-              placeholder="user@example.com"
-              value={emailToShare}
-              onChange={(e) => setEmailToShare(e.target.value)}
-            />
-            <div role="button" className="d-flex align-items-center border-circle p-2">
-              <FaPlus onClick={() => addEmail()} />
-            </div>
-          </div>
-        </Form.Group>
-
-        {condivisoConList.length > 0 && (
-          <ListGroup className="mb-3">
-            {condivisoConList.map((entry, index) => (
-              <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
-                {entry.email}
-                <Button variant="outline-danger" size="sm" onClick={() => removeEmail(entry.email)}>
-                  Rimuovi
-                </Button>
-              </ListGroup.Item>
-            ))}
-          </ListGroup>
-        )} */}
-
         <Button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
           Submit
         </Button>

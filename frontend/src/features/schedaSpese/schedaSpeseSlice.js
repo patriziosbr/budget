@@ -3,11 +3,30 @@ import schedaSpeseService from './schedaSpeseService';
 
 const initialState = {
   schedaSpese: [],
+  singleSchedaSpeseGet: null,
   isError: false,
   isSuccess: false,
   isLoading: false,
   message: '',
+
 };
+
+// Get schedaSpese
+export const singleSchedaSpeseGet = createAsyncThunk(
+  'singleSchedaSpese/get',
+  async (data, thunkAPI) => {
+    try {
+      console.log(data, "-------------schedaSpeseschedaSpese------data----"); // Debugging
+      
+      const token = thunkAPI.getState().auth.user.token;
+      return await schedaSpeseService.singleSchedaSpeseGet(data, token);
+    } catch (error) {
+      const message =
+        (error.response?.data?.message) || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
 // Get schedaSpese
 export const getSchedaSpese = createAsyncThunk(
@@ -162,6 +181,22 @@ const schedaSpeseSlice = createSlice({
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;
+      })
+      .addCase(singleSchedaSpeseGet.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(singleSchedaSpeseGet.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        state.singleSchedaSpese = action.payload;
+        state.isError = false;
+        state.message = '';
+      })
+      .addCase(singleSchedaSpeseGet.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload || 'Failed to fetch single expense record';
+        state.singleSchedaSpese = null; // Reset singleSchedaSpese on error
       });
   },
 });
