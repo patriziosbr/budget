@@ -4,6 +4,7 @@ import { FaRegTimesCircle } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa";
 import { FaUserFriends } from "react-icons/fa";
 import { FaTrash } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button'
@@ -189,11 +190,13 @@ function SingleScheda({scheda}) {
                     {longPressCount < 1 &&
                     <>
                     {/* <Button onClick={()=>singleScheda(scheda._id)}>Hello</Button> */}
-                    <h5 role="button" className='mb-0 align-self-center ' {...longPressEvent} onClick={()=>goToDettagolioScheda(scheda._id)}> 
-                        {scheda.titolo} 
+                    <div className='d-flex align-items-center  align-self-center'> 
+                        <h5 role="button" className='mb-0' {...longPressEvent}>{scheda.titolo}</h5> 
+                        <FaArrowRight className="mb-0 ms-4" onClick={()=>goToDettagolioScheda(scheda._id)}/>
+
                         {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
                         {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
-                    </h5>
+                    </div>
                     
                     </>
                     
@@ -230,7 +233,7 @@ function SingleScheda({scheda}) {
                 </Dropdown>
             </div>
             <div>
-                <Table striped className="mb-5">
+                <Table striped className="">
                     {scheda.notaSpese.length > 0 ? (
                         <>
                             <thead>
@@ -262,6 +265,9 @@ function SingleScheda({scheda}) {
                         </thead>
                     )}
             </Table>
+            <div className='mb-5 w-100 d-flex justify-content-end'>
+                <Button variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza scheda</Button>
+            </div>
             </div>
 
             <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")}>
