@@ -2,6 +2,7 @@ import { useParams } from 'react-router';
 import { useSelector, useDispatch } from 'react-redux'
 import { useEffect } from 'react';
 import { singleSchedaSpeseGet } from '../features/schedaSpese/schedaSpeseSlice'
+import { FaArrowLeft } from "react-icons/fa";
 
 function SchedaSpesaDettaglio() {
     const { id } = useParams();
@@ -18,17 +19,26 @@ function SchedaSpesaDettaglio() {
         }
     }, [id, dispatch]);
 
+    const navigateBack = () => {
+        window.history.back();
+    }
+
     return (
+        <>
         <div>
-            <h1>Dettaglio Scheda Spesa</h1>
-            <p>ID Scheda: {id}</p>
-            {singleScheda ? (
-                <pre>{JSON.stringify(singleScheda, null, 2)}</pre>
-            ) : (
-                <p>Loading...</p>
-            )}
-            {/* Additional details can be added here */}
+            <div className='d-flex align-items-center'>
+                <FaArrowLeft className='mb-0 me-3' onClick={()=>navigateBack()}/>
+                <h1 className='mb-0'>Dettaglio Scheda Spesa</h1>
+            </div>
+            <div>
+                {singleScheda ? (
+                    <pre>{JSON.stringify(singleScheda, null, 2)}</pre>
+                ) : (
+                    <p>Loading...</p>
+                )}
+            </div>
         </div>
+        </>
     );
 }
 
