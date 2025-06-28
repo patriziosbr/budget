@@ -17,10 +17,10 @@ function DashboardSchedaSpese() {
 
   return (
     <>
-      <div className='d-flex justify-content-between mb-4'>
-        <h2 className='mb-0 align-self-center'>Expence list</h2>
+      <div className='d-flex justify-content-between mb-4 mt-0 mt-sm-5'>
+        <h2 className='mb-0 align-self-center mt-3 mt-sm-4'>Expence list</h2>
 
-        <Button variant="outline-secondary" className='d-flex align-items-center' onClick={handleShow}>
+        <Button variant="outline-secondary" className='d-flex align-items-center mt-3 mt-sm-4' onClick={handleShow}>
           <FaPlus className="me-2"/>
           Scheda
         </Button>

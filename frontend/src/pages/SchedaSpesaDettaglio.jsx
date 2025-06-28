@@ -25,8 +25,8 @@ function SchedaSpesaDettaglio() {
 
     return (
         <>
-        <div>
-            <div className='d-flex align-items-center'>
+        <div className='container mt-sm-5'>
+            <div className='d-flex align-items-center pt-3'>
                 <FaArrowLeft className='mb-0 me-3' onClick={()=>navigateBack()}/>
                 <h1 className='mb-0'>Dettaglio Scheda Spesa</h1>
             </div>

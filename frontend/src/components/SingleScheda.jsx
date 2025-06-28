@@ -213,19 +213,19 @@ function SingleScheda({scheda}) {
                 <Dropdown>
                 <Dropdown.Toggle as={CustomToggle} />
                     <Dropdown.Menu size="sm" title="">
-                    <Dropdown.Header>Options</Dropdown.Header>
+                    {/* <Dropdown.Header>Options</Dropdown.Header> */}
                     <Dropdown.Item>
-                    <span variant="secondary" className='d-flex align-items-center' onClick={()=>handleShow("creaNotaModal")}>
+                    <span variant="secondary" className='d-flex align-items-center py-3' onClick={()=>handleShow("creaNotaModal")}>
                         <FaPlus className="me-2"/>Nuova nota spese
                     </span>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                    <span variant="secondary" className='d-flex align-items-center' onClick={()=>handleShow("shareModal")}>
+                    <span variant="secondary" className='d-flex align-items-center py-3' onClick={()=>handleShow("shareModal")}>
                         <FaUserPlus className="me-2"/>Condividi
                     </span>
                     </Dropdown.Item>
                     <Dropdown.Item>
-                    <span variant="error" className='d-flex align-items-center text-danger' onClick={()=>handleShow("deleteModal")}>
+                    <span variant="error" className='d-flex align-items-center text-danger py-3' onClick={()=>handleShow("deleteModal")}>
                         <FaTrash className="me-2"/>Elimina
                     </span>
                     </Dropdown.Item>
