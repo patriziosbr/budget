@@ -171,11 +171,21 @@ function SingleScheda({scheda}) {
         // handleClose("shareModal")
     }
 
-    // const singleScheda = async (idUrl) => {
-    //     await dispatch(singleSchedaSpeseGet(idUrl)).unwrap()
-
-    //     .catch((error) => console.error('Error fetching single scheda:', error));
-    // }
+    const getTotale = (notaSpese) => {
+        const initialValue = 0;
+        const importoArray = [];
+        notaSpese.map((spesa) => {
+          importoArray.push(spesa.importo);
+        })
+    
+        const importoSummed = importoArray.reduce(
+          (accumulator, currentValue) => accumulator + currentValue,
+          initialValue,
+        );
+        
+        console.log(importoSummed, "----------------------");
+        return importoSummed.toFixed(2);
+      }
 
     const goToDettagolioScheda = (schedaID) => {
         navigate(`/DashboardNotaSpese/${schedaID}`);
@@ -183,32 +193,29 @@ function SingleScheda({scheda}) {
     }
 
     return (
-        <>
+        < >
+        <div className="row" >
         {/* {console.log("user", user)} */}
             <div className='d-flex justify-content-between align-items-center'>
                 <div className="d-flex align-items-end">
                     {longPressCount < 1 &&
-                    <>
-                    {/* <Button onClick={()=>singleScheda(scheda._id)}>Hello</Button> */}
-                    <div className='d-flex align-items-center  align-self-center'> 
-                        <h5 role="button" className='mb-0' {...longPressEvent}>{scheda.titolo}</h5> 
-                        <FaArrowRight className="mb-0 ms-4" onClick={()=>goToDettagolioScheda(scheda._id)}/>
-
-                        {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
-                        {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
-                    </div>
-                    
-                    </>
-                    
+                        <>
+                            {/* <Button onClick={()=>singleScheda(scheda._id)}>Hello</Button> */}
+                            <div className='d-flex align-items-center  align-self-center'> 
+                                <h5 role="button" className='mb-0' {...longPressEvent}>{scheda.titolo}</h5> 
+                                <FaArrowRight className="mb-0 ms-4" onClick={()=>goToDettagolioScheda(scheda._id)}/>
+                                {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
+                                {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
+                            </div>
+                        </>
                     }
                     {longPressCount > 0 && 
-                    <div>
-                        <input name="titolo" type='text' value={titolo} onChange={onChange}/> 
-                        <span className='mx-4'><FaRegCheckCircle size={30} onClick={()=> updateSchedataTitolo()}/></span>
-                        <span><FaRegTimesCircle size={30} onClick={() => setlongPressCount(longPressCount - 1)} /></span>
-                    </div>
+                        <div>
+                            <input name="titolo" type='text' value={titolo} onChange={onChange}/> 
+                            <span className='mx-4'><FaRegCheckCircle size={30} onClick={()=> updateSchedataTitolo()}/></span>
+                            <span><FaRegTimesCircle size={30} onClick={() => setlongPressCount(longPressCount - 1)} /></span>
+                        </div>
                     }
-                    {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter}/> )} */}
                 </div>
                 <Dropdown>
                 <Dropdown.Toggle as={CustomToggle} />
@@ -233,6 +240,15 @@ function SingleScheda({scheda}) {
                 </Dropdown>
             </div>
             <div>
+            
+                <div style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid gap-3 mb-3">
+                    <div className='border border-secondary px-1 py-2 rounded'> 
+                        <h6>Total</h6>
+                        <p className='m-0'>{getTotale(scheda.notaSpese)}</p>
+                    </div>
+                    <div className='border border-secondary px-1 py-2 rounded'> helo</div>
+                    <div className='border border-secondary px-1 py-2 rounded'> helo</div>
+                </div>
                 <Table striped className="">
                     {scheda.notaSpese.length > 0 ? (
                         <>
@@ -343,6 +359,7 @@ function SingleScheda({scheda}) {
                     </div>
                 </Modal.Body>
             </Modal>
+        </div>
         </>
     );
 }

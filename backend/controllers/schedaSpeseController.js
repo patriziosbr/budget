@@ -21,7 +21,7 @@ const singleSchedaSpeseGet = asyncHandler(async (req, res) => {
         })
     );
     schedaSpese.notaSpese = noteSpeseResolved;
-    console.log('noteSpeseResolved noteSpeseResolved ------------------- controller', schedaSpese);
+    // console.log('noteSpeseResolved noteSpeseResolved ------------------- controller', schedaSpese);
 
     // da fare paginazione e filtri
 
@@ -55,9 +55,12 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
             return NotaSpese.findById(notaId);
           })
         );
-        
+        if (notaSpeseResolved.length > 5) {
+            // notaSpeseResolved.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // da fare chiamata per ordinamento
+            notaSpeseResolved.splice(5, Infinity);
+        }
         // You might want to attach the resolved notaSpese to the scheda
-        return { ...scheda.toObject(), notaSpese: notaSpeseResolved };
+        return { ...scheda.toObject(), notaSpese: notaSpeseResolved};
       })
     );
 
