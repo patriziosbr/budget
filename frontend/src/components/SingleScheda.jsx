@@ -170,7 +170,6 @@ function SingleScheda({scheda}) {
           initialValue,
         );
         
-        console.log(importoSummed, "----------------------");
         return importoSummed.toFixed(2);
       }
 

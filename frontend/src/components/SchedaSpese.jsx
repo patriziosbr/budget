@@ -2,36 +2,60 @@ import { useEffect } from 'react'
 import { useSelector, useDispatch } from "react-redux";
 import { getSchedaSpese } from "../features/schedaSpese/schedaSpeseSlice";
 import SingleScheda from "./SingleScheda";
+import { useNavigate, NavLink } from 'react-router-dom'
+import Button from 'react-bootstrap/Button'
+import { toast } from 'react-toastify'
 
 function SchedaSpese() {
   const dispatch = useDispatch();
+  const navigate = useNavigate()
   const { schedaSpese, isLoading, isError, message } = useSelector(
     (state) => state.schedaSpese
   )
 
   useEffect(() => {
-    dispatch(getSchedaSpese()).unwrap()
-      // .then((res) => {
-      //   console.log(res, "getSchedaSpese res");
-      //   // getTotale(schedaSpese)
-      // })
-
-    ;
+    dispatch(getSchedaSpese()).unwrap();
   }, []);
-
   //è per il margine inferiore della pagina
   const isLastElement = (arr) => {
     const lastElement= arr[arr.length - 1];
-    // console.log(lastElement._id, "isLastElement");
     return  lastElement._id;
   }
 
-  if (isLoading) return <p>Loading...</p>;
-  if (isError) return <p className="text-danger">Error: {message}</p>;
+  const GestioneError = {
+    message: "Cannot read properties of null (reading 'token')"
+  };
+  let isClosing = false;
+  const goToLogin = () => {
+    isClosing = true;
+    navigate('/login');
+  }
 
+  function Msg() {
   return (
-    // console.log(schedaSpese, isLoading, isError, message, "schedaSpese"), // Debugging;
+      <div>
+        <span>
+          Error: Please <span className='text-primary' role="button" onClick={()=>goToLogin()}><u>login</u></span> to continue
+        </span>
+      </div>
+    );
+  }
 
+  if (isLoading) return <p>Loading...</p>;
+  if (isError || GestioneError.message === message) {
+
+    toast.error(
+      <Msg />,
+      { toastId: 'err1', autoClose: false, closeOnClick: true, draggable: false, pauseOnHover: false, onClose: () => goToLogin() }
+    );
+    return (
+      <>
+      {isClosing && <p>Loading...</p>}
+        {/* <p className='text-danger' >Error: Please <span className='text-primary' role="button" onClick={()=>goToLogin()}><u>login</u></span> to continue</p> */}
+      </>
+    )
+  }
+  return (
     <>
       <section>
         {schedaSpese.length > 0 ? (
@@ -53,3 +77,4 @@ function SchedaSpese() {
 }
 
 export default SchedaSpese
+
