@@ -48,8 +48,8 @@ function SingleScheda({scheda}) {
     // Add a state to track if the form has been modified
     const [isFormModified, setIsFormModified] = useState(false);
     
-    // Track original list on modal open
-    const [originalEmailList, setOriginalEmailList] = useState([]);
+    // // Track original list on modal open
+    // const [originalEmailList, setOriginalEmailList] = useState([]);
 
     const removeSharedUser = (userMail) => {
         setSharedUserUpdateForm((f) => ({
@@ -74,19 +74,6 @@ function SingleScheda({scheda}) {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return re.test(String(email).toLowerCase());
     }
-
-    // const addEmail = (newEmailEntry) => {
-    //     setSharedUserUpdateForm((prev) => {
-    //         debugger
-    //         const newList = [...prev.condivisoConList, newEmailEntry];
-    //         // Set the form as modified
-    //         setIsFormModified(true);
-    //         return {
-    //             ...prev,
-    //             condivisoConList: newList
-    //         };
-    //     });
-    // };
 
     const removeEmail = (email) => {
         setSharedUserUpdateForm((prev) => ({
@@ -196,96 +183,146 @@ function SingleScheda({scheda}) {
         < >
         <div className="row" >
         {/* {console.log("user", user)} */}
-            <div className='d-flex justify-content-between align-items-center'>
-                <div className="d-flex align-items-end">
-                    {longPressCount < 1 &&
-                        <>
-                            {/* <Button onClick={()=>singleScheda(scheda._id)}>Hello</Button> */}
-                            <div className='d-flex align-items-center  align-self-center'> 
-                                <h5 role="button" className='mb-0' {...longPressEvent}>{scheda.titolo}</h5> 
-                                <FaArrowRight className="mb-0 ms-4" onClick={()=>goToDettagolioScheda(scheda._id)}/>
-                                {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
-                                {sharedUserLetter && ( <FaUserFriends className="ms-4" onClick={()=>handleShow("shareModal")} /> )}
-                            </div>
-                        </>
-                    }
-                    {longPressCount > 0 && 
-                        <div>
-                            <input name="titolo" type='text' value={titolo} onChange={onChange}/> 
-                            <span className='mx-4'><FaRegCheckCircle size={30} onClick={()=> updateSchedataTitolo()}/></span>
-                            <span><FaRegTimesCircle size={30} onClick={() => setlongPressCount(longPressCount - 1)} /></span>
+            <div className='col-12 d-flex justify-content-between align-items-center py-4'>
+                {longPressCount < 1 &&
+                    <div className='col-6'  >
+                        <div
+                            className='d-flex align-items-center'
+                            onClick={()=>goToDettagolioScheda(scheda._id)}
+                            {...longPressEvent}
+                            style={{height: "50px", cursor: "pointer"}}>
+                            <h6 style={{textTransform: "capitalize", textDecoration:"underline"}} 
+                                role="button" 
+                                className='mb-0 w-100'
+                                >
+                                {scheda.titolo}
+                            </h6>
                         </div>
-                    }
-                </div>
-                <Dropdown>
-                <Dropdown.Toggle as={CustomToggle} />
-                    <Dropdown.Menu size="sm" title="">
-                    {/* <Dropdown.Header>Options</Dropdown.Header> */}
-                    <Dropdown.Item>
-                    <span variant="secondary" className='d-flex align-items-center py-3' onClick={()=>handleShow("creaNotaModal")}>
-                        <FaPlus className="me-2"/>Nuova nota spese
-                    </span>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                    <span variant="secondary" className='d-flex align-items-center py-3' onClick={()=>handleShow("shareModal")}>
-                        <FaUserPlus className="me-2"/>Condividi
-                    </span>
-                    </Dropdown.Item>
-                    <Dropdown.Item>
-                    <span variant="error" className='d-flex align-items-center text-danger py-3' onClick={()=>handleShow("deleteModal")}>
-                        <FaTrash className="me-2"/>Elimina
-                    </span>
-                    </Dropdown.Item>
-                </Dropdown.Menu>
-                </Dropdown>
-            </div>
-            <div>
-            
-                <div style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid gap-3 mb-3">
-                    <div className='border border-secondary px-1 py-2 rounded'> 
-                        <h6>Total</h6>
-                        <p className='m-0'>{getTotale(scheda.notaSpese)}</p>
+                        {/* <div 
+                            style={{height: "50px", width: "50px", cursor: "pointer"}} 
+                            className='d-flex justify-content-center align-items-center me-2' 
+                            onClick={()=>goToDettagolioScheda(scheda._id)}>
+                            <FaArrowRight className="mb-0"/>
+                        </div> */}
+                        {/* <div 
+                            style={{height: "50px", width: "50px", cursor: "pointer"}} 
+                            className='d-flex justify-content-center align-items-center'>
+                            {sharedUserLetter && ( <FaUserFriends className="" onClick={()=>handleShow("shareModal")} /> )}
+                        </div> */}
+                        {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
                     </div>
-                    <div className='border border-secondary px-1 py-2 rounded'> helo</div>
-                    <div className='border border-secondary px-1 py-2 rounded'> helo</div>
+                }
+                {longPressCount > 0 && 
+                <div className='col-12 col-md-6 d-grid d-grid' style={{gridTemplateColumns: '2fr 1fr 1fr', height: "50px"}} >
+                    <div className="rounded">
+                        <input className='w-100 h-100 rounded' maxlength="20" name="titolo" type='text' value={titolo} onChange={onChange}/> 
+                    </div>
+                    <div className='d-flex align-items-center justify-content-center '>
+                        <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
+                    </div>
+                    <div className='d-flex justify-content-center align-items-center '>
+                        <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
+                    </div>
                 </div>
-                <Table striped className="">
-                    {scheda.notaSpese.length > 0 ? (
-                        <>
-                            <thead>
-                                <tr>
-                                    <th>Utente</th>
-                                    <th>Titolo</th>
-                                    <th>Data</th>
-                                    <th>Importo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {scheda.notaSpese.map((notaSpesa) => (
-                                    notaSpesa.testo && (
-                                        <tr key={notaSpesa._id}>
-                                            <td>{notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""}</td>
-                                            <td>{notaSpesa.testo ? notaSpesa.testo : null}</td>
-                                            <td>{parseDate(notaSpesa.inserimentoData)}</td>
-                                            <td>{notaSpesa.importo}</td>
-                                        </tr>
-                                    )
-                                ))}
-                            </tbody>
-                        </>
-                    ) : (
+                }
+                {longPressCount < 1 &&
+                <>
+                    <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'>
+                        <div  style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid">
+                        <div
+                            style={{height: "50px", cursor: "pointer"}} 
+                            className='d-flex justify-content-center align-items-center text-danger ' 
+                            onClick={()=>handleShow("deleteModal")}>
+                            <FaTrash/>
+                        </div>
+                        <div 
+                            style={{height: "50px", cursor: "pointer"}} 
+                            className='d-flex justify-content-center align-items-center ' 
+                            onClick={()=>handleShow("shareModal")}>
+                            <FaUserPlus/>
+                        </div>
+                        <div 
+                            style={{height: "50px", cursor: "pointer"}} 
+                            className='d-flex justify-content-center align-items-center ' 
+                            onClick={()=>handleShow("creaNotaModal")}>
+                            <FaPlus/>
+                        </div>
+                        </div>
+                    </div>
+                </>
+                }
+            </div>
+        </div>
+        <div className="row">
+            <div style={{gridTemplateColumns: '1fr 1fr'}} className="d-grid gap-4 mb-3">
+                <div className='py-2'> 
+                    <h6>Spesa maggiore:</h6>
+                    <p className='m-0'><i>nome utente</i></p>
+                    <p className='m-0'><i>333</i></p>
+                </div>
+                <div className='py-2'> 
+                    <h6>Total</h6>
+                    <p className='m-0'>&nbsp;</p>
+                    <p className='m-0'>{getTotale(scheda.notaSpese)}</p>
+                </div>
+            </div>
+        </div>
+        <div className="row">
+            <Table striped className="">
+                {scheda.notaSpese.length > 0 ? (
+                    <>
                         <thead>
                             <tr>
-                                <td role="button" colSpan="3" onClick={()=>handleShow("creaNotaModal")}>Nessuna nota spese presente</td>
+                                <th>Utente</th>
+                                <th>Titolo</th>
+                                <th>Data</th>
+                                <th>Importo</th>
                             </tr>
                         </thead>
-                    )}
+                        <tbody>
+                            {scheda.notaSpese.map((notaSpesa) => (
+                                notaSpesa.testo && (
+                                    <tr key={notaSpesa._id}>
+                                        <td>{notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""}</td>
+                                        <td>{notaSpesa.testo ? notaSpesa.testo : null}</td>
+                                        <td>{parseDate(notaSpesa.inserimentoData)}</td>
+                                        <td>{notaSpesa.importo}</td>
+                                    </tr>
+                                )
+                            ))}
+                        </tbody>
+                    </>
+                ) : (
+                    <thead>
+                        <tr>
+                            <td role="button" colSpan="3" onClick={()=>handleShow("creaNotaModal")}>Nessuna nota spese presente</td>
+                        </tr>
+                    </thead>
+                )}
             </Table>
-            <div className='mb-5 w-100 d-flex justify-content-end'>
-                <Button variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza scheda</Button>
+        </div>
+        <div className="row">
+            <div className="col-6 col-md-3">
+                <Button 
+                    variant="link"
+                    style={{height: "50px", cursor: "pointer"}} 
+                    className='d-flex justify-content-center align-items-center p-0' 
+                    onClick={()=>handleShow("creaNotaModal")}>
+                    <FaPlus className='me-1'/>
+                    <p className="mb-0 w-100 text-start">
+                        Aggiungi nota
+                    </p>
+                </Button>
             </div>
+            <div className="col-6 offset-md-6 col-md-3">
+                <Button style={{height:"50px"}} className="w-100 text-end p-0" variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>
+                    Visualizza scheda
+                </Button>
             </div>
+        </div>
 
+
+        <div className="row">
             <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")}>
                 <Modal.Header closeButton>
                 <Modal.Title><b>Crea Nota in {scheda.titolo}</b></Modal.Title>
