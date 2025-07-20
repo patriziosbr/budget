@@ -315,7 +315,7 @@ function SingleScheda({scheda}) {
             </div>
 
         </div>
-        <div className="row">
+        <div className="row mb-5">
             <div className="col-12" style={{height:"50px"}}>
                 {/* <Button style={{height:"50px"}} className="w-100 text-end p-0" variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>
                     Visualizza scheda

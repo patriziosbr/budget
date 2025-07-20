@@ -24,6 +24,31 @@ function Login() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
+  const [width, setWidth] = useState(window.innerWidth);
+  function handleWindowSizeChange() {
+      setWidth(window.innerWidth);
+      console.log(`Window width: ${window.innerWidth}`);
+  }
+  useEffect(() => {
+      window.addEventListener('resize', handleWindowSizeChange);
+      return () => {
+          window.removeEventListener('resize', handleWindowSizeChange);
+      }
+  }, [window]);
+
+  const isMobile = width <= 768;
+  const [styleMtop, setStyleMtop] = useState({});
+  useEffect(() => {
+      if(isMobile ) {
+        setStyleMtop({
+          marginTop: '20px' 
+        })
+      } else {
+        setStyleMtop({
+          marginTop: '100px' 
+        })
+      }
+  }, [isMobile]);
 
   useEffect(() => {
     if (isError) {
@@ -62,21 +87,23 @@ function Login() {
   return (
     <>
       <Container>
-        <section style={{marginTop:"80px"}}>
+        <section style={styleMtop} className='d-flex align-items-center'>
           <div style={{backgroundColor: "#f2f6ff",
             borderRadius: "50%",
             aspectRatio: "1",
             display: "flex",
             height: "90px",
-            margin: "auto",
+            marginRight: "15px",
             justifyContent: "center",
             alignItems: "center",
             marginBottom: "15px"
           }}>
             <FaSignInAlt style={{fontSize:"60px", color:"#0d6efd" }}/>
           </div>
-          <h1>Login</h1>
-          <p>Login and start sending events</p>
+          <div className='h-100'>
+            <h1>Login</h1>
+            <p>Login and save your budget</p>
+          </div>
         </section>
         <Form className="mb-3" onSubmit={onSubmit}>
           <Form.Group className="mb-3">
