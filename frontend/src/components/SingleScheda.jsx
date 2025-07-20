@@ -1,4 +1,4 @@
-import { FaPlus } from 'react-icons/fa';
+import { FaPencilAlt, FaPlus } from 'react-icons/fa';
 import { FaRegCheckCircle } from "react-icons/fa";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { FaUserPlus } from "react-icons/fa";
@@ -97,7 +97,14 @@ function SingleScheda({scheda}) {
         setIsFormModified(false); // Reset form modified state
     };
 
+    const [erroLength, setErroLength] = useState(false);
     const onChange = (e) => {
+        if(e.target.value.length > 20) {
+            setErroLength(true);
+            return;
+        } else {
+            setErroLength(false);
+        }
         setFormData((prevState) => ({
             ...prevState,
             [e.target.name]: e.target.value,
@@ -188,7 +195,6 @@ function SingleScheda({scheda}) {
                         <div
                             className='d-flex align-items-center'
                             onClick={()=>goToDettagolioScheda(scheda._id)}
-                            {...longPressEvent}
                             style={{height: "50px", cursor: "pointer"}}>
                             <h6 style={{textTransform: "capitalize", textDecoration:"underline"}} 
                                 role="button" 
@@ -214,7 +220,8 @@ function SingleScheda({scheda}) {
                 {longPressCount > 0 && 
                 <div className='col-12 col-md-6 d-grid d-grid' style={{gridTemplateColumns: '2fr 1fr 1fr', height: "50px"}} >
                     <div className="rounded">
-                        <input className='w-100 h-100 rounded' maxlength="20" name="titolo" type='text' value={titolo} onChange={onChange}/> 
+                        <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/>
+                        {erroLength && <small className='text-danger'>Limite raggiunto</small>} 
                     </div>
                     <div className='d-flex align-items-center justify-content-center '>
                         <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
@@ -228,11 +235,11 @@ function SingleScheda({scheda}) {
                 <>
                     <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'>
                         <div  style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid">
-                        <div
+                        <div 
                             style={{height: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center text-danger ' 
-                            onClick={()=>handleShow("deleteModal")}>
-                            <FaTrash/>
+                            className='d-flex justify-content-center align-items-center ' 
+                            onClick={()=>onLongPress()}>
+                            <FaPencilAlt/>
                         </div>
                         <div 
                             style={{height: "50px", cursor: "pointer"}} 
@@ -240,11 +247,11 @@ function SingleScheda({scheda}) {
                             onClick={()=>handleShow("shareModal")}>
                             <FaUserPlus/>
                         </div>
-                        <div 
+                        <div
                             style={{height: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center ' 
-                            onClick={()=>handleShow("creaNotaModal")}>
-                            <FaPlus/>
+                            className='d-flex justify-content-center align-items-center text-danger ' 
+                            onClick={()=>handleShow("deleteModal")}>
+                            <FaTrash/>
                         </div>
                         </div>
                     </div>
@@ -257,12 +264,12 @@ function SingleScheda({scheda}) {
                 <div className='py-2'> 
                     <h6>Spesa maggiore:</h6>
                     <p className='m-0'><i>nome utente</i></p>
-                    <p className='m-0'><i>333</i></p>
+                    <p className='m-0'><i>€ 333</i></p>
                 </div>
                 <div className='py-2'> 
                     <h6>Total</h6>
                     <p className='m-0'>&nbsp;</p>
-                    <p className='m-0'>{getTotale(scheda.notaSpese)}</p>
+                    <p className='m-0'>€ {getTotale(scheda.notaSpese)}</p>
                 </div>
             </div>
         </div>
@@ -272,20 +279,20 @@ function SingleScheda({scheda}) {
                     <>
                         <thead>
                             <tr>
+                                <th>Data</th>
                                 <th>Utente</th>
                                 <th>Titolo</th>
-                                <th>Data</th>
-                                <th>Importo</th>
+                                <th className='text-end'>Importo</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {scheda.notaSpese.map((notaSpesa) => (
-                                notaSpesa.testo && (
+                            {scheda.notaSpese.map((notaSpesa, i) => (
+                                notaSpesa.testo && i < 5 && (
                                     <tr key={notaSpesa._id}>
+                                        <td>{parseDate(notaSpesa.inserimentoData)}</td>
                                         <td>{notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""}</td>
                                         <td>{notaSpesa.testo ? notaSpesa.testo : null}</td>
-                                        <td>{parseDate(notaSpesa.inserimentoData)}</td>
-                                        <td>{notaSpesa.importo}</td>
+                                        <td className='text-end'>€ {notaSpesa.importo.toFixed(2)}</td>
                                     </tr>
                                 )
                             ))}
@@ -299,24 +306,28 @@ function SingleScheda({scheda}) {
                     </thead>
                 )}
             </Table>
+            <div className="row">
+                <div className="col-12" style={{height:"50px"}}>
+                    <small>
+                        Showing 1 - 5 of {scheda.notaSpese.length} · <a href='' onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza</a>
+                    </small>
+                </div>
+            </div>
+
         </div>
         <div className="row">
-            <div className="col-6 col-md-3">
-                <Button 
-                    variant="link"
-                    style={{height: "50px", cursor: "pointer"}} 
-                    className='d-flex justify-content-center align-items-center p-0' 
-                    onClick={()=>handleShow("creaNotaModal")}>
-                    <FaPlus className='me-1'/>
-                    <p className="mb-0 w-100 text-start">
-                        Aggiungi nota
-                    </p>
-                </Button>
-            </div>
-            <div className="col-6 offset-md-6 col-md-3">
-                <Button style={{height:"50px"}} className="w-100 text-end p-0" variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>
+            <div className="col-12" style={{height:"50px"}}>
+                {/* <Button style={{height:"50px"}} className="w-100 text-end p-0" variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>
                     Visualizza scheda
+                </Button> */}
+                <div className="d-flex justify-content-end">
+                <Button style={{height:"50px"}} variant="outline-secondary" className='d-flex align-items-center' onClick={()=>handleShow("creaNotaModal")}>
+                    <FaPlus className="me-2"
+                    onClick={()=>handleShow("creaNotaModal")}/>
+                    Nuova nota
                 </Button>
+
+                </div>
             </div>
         </div>
 

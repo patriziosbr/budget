@@ -16,7 +16,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
     importo: '',
     categoria_id: []
   })
-
+  const [isDisabled, setisDisabled] = useState(false);
   const { testo, inserimentoData, importo, categoria_id } = formData
 
   const dispatch = useDispatch()
@@ -53,6 +53,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
   }
 
   const fetchDispatch = async (notaSpeseData) => {
+    setisDisabled(true);
     try {
       // Dispatch action to create a new nota spese
       const response = await dispatch(createNotaSpese(notaSpeseData)).unwrap();
@@ -70,6 +71,8 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
     } catch (error) {
       console.error("Error Response:", error);
       toast.error(error.message || "Errore nella creazione della nota spese");
+    } finally {
+      setisDisabled(false);
     }
   };
 
@@ -124,7 +127,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
             onChange={onChange}
           />
         </Form.Group>
-        <Button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
+        <Button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isDisabled}>
           Submit
         </Button>
       </Form>
