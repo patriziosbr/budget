@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken")
 const asyncHandler = require('express-async-handler')
 const User = require("../model/userModel")
-const replace = from("redux-first-history"); 
 
 const protect = asyncHandler( async(req, res, next) => {
     let token
@@ -11,7 +10,6 @@ const protect = asyncHandler( async(req, res, next) => {
             token = req.headers.authorization.split(" ")[1];
             //Verify TOken
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
-            console.log("Decoded Token:", decoded);
             //Get user from the token
             req.user = await User.findById(decoded.id).select('-password');
             next();
