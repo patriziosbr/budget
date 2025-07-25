@@ -12,9 +12,6 @@ import Container from 'react-bootstrap/Container';
 
 function Dashboard() {
 
-
-
-
   return (
     <>
         <h1>HELLO</h1>
