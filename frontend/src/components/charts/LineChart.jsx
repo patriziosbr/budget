@@ -77,11 +77,13 @@ export const data = {
 
 function Linechart() {
     return (
-        <Card>
-            <Card.Body>
-                <Line options={options} data={data} />
-            </Card.Body>
-        </Card>
+        <div className="col-xl-6 col-12">
+            <Card>
+                <Card.Body>
+                    <Line options={options} data={data} />
+                </Card.Body>
+            </Card>
+        </div>
     );
 }
 

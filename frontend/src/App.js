@@ -3,6 +3,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import Header from './components/Header'
 import Container from 'react-bootstrap/Container';
+import Aside from './components/layout/Aside';
 
 import Home from './pages/Home'
 import Login from './pages/Login'
@@ -19,8 +20,9 @@ function App() {
     <>
       <Router>
         <Header />
-        <div>
-        <Container style={{marginTop:"10px"}}>
+        {/* <div className='d-flex'> */}
+        <Aside />
+          <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
           <Routes>
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/register' element={<Register />} />
@@ -29,8 +31,8 @@ function App() {
             <Route exact path='/DashboardNotaSpese' element={<DashboardNotaSpese />} />
             <Route exact path='/DashboardNotaSpese/:id' element={<SchedaSpesaDettaglio />} />
           </Routes>
-        </Container>
-        </div>
+        </main>
+        {/* </div> */}
       </Router>
       <ToastContainer />
     </>

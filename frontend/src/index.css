@@ -1,3 +1,6 @@
+@import "../src/style/dashboard.css"; 
+@import "../src/style/material-dashboard.css"; 
+
 /* -------------------header */
 
 .header-container {

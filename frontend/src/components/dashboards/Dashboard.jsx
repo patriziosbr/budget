@@ -10,6 +10,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import Container from 'react-bootstrap/Container';
 import Linechart from '../charts/LineChart'
+import CardDashboard from '../utils/CardDashboard'
 
 function Dashboard() {
 
@@ -26,6 +27,9 @@ function Dashboard() {
         </div>
         <div className="row">
           <Linechart />
+        </div>
+        <div className="row">
+          <CardDashboard/>
         </div>
       </Container>
     </>
