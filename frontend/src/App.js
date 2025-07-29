@@ -19,10 +19,11 @@ function App() {
   return (
     <>
       <Router>
-        <Header />
         {/* <div className='d-flex'> */}
         <Aside />
-          <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+          {/* <main className="main-content position-relative max-height-vh-100 h-100 border-radius-lg "> */}
+          <main className="vh-100 main-content position-relative max-height-vh-100 h-100 border-radius-lg ps ps--active-x ps--active-y">
+          <Header />
           <Routes>
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/register' element={<Register />} />

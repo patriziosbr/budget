@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux'
-import Dashboard from '../components/dashboards/Dashboard'
+import DashboardWithCharts from '../components/dashboards/DashboardWithCharts'
 import DashboardUser from '../components/dashboards/DashboardUser'
 
 function Home() {
@@ -11,7 +11,7 @@ function Home() {
         {user ? (
           <DashboardUser/>
         ) : (
-          <Dashboard/>
+          <DashboardWithCharts/>
         )}
     </>
   )
