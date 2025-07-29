@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { logout, reset } from '../../features/auth/authSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, NavLink } from 'react-router-dom'
-
+import { toggleMenu } from '../../features/utils/menuSlice';
 
 const Aside = () => {
       const navigate = useNavigate()
@@ -22,11 +22,10 @@ const Aside = () => {
         <div className={`bg-gray-100 ${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
-                <i className="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-                <a className="navbar-brand px-4 py-3 m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
-                    <FaDollarSign className="mr-1" />
-                    <span className="ms-1 text-sm text-dark">Budgetz</span>
-                </a>
+                    <NavLink to='/' className="navbar-brand px-4 py-3 m-0" type="button" onClick={()=> dispatch(toggleMenu())}>
+                        <FaDollarSign className="mr-1" />
+                        <span className="ms-1 text-sm text-dark">Budget</span>
+                    </NavLink>
                 </div>
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
@@ -97,10 +96,10 @@ const Aside = () => {
                         </button>
                     ) : (
                         <>
-                        <NavLink to='/login' className="btn btn-outline-dark mt-4 w-100" type="button">
+                        <NavLink to='/login' className="btn btn-outline-dark mt-4 w-100" type="button" onClick={()=> dispatch(toggleMenu())}>
                             <FaSignInAlt /> Login
                         </NavLink>
-                        <NavLink to='/register' className="btn bg-gradient-dark text-white w-100">
+                        <NavLink to='/register' className="btn bg-gradient-dark text-white w-100" onClick={()=> dispatch(toggleMenu())}>
                             <FaUser /> Register
                         </NavLink>
                         </>

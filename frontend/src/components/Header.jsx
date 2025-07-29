@@ -23,22 +23,7 @@ function Header() {
     navigate('/')
   }
 
-  const [isSidenavOpen, setIsSidenavOpen] = useState(false);
 
-  const toggleSidenav = () => {
-    console.log("Toggle sidenav", isSidenavOpen);
-    
-    setIsSidenavOpen(!isSidenavOpen);
-  };
-
-  useEffect(() => {
-    if (isSidenavOpen) {
-      document.body.classList.add('g-sidenav-show');
-    } else {
-      document.body.classList.remove('g-sidenav-show');
-    }
-  }, [isSidenavOpen]);
-const showMenu = useSelector((state) => state.menu) // or state.utils.menu if combined under utils
   return (
     <>
     <nav className="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
@@ -49,14 +34,15 @@ const showMenu = useSelector((state) => state.menu) // or state.utils.menu if co
             <li className="breadcrumb-item text-sm text-dark" aria-current="page">Dashboard </li>
           </ol>
         </nav>
-        <div className="mt-sm-0 mt-2 me-md-0 me-sm-4">
-          <ul className="navbar-nav d-flex m-0 p-0">
-            <li className="nav-item d-xl-none d-flex align-items-center">
+        <div className="">
+          <ul className="navbar-nav d-flex flex-row">
+            <li className="d-flex flex-column justify-content-center align-items-center d-sm-none">
               <FaBars role='button' size="20" className="nav-link text-body p-0" onClick={()=> dispatch(toggleMenu())}/>
+              <small>Menu</small>
             </li>
-            <li className="nav-item ps-5">
+            <li className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5">
               <FaRegUserCircle role='button' size="20" className="nav-link text-body p-0" />
-              {/* <FaUser role='button' size="20" className="nav-link text-body p-0" /> */}
+              <small>Profile</small>
             </li>
           </ul>
         </div>
