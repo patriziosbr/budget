@@ -26,23 +26,28 @@ function Header() {
 
   return (
     <>
-    <nav className="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
-      <div className="container-fluid py-3 px-3">
+    <nav className="navbar navbar-main navbar-expand-lg px-0 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div className="container-fluid py-3">
+        {/* da fare un componente di breadcrumbs */}
         <nav aria-label="breadcrumb">
           <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-0 px-0">
-            <li className="breadcrumb-item text-sm"><NavLink className="text-decoration-none opacity-5 text-dark" to='/'>Home</NavLink></li>
-            <li className="breadcrumb-item text-sm text-dark" aria-current="page">Dashboard </li>
+            <li className="breadcrumb-item text-sm">
+              <NavLink className="text-decoration-none opacity-5 text-dark" to='/'>Home</NavLink>
+            </li>
           </ol>
         </nav>
+        {/* da fare un componente di breadcrumbs */}
         <div className="">
           <ul className="navbar-nav d-flex flex-row">
-            <li className="d-flex flex-column justify-content-center align-items-center d-sm-none">
-              <FaBars role='button' size="20" className="nav-link text-body p-0" onClick={()=> dispatch(toggleMenu())}/>
+            <li className="d-flex flex-column justify-content-center align-items-center d-xl-none nav-link">
+              <FaBars role='button' size="18" className="text-body p-0" onClick={()=> dispatch(toggleMenu())}/>
               <small>Menu</small>
             </li>
-            <li className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5">
-              <FaRegUserCircle role='button' size="20" className="nav-link text-body p-0" />
-              <small>Profile</small>
+            <li>
+              <NavLink to='/login' className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5 nav-link">
+                <FaRegUserCircle role='button' size="20" className="text-body p-0" />
+                <small>Profile</small>
+              </NavLink>
             </li>
           </ul>
         </div>

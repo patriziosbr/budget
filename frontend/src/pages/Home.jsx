@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux'
-import DashboardWithCharts from '../components/dashboards/DashboardWithCharts'
 import DashboardUser from '../components/dashboards/DashboardUser'
+import HeroAreaPublic from '../components/layout/HeroAreaPublic.jsx'
 
 function Home() {
 
@@ -11,7 +11,8 @@ function Home() {
         {user ? (
           <DashboardUser/>
         ) : (
-          <DashboardWithCharts/>
+          <HeroAreaPublic />
+          // <DashboardWithCharts/>
         )}
     </>
   )

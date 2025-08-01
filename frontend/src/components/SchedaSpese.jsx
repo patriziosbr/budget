@@ -17,9 +17,11 @@ function SchedaSpese() {
   const { schedaSpese, isLoading, isError, message } = useSelector(
     (state) => state.schedaSpese
   )
-
+  const { user } = useSelector((state) => state.auth)
   useEffect(() => {
-    dispatch(getSchedaSpese()).unwrap();
+    if (user) {
+      dispatch(getSchedaSpese()).unwrap();
+    }
   }, []);
   //è per il margine inferiore della pagina
   const isLastElement = (arr) => {
@@ -32,7 +34,7 @@ function SchedaSpese() {
   const goToLogin = () => {
     isClosing = true;
     dispatch(logout());
-    navigate('/');
+    navigate('/login');
   }
 
   function Msg() {
@@ -50,9 +52,11 @@ function SchedaSpese() {
     return (
       <p className="text-danger">Error: {message}
         <br />
-        Please <span className='text-primary' role="button" onClick={() => goToLogin()}>
-          <u>login</u>
-        </span> to continue
+        Please 
+        <span className='text-primary' role="button" onClick={() => goToLogin()}>
+          <u>login </u>
+        </span>
+        to continue
       </p>
     )
   }
@@ -70,7 +74,7 @@ function SchedaSpese() {
   }
   return (
     <>
-      <section>
+      <section className='container-fluid py-2'>
         {schedaSpese.length > 0 ? (
           // {{schedaSpese.slice(-1)}}
           schedaSpese.map((scheda, i, arr) => (
@@ -82,7 +86,16 @@ function SchedaSpese() {
             </div>
           ))
         ) : (
-          <p>No schede available.</p>
+          <>
+            {user ? (<p>No schede available.</p>) : 
+            (<p>
+              Please
+              <span className='text-primary' role="button" onClick={() => goToLogin()}>
+                <u> login </u>
+              </span>
+              to continue
+            </p>)}  
+          </>
         )}
       </section>
     </>

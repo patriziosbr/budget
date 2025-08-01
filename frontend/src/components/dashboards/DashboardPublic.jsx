@@ -13,7 +13,7 @@ import Container from 'react-bootstrap/Container';
 import Chart from '../charts/Chart';
 import HeroAreaPublic from '../layout/HeroAreaPublic';
 
-function DashboardWithCharts() {
+function DashboardPublic() {
   const { user } = useSelector((state) => state.auth)
 
   const barChartData = {
@@ -243,9 +243,7 @@ function DashboardWithCharts() {
             Explore your financial data with our dashboard.
           </p>
         </div>
-        <div>
-          <HeroAreaPublic />
-        </div>
+        
         <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div className="card">
             <div className="card-header p-2 ps-3">
@@ -345,7 +343,7 @@ function DashboardWithCharts() {
 
               <div className="d-flex ">
                 <i className="material-symbols-rounded text-sm my-auto me-1">schedule</i>
-                <p class_name="mb-0 text-sm">just updated</p>
+                <p className="mb-0 text-sm"> updated 4 min ago </p>
               </div>
             </div>
           </div>
@@ -713,4 +711,4 @@ function DashboardWithCharts() {
   )
 }
 
-export default DashboardWithCharts;
+export default DashboardPublic;

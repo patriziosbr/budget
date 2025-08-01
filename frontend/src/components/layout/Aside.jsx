@@ -7,10 +7,10 @@ import { useNavigate, NavLink } from 'react-router-dom'
 import { toggleMenu } from '../../features/utils/menuSlice';
 
 const Aside = () => {
-      const navigate = useNavigate()
+    const navigate = useNavigate()
     const dispatch = useDispatch()
     const { user } = useSelector((state) => state.auth)
-    // Safely access menu from state, fallback to false if undefined
+
     const showMenu = useSelector((state) => state.menuShow.value);
     const onLogout = () => {
         dispatch(logout())
@@ -30,60 +30,15 @@ const Aside = () => {
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
                 <ul className="navbar-nav">
-                    {/* <li className="nav-item">
-                    <a className="nav-link active bg-gradient-dark text-white" href="../pages/dashboard.html">
-                    
+                    <li className="nav-item">
+                    <NavLink className="nav-link text-dark" to={`${user ? '/dashboardPrivate' : '/dashboard'}`} onClick={()=> dispatch(toggleMenu())}>
                         <span className="nav-link-text ms-1">Dashboard</span>
-                    </a>
-                    </li> */}
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/tables.html">
-                        
-                        <span className="nav-link-text ms-1">Tables</span>
-                    </a>
+                    </NavLink>
                     </li>
                     <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/billing.html">
-                        
-                        <span className="nav-link-text ms-1">Billing</span>
-                    </a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/virtual-reality.html">
-                        
-                        <span className="nav-link-text ms-1">Virtual Reality</span>
-                    </a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/rtl.html">
-                        <span className="nav-link-text ms-1">RTL</span>
-                    </a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/notifications.html">
-                        <span className="nav-link-text ms-1">Notifications</span>
-                    </a>
-                    </li>
-                    <li className="nav-item mt-3">
-                    <h6 className="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/profile.html">
-        
-                        <span className="nav-link-text ms-1">Profile</span>
-                    </a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/sign-in.html">
-    
-                        <span className="nav-link-text ms-1">Sign In</span>
-                    </a>
-                    </li>
-                    <li className="nav-item">
-                    <a className="nav-link text-dark" href="../pages/sign-up.html">
-                        
-                        <span className="nav-link-text ms-1">Sign Up</span>
-                    </a>
+                    {user && <NavLink className="nav-link text-dark" to='/DashboardNotaSpese' onClick={()=> dispatch(toggleMenu())}>
+                        <span className="nav-link-text ms-1">Expence list</span>
+                    </NavLink>}
                     </li>
                 </ul>
                 </div>

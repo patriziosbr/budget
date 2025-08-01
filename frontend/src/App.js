@@ -11,7 +11,8 @@ import Register from './pages/Register'
 import NotaSpese from './pages/NotaSpese.jsx'
 import DashboardNotaSpese from './pages/DashboardSchedaSpese.jsx'
 import SchedaSpesaDettaglio from './pages/SchedaSpesaDettaglio.jsx'
-
+import DashboardPublic from './components/dashboards/DashboardPublic.jsx'
+import DashboardUser from './components/dashboards/DashboardUser'
 function App() {
 
   
@@ -28,7 +29,9 @@ function App() {
             <Route exact path='/login' element={<Login />} />
             <Route exact path='/register' element={<Register />} />
             <Route exact path='/' element={<Home />} />
-            <Route exact path='/notaSpese' element={<NotaSpese />} />
+            <Route exact path='/dashboard' element={<DashboardPublic />} />
+            <Route exact path='/dashboardPrivate' element={<DashboardUser />} />
+            {/* <Route exact path='/notaSpese' element={<NotaSpese />} /> */}
             <Route exact path='/DashboardNotaSpese' element={<DashboardNotaSpese />} />
             <Route exact path='/DashboardNotaSpese/:id' element={<SchedaSpesaDettaglio />} />
           </Routes>
