@@ -4,7 +4,7 @@ import { FaBars } from "react-icons/fa";
 import { useNavigate, NavLink } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { logout, reset } from '../features/auth/authSlice'
-import { toggleMenu } from '../features/utils/menuSlice';
+import { toggleMenu, closeMenu } from '../features/utils/menuSlice';
 import { FaRegUserCircle } from "react-icons/fa";
 
 
@@ -30,23 +30,30 @@ function Header() {
       <div className="container-fluid py-3">
         {/* da fare un componente di breadcrumbs */}
         <nav aria-label="breadcrumb">
-          <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-0 px-0">
+          {/* <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-0 px-0">
             <li className="breadcrumb-item text-sm">
               <NavLink className="text-decoration-none opacity-5 text-dark" to='/'>Home</NavLink>
             </li>
-          </ol>
+          </ol> */}
         </nav>
         {/* da fare un componente di breadcrumbs */}
         <div className="">
           <ul className="navbar-nav d-flex flex-row">
-            <li className="d-flex flex-column justify-content-center align-items-center d-xl-none nav-link">
-              <FaBars role='button' size="18" className="text-body p-0" onClick={()=> dispatch(toggleMenu())}/>
+            <li role='button' className="d-flex flex-column justify-content-center align-items-center d-xl-none nav-link" onClick={()=> dispatch(toggleMenu())}>
+              <FaBars  size="18" className="text-body p-0" />
               <small>Menu</small>
             </li>
-            <li>
-              <NavLink to='/login' className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5 nav-link">
-                <FaRegUserCircle role='button' size="20" className="text-body p-0" />
-                <small>Profile</small>
+            <li                 onClick={(e) => {
+                  dispatch(closeMenu());
+                }}>
+              <NavLink
+                role="button"
+                to={`${user ? '/profileTODO' : '/login'}`}
+                className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5 nav-link"
+
+              >
+                <FaRegUserCircle size="20" className="text-body p-0" />
+                <small className='text-capitalize'>{`${user ? user.name : 'Profile'}`}</small>
               </NavLink>
             </li>
           </ul>

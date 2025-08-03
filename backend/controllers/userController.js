@@ -11,7 +11,7 @@ const registerUser = asyncHandler(async (req, res) => {
     const { name, email, password } = req.body;
     if(!name || !email || !password) {
         res.status(400)
-        throw new Error("add name || email || password in body") //restituisce l'errore in html per ricevere un json vedere ./middleware 
+        throw new Error("Please fill in all fields") //restituisce l'errore in html per ricevere un json vedere ./middleware 
     }
     //check if user exist 
     const userExists = await User.findOne({ email });

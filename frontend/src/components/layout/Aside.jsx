@@ -16,6 +16,7 @@ const Aside = () => {
         dispatch(logout())
         dispatch(reset())
         navigate('/')
+        dispatch(toggleMenu())
     }
 
     return (

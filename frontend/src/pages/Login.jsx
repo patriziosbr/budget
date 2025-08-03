@@ -5,6 +5,7 @@ import { useNavigate, NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
 import Spinner from '../components/Spinner'
+import { toggleMenu, closeMenu } from '../features/utils/menuSlice';
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
@@ -24,31 +25,8 @@ function Login() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
-  const [width, setWidth] = useState(window.innerWidth);
-  function handleWindowSizeChange() {
-      setWidth(window.innerWidth);
-      console.log(`Window width: ${window.innerWidth}`);
-  }
-  useEffect(() => {
-      window.addEventListener('resize', handleWindowSizeChange);
-      return () => {
-          window.removeEventListener('resize', handleWindowSizeChange);
-      }
-  }, [window]);
 
-  const isMobile = width <= 768;
-  const [styleMtop, setStyleMtop] = useState({});
-  useEffect(() => {
-      if(isMobile ) {
-        setStyleMtop({
-          marginTop: '20px' 
-        })
-      } else {
-        setStyleMtop({
-          marginTop: '100px' 
-        })
-      }
-  }, [isMobile]);
+  const menuState = useSelector((state) => state.menuShow.value);
 
   useEffect(() => {
     if (isError) {
@@ -71,12 +49,18 @@ function Login() {
 
   const onSubmit = (e) => {
     e.preventDefault()
+    // Validate form data
+    if (!email || !password) {
+      toast.error('Please fill in all fields')
+      return
+    }
 
     const userData = {
       email,
       password,
     }
 
+    // if (menuState) dispatch(toggleMenu());
     dispatch(login(userData))
   }
 
@@ -92,8 +76,8 @@ function Login() {
             <div class="card z-index-0 fadeIn3 fadeInBottom">
               <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                  <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">Sign in</h4>
-                  <div class="row mt-3">
+                  <h4 class="text-white font-weight-bolder text-center my-2">Login</h4>
+                  {/* <div class="row mt-3">
                     <div class="col-2 text-center ms-auto">
                       <a class="btn btn-link px-3" href="javascript:;">
                         <i class="fa fa-facebook text-white text-lg"></i>
@@ -109,7 +93,7 @@ function Login() {
                         <i class="fa fa-google text-white text-lg"></i>
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
 
@@ -129,14 +113,14 @@ function Login() {
                         <span className="nav-link-text ms-1">Forgot password?</span>
                     </NavLink>
                   </p>
-                  <Button type="submit" className='btn bg-gradient-dark w-100 my-4 mb-2 p-2'>
-                    Register xx
+                  <Button type="submit" className='btn bg-gradient-dark w-100 my-4 mb-2 p-2' >
+                    Login
                   </Button>
                   <div>
                   <p class="mt-4 text-sm text-center">
                     Don't have an account?
-                    <NavLink className="text-primary text-gradient font-weight-bold" to='/register' >
-                        <span className="nav-link-text ms-1">Sign up</span>
+                    <NavLink className="text-primary text-gradient font-weight-bold" to='/register' onClick={(e) => { dispatch(closeMenu())}}>
+                        <span className="nav-link-text ms-1">Register</span>
                     </NavLink>
                   </p>
                   </div>

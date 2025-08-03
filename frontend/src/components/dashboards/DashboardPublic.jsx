@@ -237,13 +237,13 @@ function DashboardPublic() {
     <>
     <div className="container-fluid py-2">
       <div className="row">
-        <div>
-          <h3 className="mb-0 h4 font-weight-bolder">Dashboard</h3>
-          <p className="mb-4">
-            Explore your financial data with our dashboard.
-          </p>
-        </div>
-        
+        <h3 className="mb-0 h4 font-weight-bolder">Dashboard</h3>
+        <p className="mb-4">
+          Explore your financial data with our dashboard.
+        </p>
+      </div>
+      
+      <div className="row">
         <div className="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div className="card">
             <div className="card-header p-2 ps-3">

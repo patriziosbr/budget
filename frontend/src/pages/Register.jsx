@@ -12,6 +12,7 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import { use } from 'react'
+import { closeMenu } from '../features/utils/menuSlice'
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -29,34 +30,6 @@ function Register() {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   )
-
-  const [width, setWidth] = useState(window.innerWidth);
-
-  function handleWindowSizeChange() {
-      setWidth(window.innerWidth);
-      console.log(`Window width: ${window.innerWidth}`);
-  }
-
-  useEffect(() => {
-      window.addEventListener('resize', handleWindowSizeChange);
-      return () => {
-          window.removeEventListener('resize', handleWindowSizeChange);
-      }
-  }, [window]);
-
-  const isMobile = width <= 768;
-  const [styleMtop, setStyleMtop] = useState({});
-  useEffect(() => {
-      if(isMobile ) {
-        setStyleMtop({
-          marginTop: '20px' 
-        })
-      } else {
-        setStyleMtop({
-          marginTop: '100px' 
-        })
-      }
-  }, [isMobile]);
   
   useEffect(() => {
     if (isError) {
@@ -113,7 +86,7 @@ function Register() {
             <div className="card z-index-0 fadeIn3 fadeInBottom">
               <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div className="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                  <h4 className="text-white font-weight-bolder text-center mt-2 mb-0">Sign Up</h4>
+                  <h4 className="text-white font-weight-bolder text-center mt-2 mb-0">Register</h4>
                   <p className="text-white text-center mt-2">Enter your email and password to register</p>
                   <div className="row mt-3">
                     <div className="col-2 text-center ms-auto">
@@ -164,15 +137,15 @@ function Register() {
 
 
                   <div className="text-center">
-                    <Button type='submit' className="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0 p-2">Sign up</Button>
+                    <Button type='submit' className="btn btn-lg bg-gradient-dark btn-lg w-100 mt-4 mb-0 p-2"><p className='m-0'>Register</p></Button>
                   </div>
               </Form>
               </div>
-              <div className="card-footer text-center pt-0 px-lg-2 px-1">
+              <div className="text-center pt-0 pb-2 px-lg-2 px-1">
                 <p className="mb-2 text-sm mx-auto">
                   Already have an account?
-                  <NavLink className="text-primary text-gradient font-weight-bold" to='/login' >
-                      <span className="nav-link-text ms-1">Sign in</span>
+                  <NavLink className="text-primary text-gradient font-weight-bold" to='/login' onClick={()=> dispatch(closeMenu())} >
+                      <span className="nav-link-text ms-1">Login</span>
                   </NavLink>
                 </p>
               </div>

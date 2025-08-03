@@ -6,9 +6,13 @@ function DashboardUser() {
 
   return (
     <>
-    <div className="container-fluid">
-        <h1>Welcome to the Dashboard</h1>
-        <p>Hello, {user.name}!</p>
+    <div className="container-fluid py-2">
+      <div className="row">
+        <h3 className="mb-0 h4 font-weight-bolder">Dashboard</h3>
+        {/* <p className='mb-4'>Hello, {user.name}!</p> */}
+      </div>
+      
+
     </div>
     </>
   )
