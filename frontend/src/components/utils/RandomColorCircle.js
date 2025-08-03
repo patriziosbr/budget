@@ -30,7 +30,7 @@ function RandomColorCircle({ letter = "X", tooltip = "", className, ...props }) 
     <>
       <span 
         ref={targetRef}
-        className={`circle ${className || ''}`}
+        className={`text-capitalize p-3 ${className || ''}`}
         style={{ 
           backgroundColor: randomColor,
           color: textColor,
@@ -40,7 +40,7 @@ function RandomColorCircle({ letter = "X", tooltip = "", className, ...props }) 
         onMouseLeave={() => setShowTooltip(false)}
         {...props}
       >
-       <p className='mb-0'> {Array.isArray(letter) ? letter.join('') : letter}</p>
+       <p className='text-bold mb-0'> {Array.isArray(letter) ? letter.join('') : letter[0]}</p>
       </span>
       
       {tooltip && (

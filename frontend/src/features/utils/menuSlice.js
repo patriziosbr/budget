@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const menuSlice = createSlice({
   name: 'showMenu',
   initialState: {
-    value: false, // true means menu is closed, false means menu is open
+    value: true, // true means menu is closed, false means menu is open
   },
   reducers: {
     toggleMenu: (state) => {

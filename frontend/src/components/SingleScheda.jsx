@@ -187,10 +187,116 @@ function SingleScheda({scheda}) {
 
     return (
         < >
+            <div className="col-12">
+                <div className="card h-100 mb-4">
+                    <div className="card-header px-3">
+                        <div className="row">
+                            {longPressCount < 1 &&
+                            <>
+                                <div className='col-6'>
+                                    <div
+                                        className='d-flex align-items-center text-dark-emphasis'
+                                        onClick={()=>goToDettagolioScheda(scheda._id)}
+                                        style={{height: "50px", cursor: "pointer"}}>
+                                        <h6 style={{textTransform: "capitalize", textDecoration:"underline"}} 
+                                            role="button" 
+                                            className='mb-0 w-100'
+                                            >
+                                            {scheda.titolo}
+                                        </h6>
+                                    </div>
+                                </div>
+                                <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
+                                    {/* <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'> */}
+                                        <div  style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid gap-4">
+                                        <div 
+                                            style={{height: "50px", cursor: "pointer"}} 
+                                            className='d-flex justify-content-center align-items-center text-dark-emphasis' 
+                                            onClick={()=>onLongPress()}>
+                                            <FaPencilAlt/>
+                                        </div>
+                                        <div 
+                                            style={{height: "50px", cursor: "pointer"}} 
+                                            className='d-flex justify-content-center align-items-center text-dark-emphasis' 
+                                            onClick={()=>handleShow("shareModal")}>
+                                            <FaUserPlus/>
+                                        </div>
+                                        <div
+                                            style={{height: "50px", cursor: "pointer"}} 
+                                            className='d-flex justify-content-center align-items-center text-danger ' 
+                                            onClick={()=>handleShow("deleteModal")}>
+                                            <FaTrash/>
+                                        </div>
+                                        {/* </div> */}
+                                    </div>
+                                </div>
+                            </>
+                            }
+                            {longPressCount > 0 && 
+                            <div className='col-12 col-md-8 col-lg-8 d-grid ' style={{gridTemplateColumns: '2fr 1fr 1fr'}} >
+                                <Form.Group>
+                                    <Form.Control className='d-flex align-self-center' type="titolo" id='titolo' maxlength="21" name="titolo" value={titolo} placeholder='titolo' onChange={onChange} />
+                                </Form.Group>
+                                {/* <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/> */}
+                                {erroLength && <small className='text-danger'>Limite raggiunto</small>} 
+                                <div className='d-flex justify-content-center align-items-center'>
+                                    <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
+                                </div>
+                                <div className='d-flex justify-content-center align-items-center'>
+                                    <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
+                                </div>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    <div className="card-body pt-4 p-3">
+                        <ul className="list-group">
+                        {scheda.notaSpese.map((notaSpesa, i) => (
+                            notaSpesa.testo && i < 5 && (
+                            <li key={notaSpesa._id} className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <div className="d-flex align-items-center">
+                                <button className="btn btn-icon-only btn-rounded btn-outline-dark mb-0 p-3 me-3 btn-sm d-flex align-items-center justify-content-center">
+                                    {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
+                                    <RandomColorCircle letter={notaSpesa.inserimentoUser?.name} tooltip={notaSpesa.inserimentoUser?.name} />
+                                    {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
+                                </button>
+                                <div className="d-flex flex-column">
+                                    <h6 className="mb-1 text-dark text-sm">{notaSpesa.testo ? notaSpesa.testo : null}</h6>
+                                    <span className="text-xs">{parseDate(notaSpesa.inserimentoData)}</span>
+                                </div>
+                            </div>
+                            <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
+                                € {notaSpesa.importo.toFixed(2)}
+                            </div>
+                            </li>
+                            )
+                        ))}
+                        <li className="list-group-item border-0 d-flex justify-content-between ps-0 my-2 border-radius-lg">
+                            <div className="d-flex align-items-center">
+                                <div className="">
+                                    <small className="text-dark-emphasis">
+                                        Showing 1 - 5 of {scheda.notaSpese.length} · <a href='' onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza</a>
+                                    </small>
+                                </div>
+                            </div>
+                            <div role="button" className="d-flex flex-column align-items-center text-dark text-sm font-weight-bold"  onClick={()=>handleShow("creaNotaModal")}>
+                                <button className="btn btn-icon-only btn-rounded btn-outline-dark mb-0 btn-sm d-flex align-items-center justify-content-center">
+                                    <FaPlus className='text-dark'/>
+                                </button>
+                                Nota
+                            </div>
+                        </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </div>
+
+
+
         <div className="row" >
-        {/* {console.log("user", user)} */}
             <div className='col-12 d-flex justify-content-between align-items-center py-4'>
-                {longPressCount < 1 &&
+                {/* {longPressCount < 1 &&
                     <div className='col-6'  >
                         <div
                             className='d-flex align-items-center'
@@ -202,7 +308,7 @@ function SingleScheda({scheda}) {
                                 >
                                 {scheda.titolo}
                             </h6>
-                        </div>
+                        </div> */}
                         {/* <div 
                             style={{height: "50px", width: "50px", cursor: "pointer"}} 
                             className='d-flex justify-content-center align-items-center me-2' 
@@ -215,9 +321,9 @@ function SingleScheda({scheda}) {
                             {sharedUserLetter && ( <FaUserFriends className="" onClick={()=>handleShow("shareModal")} /> )}
                         </div> */}
                         {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
-                    </div>
-                }
-                {longPressCount > 0 && 
+                    {/* </div>
+                } */}
+                {/* {longPressCount > 0 && 
                 <div className='col-12 col-md-6 d-grid d-grid' style={{gridTemplateColumns: '2fr 1fr 1fr', height: "50px"}} >
                     <div className="rounded">
                         <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/>
@@ -256,7 +362,7 @@ function SingleScheda({scheda}) {
                         </div>
                     </div>
                 </>
-                }
+                } */}
             </div>
         </div>
         <div className="row">
@@ -274,7 +380,7 @@ function SingleScheda({scheda}) {
             </div>
         </div>
         <div className="row">
-            <Table striped className="">
+            {/* <Table striped className="">
                 {scheda.notaSpese.length > 0 ? (
                     <>
                         <thead>
@@ -305,14 +411,14 @@ function SingleScheda({scheda}) {
                         </tr>
                     </thead>
                 )}
-            </Table>
-            <div className="row">
+            </Table> */}
+            {/* <div className="row">
                 <div className="col-12" style={{height:"50px"}}>
                     <small>
                         Showing 1 - 5 of {scheda.notaSpese.length} · <a href='' onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza</a>
                     </small>
                 </div>
-            </div>
+            </div> */}
 
         </div>
         <div className="row mb-5">

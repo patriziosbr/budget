@@ -20,7 +20,7 @@ function EmailShareList({
     if(!onValidateEmail(email)) {toast.warn('Inserisci un indirizzo email valido'); return};
     const alreadyAdded = emailList_tmp.some((entry) => entry.email === email) || emailListParent.some((m) => m.email === email);
     if (alreadyAdded) {
-      toast.warn('Email già aggiunta');
+      toast.warn('Email già presente');
       return;
     }
 
