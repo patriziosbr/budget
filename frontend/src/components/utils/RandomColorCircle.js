@@ -1,7 +1,10 @@
 import React, { useRef } from 'react';
 import { Overlay, Tooltip } from 'react-bootstrap';
 
-function RandomColorCircle({ letter = "X", tooltip = "", className, ...props }) {
+const userNameColor = [];
+
+function RandomColorCircle({ letter = "X", tooltip = "", userId = null,  className, ...props }) {
+
   const [showTooltip, setShowTooltip] = React.useState(false);
   const targetRef = useRef(null);
   
@@ -25,22 +28,28 @@ function RandomColorCircle({ letter = "X", tooltip = "", className, ...props }) 
   };
   
   const textColor = getContrastColor(randomColor);
-  
+
+  if(userId) {
+    userNameColor.push({userId,randomColor,textColor})
+  }
+
   return (
     <>
       <span 
         ref={targetRef}
-        className={`text-capitalize p-3 ${className || ''}`}
+        className={`text-capitalize circle ${className || ''}`}
         style={{ 
-          backgroundColor: randomColor,
-          color: textColor,
+          backgroundColor: userNameColor.find((item) => item.userId === userId)?.randomColor ?? randomColor,
+          color: userNameColor.find((item) => item.userId === userId)?.textColor ?? textColor,
 
         }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         {...props}
       >
-       <p className='text-bold mb-0'> {Array.isArray(letter) ? letter.join('') : letter[0]}</p>
+      <p className='text-bold mb-0'> 
+        {Array.isArray(letter) ? letter.join('') : letter[0]}
+      </p>
       </span>
       
       {tooltip && (

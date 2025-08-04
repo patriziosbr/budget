@@ -255,11 +255,13 @@ function SingleScheda({scheda}) {
                             notaSpesa.testo && i < 5 && (
                             <li key={notaSpesa._id} className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
                             <div className="d-flex align-items-center">
-                                <button className="btn btn-icon-only btn-rounded btn-outline-dark mb-0 p-3 me-3 btn-sm d-flex align-items-center justify-content-center">
+                                <div className="d-flex align-items-center">
                                     {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
-                                    <RandomColorCircle letter={notaSpesa.inserimentoUser?.name} tooltip={notaSpesa.inserimentoUser?.name} />
+                                    <RandomColorCircle letter={notaSpesa.inserimentoUser?.name} tooltip={notaSpesa.inserimentoUser?.name}
+                                    userId={notaSpesa.inserimentoUser?.id}
+                                    />
                                     {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
-                                </button>
+                                </div>
                                 <div className="d-flex flex-column">
                                     <h6 className="mb-1 text-dark text-sm">{notaSpesa.testo ? notaSpesa.testo : null}</h6>
                                     <span className="text-xs">{parseDate(notaSpesa.inserimentoData)}</span>
@@ -466,18 +468,26 @@ function SingleScheda({scheda}) {
                         <div >
                             {user._id === scheda.user && <div className="d-flex justify-content-between align-items-center my-3" >
                                 <div className="d-flex align-items-center">
-                                    <RandomColorCircle letter={user.email[0]} /> 
+                                    <RandomColorCircle 
+                                    letter={user.email[0]}
+                                    tooltip={user.email} 
+                                    userId={user._id}
+                                    /> 
                                     <p className='m-0'>{user.email} (you)</p>
                                 </div>
                                 <div>
-                                    <p className='m-0'>Admin</p>
+                                    <p className='m-0'>{user._id} Admin</p>
                                 </div>
                             </div>
                             }
                             {scheda.condivisoConList.map((userMail) => (
                                 <div className="d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
                                     <div className="d-flex align-items-center">
-                                        <RandomColorCircle letter={userMail.email[0]} /> 
+                                        <RandomColorCircle 
+                                        letter={user.email[0]}
+                                        tooltip={user.email} 
+                                        userId={user._id}
+                                        /> 
                                         <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                     </div>
                                     <div>
