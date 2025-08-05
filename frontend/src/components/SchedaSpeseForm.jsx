@@ -65,6 +65,12 @@ function SchedaSpeseForm({onSuccess}) {
     }));
   };
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(String(email).toLowerCase());
+  }
+
+
   return (    
     <Container>
       <Form className="mb-3" onSubmit={onSubmit}>
@@ -93,13 +99,15 @@ function SchedaSpeseForm({onSuccess}) {
         </Form.Group> */}
 
         <EmailShareList 
-          emailList={condivisoConList}
+          emailList_tmp={condivisoConList}
           onAddEmail={addEmail}
+          onValidateEmail={validateEmail}
           onRemoveEmail={removeEmail}
+
         />
 
-        <Button type="submit" className="btn btn-primary" style={{ width: '100%' }}>
-          Submit
+        <Button type="submit" className="d-flex justify-content-center align-items-center btn bg-gradient-dark mb-0 w-100 m-auto" >
+          <p className='mb-0'>Create</p>
         </Button>
       </Form>
     </Container>

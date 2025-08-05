@@ -49,14 +49,13 @@ function EmailShareList({
             onChange={(e) => setEmailToShare(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <Button
+          <button
             role="button" 
-            style={{'border': "3px solid #0d6efd" }}
-            className="d-flex align-items-center border-circle p-2"
+            className="text-dark btn btn-outline-dark btn-sm d-flex align-items-center border-circle p-2 mb-0"
             onClick={handleAddEmail}
           >
           <FaPlus />
-          </Button>
+          </button>
         </div>
       </Form.Group>
 

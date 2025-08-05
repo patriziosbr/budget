@@ -39,9 +39,9 @@ function DashboardSchedaSpese() {
 
       <SchedaSpese/>
       
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={handleClose} centered>
         <Modal.Header closeButton>
-          <Modal.Title><b>Crea scheda</b></Modal.Title>
+          <Modal.Title><b>Create new list</b></Modal.Title>
         </Modal.Header>
         <Modal.Body>            
           <SchedaSpeseForm onSuccess={handleClose} />

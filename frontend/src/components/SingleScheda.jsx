@@ -198,28 +198,7 @@ function SingleScheda({scheda}) {
     return (
         < >
             <div className="col-12">
-              <div class="row mb-4">
-                <div class="col-md-6 col-6">
-                    <div class="card">
-                        <div class="card-body p-3 text-center">
-                        <h6 class="text-center mb-0">Higher expence</h6>
-                        <span class="text-xs">user name</span>
-                        <hr class="horizontal dark my-3"/>
-                        <h5 class="mb-0">€ 0</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-6">
-                  <div class="card">
-                    <div class="card-body p-3 text-center">
-                      <h6 class="text-center mb-0">Total</h6>
-                      <span class="text-xs">&nbsp;</span>
-                      <hr class="horizontal dark my-3"/>
-                      <h5 class="mb-0">€ {getTotale(scheda.notaSpese)}</h5>
-                    </div>
-                  </div>
-                </div>
+              <div className="row mb-4">
                     {/* <div style={{gridTemplateColumns: '1fr 1fr'}} className="d-grid gap-4 mb-3">
                         <div className='py-2'> 
                             <h6>Spesa maggiore:</h6>
@@ -233,7 +212,7 @@ function SingleScheda({scheda}) {
                         </div>
                     </div> */}
                 </div>
-                <div className="card h-100 mb-4">
+                <div className="card h-100 mb-2">
                     <div className="card-header px-3">
                         <div className="row">
                             {longPressCount < 1 &&
@@ -242,7 +221,7 @@ function SingleScheda({scheda}) {
                                     <div
                                         className='d-flex align-items-center text-dark-emphasis'
                                         onClick={()=>goToDettagolioScheda(scheda._id)}
-                                        style={{height: "50px", cursor: "pointer"}}>
+                                        style={{cursor: "pointer"}}>
                                         <h6 style={{textTransform: "capitalize", textDecoration:"underline"}} 
                                             role="button" 
                                             className='mb-0 w-100'
@@ -255,19 +234,19 @@ function SingleScheda({scheda}) {
                                     {/* <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'> */}
                                         <div  style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid gap-4">
                                         <div 
-                                            style={{height: "50px", cursor: "pointer"}} 
+                                            style={{cursor: "pointer"}} 
                                             className='d-flex justify-content-center align-items-center text-dark-emphasis' 
                                             onClick={()=>onLongPress()}>
                                             <FaPencilAlt/>
                                         </div>
                                         <div 
-                                            style={{height: "50px", cursor: "pointer"}} 
+                                            style={{cursor: "pointer"}} 
                                             className='d-flex justify-content-center align-items-center text-dark-emphasis' 
                                             onClick={()=>handleShow("shareModal")}>
                                             <FaUserPlus/>
                                         </div>
                                         <div
-                                            style={{height: "50px", cursor: "pointer"}} 
+                                            style={{cursor: "pointer"}} 
                                             className='d-flex justify-content-center align-items-center text-danger ' 
                                             onClick={()=>handleShow("deleteModal")}>
                                             <FaTrash/>
@@ -294,11 +273,11 @@ function SingleScheda({scheda}) {
                             }
                         </div>
                     </div>
-                    <div className="card-body pt-4 p-3">
+                    <div className="card-body">
                         <ul className="list-group">
                         {scheda.notaSpese.map((notaSpesa, i) => (
                             notaSpesa.testo && i < 5 && (
-                            <li key={notaSpesa._id} className="list-group-item border-0 d-flex justify-content-between ps-0 mb-2 border-radius-lg">
+                            <li key={notaSpesa._id} className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg">
                             <div className="d-flex align-items-center">
                                 <div className="d-flex align-items-center">
                                     {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
@@ -320,13 +299,40 @@ function SingleScheda({scheda}) {
                         ))}
                             {/* <li className="list-group-item border-0 d-flex justify-content-between ps-0 my-2 border-radius-lg">
                             </li> */}
-                            <li className="list-group-item border-0 d-flex justify-content-end ps-0 mt-3 border-radius-lg">
-                                <div className="d-flex align-items-center text-dark btn btn-outline-dark btn-sm mb-0" onClick={()=>handleShow("creaNotaModal")}>
+                            <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
+                                <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100 me-4 " onClick={()=>handleShow("creaNotaModal")}>
+                                    <p className='mb-0 text-center'>&nbsp;Show all</p>
+                                </div>
+                                <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100" onClick={()=>handleShow("creaNotaModal")}>
                                     <FaPlus/>
-                                    <p className='mb-0'>&nbsp;Note</p>
+                                    <p className='mb-0'>&nbsp;New note</p>
                                 </div>
                             </li>
                         </ul>
+                    </div>
+                </div>
+
+                <div className="row">
+                    <div className="col-md-6 col-6">
+                        <div className="card">
+                            <div className="card-body p-3 text-center">
+                            <h6 className="text-center mb-0">Higher expence</h6>
+                            <span className="text-xs">user name</span>
+                            <hr className="horizontal dark my-3"/>
+                            <h5 className="mb-0">€ 0</h5>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6 col-6">
+                    <div className="card">
+                        <div className="card-body p-3 text-center">
+                        <h6 className="text-center mb-0">Total</h6>
+                        <span className="text-xs">&nbsp;</span>
+                        <hr className="horizontal dark my-3"/>
+                        <h5 className="mb-0">€ {getTotale(scheda.notaSpese)}</h5>
+                        </div>
+                    </div>
                     </div>
                 </div>
                 {/* <div className="d-flex align-items-center">
@@ -396,7 +402,7 @@ function SingleScheda({scheda}) {
 
 
         <div className="row">
-            <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")}>
+            <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")} centered>
                 <Modal.Header closeButton>
                 <Modal.Title><b>Crea Nota in {scheda.titolo}</b></Modal.Title>
                 </Modal.Header>
@@ -405,7 +411,7 @@ function SingleScheda({scheda}) {
                 </Modal.Body>
             </Modal>
 
-            <Modal show={modalState.shareModal} onHide={() => handleClose("shareModal")}>
+            <Modal show={modalState.shareModal} onHide={() => handleClose("shareModal")} centered>
                 <Modal.Header closeButton>
                     <Modal.Title><b>Condividi "{scheda.titolo}"</b></Modal.Title>
                 </Modal.Header>
@@ -426,9 +432,9 @@ function SingleScheda({scheda}) {
                                     <RandomColorCircle 
                                     letter={user.email[0]}
                                     tooltip={user.email} 
-                                    userId={user.email}
+                                    email={user.email}
                                     /> 
-                                    <p className='m-0'>{user.email} (you)</p>
+                                    <p className='ms-2 m-0'>{user.email} (you)</p>
                                 </div>
                                 <div>
                                     <p className='m-0'>Admin</p>
@@ -436,16 +442,16 @@ function SingleScheda({scheda}) {
                             </div>
                             }
                             {scheda.condivisoConList.map((userMail) => (
-                                <div className="row d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
-                                    <div className="col-12 d-flex align-items-center">
+                                <div className="d-flex align-items-center mb-3" key={userMail._id}>
+                                    <div className="d-flex align-items-center me-2">
                                         <RandomColorCircle 
                                         letter={userMail.email[0]}
                                         tooltip={userMail.email} 
                                         email={userMail.email}
                                         /> 
-                                        <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                     </div>
-                                    <div className="col-12">
+                                    <div className="">
+                                        <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                         <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail);}}}>
                                                 <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
                                                 <option className="text-danger" value="1">Rimuovi</option>
@@ -455,14 +461,14 @@ function SingleScheda({scheda}) {
                             ))}
                         </div>
                         <div className='d-flex align-item-center justify-content-end mt-4'> 
-                            {!isFormModified && <Button className="btn btn-primary" onClick={()=>handleClose("shareModal")}>Fine</Button>}
-                            {isFormModified &&<Button type="submit" className="btn btn-primary" >Salva</Button>}
+                            {!isFormModified && <Button className="btn bg-gradient-dark btn btn-outline-dark btn-sm w-100" onClick={()=>handleClose("shareModal")}>Fine</Button>}
+                            {isFormModified &&<Button type="submit" className="btn bg-gradient-dark btn btn-outline-dark btn-sm w-100" >Salva</Button>}
                         </div>
                     </Form>
                 </Modal.Body>
             </Modal>
 
-            <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal")}>
+            <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal")} centered>
                 <Modal.Header closeButton>
                 <Modal.Title><b>Confermi di eliminare la scheda: {scheda.titolo}?</b></Modal.Title>
                 </Modal.Header>
