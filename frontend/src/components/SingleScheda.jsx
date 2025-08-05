@@ -20,6 +20,7 @@ import RandomColorCircle from './utils/RandomColorCircle.js';
 import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese, singleSchedaSpeseGet } from '../features/schedaSpese/schedaSpeseSlice'
 import EmailShareList from './utils/EmailShareList';
 import { useNavigate, NavLink } from 'react-router-dom'
+import { toast } from 'react-toastify';
 
 
 function SingleScheda({scheda}) {
@@ -65,7 +66,6 @@ function SingleScheda({scheda}) {
             ...f,
             condivisoConList: [...f.condivisoConList, newEmailEntry],
         }));
-        console.log("newEmailEntry", newEmailEntry);
         
         setIsFormModified(true);
     };
@@ -159,8 +159,18 @@ function SingleScheda({scheda}) {
             condivisoConList: sharedUserUpdateForm.condivisoConList,
             removedEmails: sharedUserUpdateForm.removedEmails  
         };
-        await dispatch(updateSchedaSpese({schedaId: scheda._id, ...updatePayload})).unwrap()
-        .then((payload) => console.log('fulfilled', payload))
+        try{
+            await dispatch(updateSchedaSpese({schedaId: scheda._id, ...updatePayload})).unwrap()
+            .then((payload) => console.log('fulfilled', payload));
+            if (updatePayload.condivisoConList.length > 0) {
+                toast.success(`Scheda "${scheda.titolo}" condivisa con successo!`);
+            }
+            if (updatePayload.removedEmails.length > 0) {
+                toast.success(`Utenti rimossi con successo!`);
+            }
+        } catch (error) {
+            toast.error(`Error updating shared users: ${error.message}`)
+        }
         await dispatch(getSchedaSpese()).unwrap();
         // handleClose("shareModal")
     }
@@ -188,6 +198,41 @@ function SingleScheda({scheda}) {
     return (
         < >
             <div className="col-12">
+              <div class="row mb-4">
+                <div class="col-md-6 col-6">
+                    <div class="card">
+                        <div class="card-body p-3 text-center">
+                        <h6 class="text-center mb-0">Higher expence</h6>
+                        <span class="text-xs">user name</span>
+                        <hr class="horizontal dark my-3"/>
+                        <h5 class="mb-0">€ 0</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-6">
+                  <div class="card">
+                    <div class="card-body p-3 text-center">
+                      <h6 class="text-center mb-0">Total</h6>
+                      <span class="text-xs">&nbsp;</span>
+                      <hr class="horizontal dark my-3"/>
+                      <h5 class="mb-0">€ {getTotale(scheda.notaSpese)}</h5>
+                    </div>
+                  </div>
+                </div>
+                    {/* <div style={{gridTemplateColumns: '1fr 1fr'}} className="d-grid gap-4 mb-3">
+                        <div className='py-2'> 
+                            <h6>Spesa maggiore:</h6>
+                            <p className='m-0'><i>nome utente</i></p>
+                            <p className='m-0'><i>€ 333</i></p>
+                        </div>
+                        <div className='py-2'> 
+                            <h6>Total</h6>
+                            <p className='m-0'>&nbsp;</p>
+                            <p className='m-0'>€ {getTotale(scheda.notaSpese)}</p>
+                        </div>
+                    </div> */}
+                </div>
                 <div className="card h-100 mb-4">
                     <div className="card-header px-3">
                         <div className="row">
@@ -233,19 +278,19 @@ function SingleScheda({scheda}) {
                             </>
                             }
                             {longPressCount > 0 && 
-                            <div className='col-12 col-md-8 col-lg-8 d-grid ' style={{gridTemplateColumns: '2fr 1fr 1fr'}} >
-                                <Form.Group>
-                                    <Form.Control className='d-flex align-self-center' type="titolo" id='titolo' maxlength="21" name="titolo" value={titolo} placeholder='titolo' onChange={onChange} />
-                                </Form.Group>
-                                {/* <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/> */}
-                                {erroLength && <small className='text-danger'>Limite raggiunto</small>} 
-                                <div className='d-flex justify-content-center align-items-center'>
-                                    <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
+                                <div className='col-12 col-md-8 col-lg-8 d-grid ' style={{gridTemplateColumns: '2fr 1fr 1fr'}} >
+                                    <Form.Group>
+                                        <Form.Control className='d-flex align-self-center' type="titolo" id='titolo' maxlength="21" name="titolo" value={titolo} placeholder='titolo' onChange={onChange} />
+                                    {erroLength && <small className='text-danger'>Max characters exceeded</small>} 
+                                    </Form.Group>
+                                    {/* <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/> */}
+                                    <div className='d-flex justify-content-center align-items-center'>
+                                        <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
+                                    </div>
+                                    <div className='d-flex justify-content-center align-items-center'>
+                                        <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
+                                    </div>
                                 </div>
-                                <div className='d-flex justify-content-center align-items-center'>
-                                    <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
-                                </div>
-                            </div>
                             }
                         </div>
                     </div>
@@ -258,7 +303,7 @@ function SingleScheda({scheda}) {
                                 <div className="d-flex align-items-center">
                                     {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                                     <RandomColorCircle letter={notaSpesa.inserimentoUser?.name} tooltip={notaSpesa.inserimentoUser?.name}
-                                    userId={notaSpesa.inserimentoUser?.id}
+                                    email={notaSpesa.inserimentoUser?.email}
                                     />
                                     {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                                 </div>
@@ -273,115 +318,28 @@ function SingleScheda({scheda}) {
                             </li>
                             )
                         ))}
-                        <li className="list-group-item border-0 d-flex justify-content-between ps-0 my-2 border-radius-lg">
-                            <div className="d-flex align-items-center">
-                                <div className="">
-                                    <small className="text-dark-emphasis">
-                                        Showing 1 - 5 of {scheda.notaSpese.length} · <a href='' onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza</a>
-                                    </small>
+                            {/* <li className="list-group-item border-0 d-flex justify-content-between ps-0 my-2 border-radius-lg">
+                            </li> */}
+                            <li className="list-group-item border-0 d-flex justify-content-end ps-0 mt-3 border-radius-lg">
+                                <div className="d-flex align-items-center text-dark btn btn-outline-dark btn-sm mb-0" onClick={()=>handleShow("creaNotaModal")}>
+                                    <FaPlus/>
+                                    <p className='mb-0'>&nbsp;Note</p>
                                 </div>
-                            </div>
-                            <div role="button" className="d-flex flex-column align-items-center text-dark text-sm font-weight-bold"  onClick={()=>handleShow("creaNotaModal")}>
-                                <button className="btn btn-icon-only btn-rounded btn-outline-dark mb-0 btn-sm d-flex align-items-center justify-content-center">
-                                    <FaPlus className='text-dark'/>
-                                </button>
-                                Nota
-                            </div>
-                        </li>
+                            </li>
                         </ul>
-
                     </div>
                 </div>
+                {/* <div className="d-flex align-items-center">
+                    <div className="">
+                        <small className="text-dark-emphasis">
+                            Showing 1 - 5 of {scheda.notaSpese.length} · <a href='' onClick={()=>goToDettagolioScheda(scheda._id)}>Visualizza</a>
+                        </small>
+                    </div>
+                </div> */}
             </div>
 
 
-
-        <div className="row" >
-            <div className='col-12 d-flex justify-content-between align-items-center py-4'>
-                {/* {longPressCount < 1 &&
-                    <div className='col-6'  >
-                        <div
-                            className='d-flex align-items-center'
-                            onClick={()=>goToDettagolioScheda(scheda._id)}
-                            style={{height: "50px", cursor: "pointer"}}>
-                            <h6 style={{textTransform: "capitalize", textDecoration:"underline"}} 
-                                role="button" 
-                                className='mb-0 w-100'
-                                >
-                                {scheda.titolo}
-                            </h6>
-                        </div> */}
-                        {/* <div 
-                            style={{height: "50px", width: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center me-2' 
-                            onClick={()=>goToDettagolioScheda(scheda._id)}>
-                            <FaArrowRight className="mb-0"/>
-                        </div> */}
-                        {/* <div 
-                            style={{height: "50px", width: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center'>
-                            {sharedUserLetter && ( <FaUserFriends className="" onClick={()=>handleShow("shareModal")} /> )}
-                        </div> */}
-                        {/* {scheda.condivisoCon.length > 0 && ( <RandomColorCircle letter={sharedUserLetter} tooltip={sharedUserMail} className="ms-4"/> )} */}
-                    {/* </div>
-                } */}
-                {/* {longPressCount > 0 && 
-                <div className='col-12 col-md-6 d-grid d-grid' style={{gridTemplateColumns: '2fr 1fr 1fr', height: "50px"}} >
-                    <div className="rounded">
-                        <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/>
-                        {erroLength && <small className='text-danger'>Limite raggiunto</small>} 
-                    </div>
-                    <div className='d-flex align-items-center justify-content-center '>
-                        <FaRegCheckCircle size={20} onClick={()=> updateSchedataTitolo()}/>
-                    </div>
-                    <div className='d-flex justify-content-center align-items-center '>
-                        <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
-                    </div>
-                </div>
-                }
-                {longPressCount < 1 &&
-                <>
-                    <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'>
-                        <div  style={{gridTemplateColumns: '1fr 1fr 1fr'}} className="d-grid">
-                        <div 
-                            style={{height: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center ' 
-                            onClick={()=>onLongPress()}>
-                            <FaPencilAlt/>
-                        </div>
-                        <div 
-                            style={{height: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center ' 
-                            onClick={()=>handleShow("shareModal")}>
-                            <FaUserPlus/>
-                        </div>
-                        <div
-                            style={{height: "50px", cursor: "pointer"}} 
-                            className='d-flex justify-content-center align-items-center text-danger ' 
-                            onClick={()=>handleShow("deleteModal")}>
-                            <FaTrash/>
-                        </div>
-                        </div>
-                    </div>
-                </>
-                } */}
-            </div>
-        </div>
-        <div className="row">
-            <div style={{gridTemplateColumns: '1fr 1fr'}} className="d-grid gap-4 mb-3">
-                <div className='py-2'> 
-                    <h6>Spesa maggiore:</h6>
-                    <p className='m-0'><i>nome utente</i></p>
-                    <p className='m-0'><i>€ 333</i></p>
-                </div>
-                <div className='py-2'> 
-                    <h6>Total</h6>
-                    <p className='m-0'>&nbsp;</p>
-                    <p className='m-0'>€ {getTotale(scheda.notaSpese)}</p>
-                </div>
-            </div>
-        </div>
-        <div className="row">
+        {/* <div className="row"> */}
             {/* <Table striped className="">
                 {scheda.notaSpese.length > 0 ? (
                     <>
@@ -422,12 +380,9 @@ function SingleScheda({scheda}) {
                 </div>
             </div> */}
 
-        </div>
-        <div className="row mb-5">
+        {/* </div> */}
+        {/* <div className="row mb-5">
             <div className="col-12" style={{height:"50px"}}>
-                {/* <Button style={{height:"50px"}} className="w-100 text-end p-0" variant="link" onClick={()=>goToDettagolioScheda(scheda._id)}>
-                    Visualizza scheda
-                </Button> */}
                 <div className="d-flex justify-content-end">
                 <Button style={{height:"50px"}} variant="outline-secondary" className='d-flex align-items-center' onClick={()=>handleShow("creaNotaModal")}>
                     <FaPlus className="me-2"
@@ -437,7 +392,7 @@ function SingleScheda({scheda}) {
 
                 </div>
             </div>
-        </div>
+        </div> */}
 
 
         <div className="row">
@@ -471,26 +426,26 @@ function SingleScheda({scheda}) {
                                     <RandomColorCircle 
                                     letter={user.email[0]}
                                     tooltip={user.email} 
-                                    userId={user._id}
+                                    userId={user.email}
                                     /> 
                                     <p className='m-0'>{user.email} (you)</p>
                                 </div>
                                 <div>
-                                    <p className='m-0'>{user._id} Admin</p>
+                                    <p className='m-0'>Admin</p>
                                 </div>
                             </div>
                             }
                             {scheda.condivisoConList.map((userMail) => (
-                                <div className="d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
-                                    <div className="d-flex align-items-center">
+                                <div className="row d-flex justify-content-between align-items-center mb-3" key={userMail._id}>
+                                    <div className="col-12 d-flex align-items-center">
                                         <RandomColorCircle 
-                                        letter={user.email[0]}
-                                        tooltip={user.email} 
-                                        userId={user._id}
+                                        letter={userMail.email[0]}
+                                        tooltip={userMail.email} 
+                                        email={userMail.email}
                                         /> 
                                         <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                     </div>
-                                    <div>
+                                    <div className="col-12">
                                         <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail);}}}>
                                                 <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
                                                 <option className="text-danger" value="1">Rimuovi</option>

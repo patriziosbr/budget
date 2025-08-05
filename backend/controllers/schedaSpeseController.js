@@ -6,7 +6,7 @@ const NotaSpese = require("../model/notaSpeseModel")
 const { Types } = require('mongoose');
 const ObjectId = Types.ObjectId;
 const { all } = require('axios');
-const baseUrl = process.env.NODE_ENV === "development"? process.env.DEV_BASE_URL : process.env.PORDUCTION_BASE_URL; 
+const baseUrl = "https://budget-fe.onrender.com/"; 
 const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTemplate/condivisioneSchedaSpese");
 
 //@desc get goals

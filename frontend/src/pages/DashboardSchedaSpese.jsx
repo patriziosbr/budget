@@ -20,13 +20,19 @@ function DashboardSchedaSpese() {
     <>
       {user && 
       <div className="container-fluid">
-        <div className='d-flex justify-content-between mb-4 mt-0'>
+        <div className='d-flex justify-content-between align-items-center mb-4 mt-0'>
           <h2 className='mb-0 align-self-center mt-sm-4'>Expence list</h2>
 
-          <Button variant="outline-secondary" className='d-flex align-items-center mt-sm-4' onClick={handleShow}>
+          {/* <Button variant="outline-secondary" className='d-flex align-items-center mt-sm-4' onClick={handleShow}>
             <FaPlus className="me-2"/>
             Scheda
-          </Button>
+          </Button> */}
+          <div className="d-flex align-items-center btn bg-gradient-dark mb-0" onClick={handleShow}>
+              <FaPlus className="me-2"/>
+              <p className="mb-0">
+                Add List
+              </p>
+          </div>
         </div>
       </div>
       }
