@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { logout, reset } from '../../features/auth/authSlice'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, NavLink } from 'react-router-dom'
-import { toggleMenu } from '../../features/utils/menuSlice';
+import { closeMenu, toggleMenu } from '../../features/utils/menuSlice';
 
 const Aside = () => {
     const navigate = useNavigate()
@@ -20,6 +20,7 @@ const Aside = () => {
     }
 
     return (
+    <>
         <div className={`bg-gray-100 ${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
@@ -64,6 +65,10 @@ const Aside = () => {
                 </div>
             </aside>
         </div>
+        { !showMenu &&<div className="bg-secondary vh-100 w-100 opacity-5 position-absolute z-index-1" onClick={() => dispatch(closeMenu())}>
+
+        </div>}
+    </>
     )
 }
 export default Aside;
