@@ -20,7 +20,16 @@ function SchedaSpese() {
   const { user } = useSelector((state) => state.auth)
   useEffect(() => {
     if (user) {
-      dispatch(getSchedaSpese()).unwrap();
+      dispatch(getSchedaSpese()).unwrap()
+      .then((response) => {
+        console.log("tuttook");
+      })
+      .catch((error) => {
+        if(error.includes('500')){
+          toast.error("Service unavailable, try again later");
+        }
+        console.error("Error Response:", error); // Debugging
+      });
     }
   }, []);
   //è per il margine inferiore della pagina

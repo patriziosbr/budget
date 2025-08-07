@@ -24,21 +24,21 @@ const Aside = () => {
         <div className={`bg-gray-100 ${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
-                    <NavLink to='/' className="navbar-brand px-4 py-3 m-0" type="button" onClick={()=> dispatch(toggleMenu())}>
-                        <FaDollarSign className="mr-1" />
-                        <span className="ms-1 text-sm text-dark">Budget</span>
+                    <NavLink to='/' className="navbar-brand px-4 py-3 m-0" type="button" onClick={()=> dispatch(closeMenu())}>
+                        <FaHome className="mr-1" />
+                        <span className="ms-1 text-sm text-dark"> Home</span>
                     </NavLink>
                 </div>
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
                 <ul className="navbar-nav">
                     <li className="nav-item">
-                    <NavLink className="nav-link text-dark" to={`${user ? '/dashboardPrivate' : '/dashboard'}`} onClick={()=> dispatch(toggleMenu())}>
+                    <NavLink className="nav-link text-dark" to={`${user ? '/dashboardPrivate' : '/dashboard'}`} onClick={()=> dispatch(closeMenu())}>
                         <span className="nav-link-text ms-1">Dashboard</span>
                     </NavLink>
                     </li>
                     <li className="nav-item">
-                    {user && <NavLink className="nav-link text-dark" to='/DashboardNotaSpese' onClick={()=> dispatch(toggleMenu())}>
+                    {user && <NavLink className="nav-link text-dark" to='/DashboardNotaSpese' onClick={()=> dispatch(closeMenu())}>
                         <span className="nav-link-text ms-1">Expence list</span>
                     </NavLink>}
                     </li>
@@ -53,10 +53,10 @@ const Aside = () => {
                         </button>
                     ) : (
                         <>
-                        <NavLink to='/login' className="btn btn-outline-dark mt-4 w-100" type="button" onClick={()=> dispatch(toggleMenu())}>
+                        <NavLink to='/login' className="btn btn-outline-dark mt-4 w-100" type="button" onClick={()=> dispatch(closeMenu())}>
                             <FaSignInAlt /> Login
                         </NavLink>
-                        <NavLink to='/register' className="btn bg-gradient-dark text-white w-100" onClick={()=> dispatch(toggleMenu())}>
+                        <NavLink to='/register' className="btn bg-gradient-dark text-white w-100" onClick={()=> dispatch(closeMenu())}>
                             <FaUser /> Register
                         </NavLink>
                         </>
@@ -65,9 +65,10 @@ const Aside = () => {
                 </div>
             </aside>
         </div>
-        { !showMenu &&<div className="bg-secondary vh-100 w-100 opacity-5 position-absolute z-index-1" onClick={() => dispatch(closeMenu())}>
 
-        </div>}
+        <div className={`${!showMenu ? "bg-secondary vh-100 w-100 opacity-5 position-absolute z-index-1"  : ''}`} onClick={() => dispatch(closeMenu())}>
+        </div>
+        
     </>
     )
 }

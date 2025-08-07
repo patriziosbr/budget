@@ -1,10 +1,5 @@
-import { FaPencilAlt, FaPlus } from 'react-icons/fa';
-import { FaRegCheckCircle } from "react-icons/fa";
-import { FaRegTimesCircle } from "react-icons/fa";
-import { FaUserPlus } from "react-icons/fa";
-import { FaUserFriends } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa";
-import { FaArrowRight } from "react-icons/fa";
+import { FaPencilAlt, FaPlus, FaRegCheckCircle, FaRegTimesCircle } from 'react-icons/fa';
+import { FaTrash, FaArrowRight, FaUserFriends, FaUserPlus, FaEye } from "react-icons/fa";
 
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button'
@@ -95,7 +90,14 @@ function SingleScheda({scheda}) {
             [modalType]: false,
         }));
         setIsFormModified(false); // Reset form modified state
+        setNotaSpesaToEdit(null)
     };
+
+    const [notaSpesaToEdit, setNotaSpesaToEdit] = useState(null);
+    const editNota = (modalType, notaSpesa) => {
+        handleShow(modalType)
+        setNotaSpesaToEdit(notaSpesa);
+    }
 
     const [erroLength, setErroLength] = useState(false);
     const onChange = (e) => {
@@ -111,29 +113,29 @@ function SingleScheda({scheda}) {
         }))
     }
 
-    const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
-        <a
-          href=""
-          ref={ref}
-          onClick={e => {
-            e.preventDefault();
-            onClick(e);
-          }}
-        >
-          {children}
-          <span className="threedots" />
-        </a>
-      ));
+    // const CustomToggle = React.forwardRef(({ children, onClick }, ref) => (
+    //     <a
+    //       href=""
+    //       ref={ref}
+    //       onClick={e => {
+    //         e.preventDefault();
+    //         onClick(e);
+    //       }}
+    //     >
+    //       {children}
+    //       <span className="threedots" />
+    //     </a>
+    //   ));
       
       const onLongPress = () => {
         setlongPressCount(longPressCount + 1)
       };
 
-      const defaultOptions = {
-        shouldPreventDefault: true,
-        delay: 500,
-      };
-      const longPressEvent = useLongPress(onLongPress, defaultOptions);
+    //   const defaultOptions = {
+    //     shouldPreventDefault: true,
+    //     delay: 500,
+    //   };
+    //   const longPressEvent = useLongPress(onLongPress, defaultOptions);
 
       const updateSchedataTitolo = async () => {
         const updatePayload = { titolo: titolo };
@@ -286,7 +288,7 @@ function SingleScheda({scheda}) {
                                     />
                                     {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                                 </div>
-                                <div className="d-flex flex-column">
+                                <div role="button" className="d-flex flex-column" onClick={()=>editNota("creaNotaModal", notaSpesa)}>
                                     <h6 className="mb-1 text-dark text-sm">{notaSpesa.testo ? notaSpesa.testo : null}</h6>
                                     <span className="text-xs">{parseDate(notaSpesa.inserimentoData)}</span>
                                 </div>
@@ -300,7 +302,8 @@ function SingleScheda({scheda}) {
                             {/* <li className="list-group-item border-0 d-flex justify-content-between ps-0 my-2 border-radius-lg">
                             </li> */}
                             <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
-                                <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100 me-4 " onClick={()=>handleShow("creaNotaModal")}>
+                                <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100 me-4 " onClick={()=>goToDettagolioScheda(scheda._id)}>
+                                    <FaEye/>
                                     <p className='mb-0 text-center'>&nbsp;Show all</p>
                                 </div>
                                 <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100" onClick={()=>handleShow("creaNotaModal")}>
@@ -407,7 +410,7 @@ function SingleScheda({scheda}) {
                 <Modal.Title><b>Crea Nota in {scheda.titolo}</b></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>            
-                    <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} />
+                    <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} />
                 </Modal.Body>
             </Modal>
 

@@ -6,14 +6,16 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { createNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import { parseDate } from './utils/dateParser'
 
-function NotaSpeseForm({ onSuccess, schedaId }) {
-  const { user } = useSelector((state) => state.auth)
-  const today = new Date().toISOString().split('T')[0]
+function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
+  const { user } = useSelector((state) => state.auth);
+  const today = new Date().toISOString().split('T')[0];
+
   const [formData, setFormData] = useState({
-    testo: '',
-    inserimentoData: today,
-    importo: '',
+    testo: notaToEdit?.testo ?? '',
+    inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
+    importo: notaToEdit?.importo ?? '',
     categoria_id: []
   })
   const [isDisabled, setisDisabled] = useState(false);
@@ -27,6 +29,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
       [e.target.name]: e.target.value,
     }))
   }
+
 
   const onSubmit = async (e) => {
     e.preventDefault()
@@ -47,8 +50,13 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
           name: user.name
         }
       }
+      if(notaToEdit !== null) {
+        // go edit
+      } else {
+        // crea nuovo
+        fetchDispatch(notaSpeseData)
+      }
 
-      fetchDispatch(notaSpeseData)
     }
   }
 
@@ -128,7 +136,7 @@ function NotaSpeseForm({ onSuccess, schedaId }) {
           />
         </Form.Group>
         <Button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isDisabled}>
-          Submit
+          { notaToEdit === null? ("Crea") : ("Modifica")}  
         </Button>
       </Form>
     </Container>

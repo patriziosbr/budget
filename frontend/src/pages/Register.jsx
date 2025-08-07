@@ -86,9 +86,8 @@ function Register() {
             <div className="card z-index-0 fadeIn3 fadeInBottom">
               <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
                 <div className="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                  <h4 className="text-white font-weight-bolder text-center mt-2 mb-0">Register</h4>
-                  <p className="text-white text-center mt-2">Enter your email and password to register</p>
-                  <div className="row mt-3">
+                  <h4 className="text-white font-weight-bolder text-center my-2">Register</h4>
+                  {/* <div className="row mt-3">
                     <div className="col-2 text-center ms-auto">
                       <a className="btn btn-link px-3" href="">
                         <i className="fa fa-facebook text-white text-lg"></i>
@@ -104,7 +103,7 @@ function Register() {
                         <i className="fa fa-google text-white text-lg"></i>
                       </a>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
               </div>
               <div className="card-body">
@@ -144,7 +143,7 @@ function Register() {
               <div className="text-center pt-0 pb-2 px-lg-2 px-1">
                 <p className="mb-2 text-sm mx-auto">
                   Already have an account?
-                  <NavLink className="text-primary text-gradient font-weight-bold" to='/login' onClick={()=> dispatch(closeMenu())} >
+                  <NavLink className="text-primary text-gradient font-weight-bold" to='/login'  >
                       <span className="nav-link-text ms-1">Login</span>
                   </NavLink>
                 </p>

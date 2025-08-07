@@ -70,34 +70,34 @@ function Login() {
 
   return (
     <>
-      <div class="container my-auto mt-5">
-        <div class="row">
-          <div class="col-lg-4 col-md-8 col-12 mx-auto">
-            <div class="card z-index-0 fadeIn3 fadeInBottom">
-              <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
-                <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                  <h4 class="text-white font-weight-bolder text-center my-2">Login</h4>
-                  {/* <div class="row mt-3">
-                    <div class="col-2 text-center ms-auto">
-                      <a class="btn btn-link px-3" href="javascript:;">
-                        <i class="fa fa-facebook text-white text-lg"></i>
+      <div className="container my-auto mt-5">
+        <div className="row">
+          <div className="col-lg-6 col-md-8 col-12 mx-auto">
+            <div className="card z-index-0 fadeIn3 fadeInBottom">
+              <div className="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+                <div className="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
+                  <h4 className="text-white font-weight-bolder text-center my-2">Login</h4>
+                  {/* <div className="row mt-3">
+                    <div className="col-2 text-center ms-auto">
+                      <a className="btn btn-link px-3" href="javascript:;">
+                        <i className="fa fa-facebook text-white text-lg"></i>
                       </a>
                     </div>
-                    <div class="col-2 text-center px-1">
-                      <a class="btn btn-link px-3" href="javascript:;">
-                        <i class="fa fa-github text-white text-lg"></i>
+                    <div className="col-2 text-center px-1">
+                      <a className="btn btn-link px-3" href="javascript:;">
+                        <i className="fa fa-github text-white text-lg"></i>
                       </a>
                     </div>
-                    <div class="col-2 text-center me-auto">
-                      <a class="btn btn-link px-3" href="javascript:;">
-                        <i class="fa fa-google text-white text-lg"></i>
+                    <div className="col-2 text-center me-auto">
+                      <a className="btn btn-link px-3" href="javascript:;">
+                        <i className="fa fa-google text-white text-lg"></i>
                       </a>
                     </div>
                   </div> */}
                 </div>
               </div>
 
-              <div class="card-body">
+              <div className="card-body">
                 <Form className="text-start my-3" onSubmit={onSubmit}>
                   <Form.Group className=" mb-3">
                     <Form.Label>Email</Form.Label>
@@ -107,7 +107,7 @@ function Login() {
                     <Form.Label>Password</Form.Label>
                     <Form.Control type="password" id='password' name="password" value={password} placeholder='Password' onChange={onChange} />
                   </Form.Group>
-                  <p class="mt-2 text-sm text-end">
+                  <p className="mt-2 text-sm text-end">
 
                     <NavLink className="text-primary text-gradient font-weight-bold" to='/' >
                         <span className="nav-link-text ms-1">Forgot password?</span>
@@ -117,9 +117,9 @@ function Login() {
                     Login
                   </Button>
                   <div>
-                  <p class="mt-4 text-sm text-center">
+                  <p className="mt-4 text-sm text-center">
                     Don't have an account?
-                    <NavLink className="text-primary text-gradient font-weight-bold" to='/register' onClick={(e) => { dispatch(closeMenu())}}>
+                    <NavLink className="text-primary text-gradient font-weight-bold" to='/register' >
                         <span className="nav-link-text ms-1">Register</span>
                     </NavLink>
                   </p>
