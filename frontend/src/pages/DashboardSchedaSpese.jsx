@@ -38,7 +38,7 @@ function DashboardSchedaSpese() {
         </div>
       </div>
       }
-{schedaSpese.length < 0 ? (<><SchedaSpese/></>) : 
+{schedaSpese.length > 0 ? (<><SchedaSpese/></>) : 
 (
 <>
       <div className="container-fluid">
