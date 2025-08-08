@@ -60,6 +60,7 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
         //     notaSpeseResolved.splice(5, Infinity);
         // }
         // You might want to attach the resolved notaSpese to the scheda
+        notaSpeseResolved.sort((a, b) => new Date(b.inserimentoData) - new Date(a.inserimentoData));
         return { ...scheda.toObject(), notaSpese: notaSpeseResolved};
       })
     );
@@ -180,7 +181,7 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
     }
 
     if(!schedaSpese) {
-        throw new Error("goal not found")
+        throw new Error("scheda not found")
     }
     //check user
     if(!req.user) {

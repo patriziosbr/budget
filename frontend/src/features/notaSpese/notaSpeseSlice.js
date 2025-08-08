@@ -39,40 +39,41 @@ export const createNotaSpese = createAsyncThunk(
   }
 );
 
-// Update match
-// export const updateBudget = createAsyncThunk(
-//   'match/update',
-//   async (data, thunkAPI) => {
-//     if(data.body) {
-//       try {
-//         const token = thunkAPI.getState().auth.user.token;
-//         const matchId = data.matchId;
-//         const matchData = data.body;
-//         return await budgetService.updateBudget(matchId, matchData, token);
-//       } catch (error) {
-//         const message =
-//           (error.response?.data?.message) || error.message || error.toString();
-//         return thunkAPI.rejectWithValue(message);
-//       }
-//     } else {
-//       try {
-//         const token = thunkAPI.getState().auth.user.token;
-//         const updatedBudgetes = await Promise.all(
-//           data.map(async (match) => {
-//             const matchId = match.matchId;
-//             const matchData = match;
-//             return await budgetService.updateBudget(matchId, matchData, token);
-//           })
-//         );
-//         return updatedBudgetes;
-//       } catch (error) {
-//         const message =
-//           (error.response?.data?.message) || error.message || error.toString();
-//         return thunkAPI.rejectWithValue(message);
-//       }
-//     }
-//   }
-// );
+// Update notaSpese
+export const updateNotaSpese = createAsyncThunk(
+  'notaSpese/update',
+  async (data, thunkAPI) => {
+    debugger
+    if(data) {
+      try {
+        const token = thunkAPI.getState().auth.user.token;
+        const notaSpeseId = data.notaID;
+        const notaSpeseData = data;
+        return await notaSpeseService.updateNotaSpese(notaSpeseId, notaSpeseData, token);
+      } catch (error) {
+        const message =
+          (error.response?.data?.message) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    } else {
+      try {
+        const token = thunkAPI.getState().auth.user.token;
+        const updatedBudgetes = await Promise.all(
+          data.map(async (notaSpese) => {
+            const notaSpeseId = notaSpese.notaSpeseId;
+            const notaSpeseData = notaSpese;
+            return await notaSpeseService.updateNotaSpese(notaSpeseId, notaSpeseData, token);
+          })
+        );
+        return updatedBudgetes;
+      } catch (error) {
+        const message =
+          (error.response?.data?.message) || error.message || error.toString();
+        return thunkAPI.rejectWithValue(message);
+      }
+    }
+  }
+);
 
 const notaSpeseSlice = createSlice({
   name: 'notaSpese',
@@ -95,22 +96,22 @@ const notaSpeseSlice = createSlice({
         state.isError = true;
         state.message = action.payload;
       })
-      // .addCase(updateBudget.pending, (state) => {
-      //   state.isLoading = true;
-      // })
-      // .addCase(updateBudget.fulfilled, (state, action) => {
-      //   state.isLoading = false;
-      //   state.isSuccess = true;
-      //   const index = state.matches.findIndex((match) => match._id === action.payload._id);
-      //   if (index !== -1) {
-      //     state.matches[index] = action.payload;
-      //   }
-      // })
-      // .addCase(updateBudget.rejected, (state, action) => {
-      //   state.isLoading = false;
-      //   state.isError = true;
-      //   state.message = action.payload;
-      // })
+      .addCase(updateNotaSpese.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(updateNotaSpese.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        const index = state.notaSpese.findIndex((notaSpese) => notaSpese._id === action.payload._id);
+        if (index !== -1) {
+          state.notaSpese[index] = action.payload;
+        }
+      })
+      .addCase(updateNotaSpese.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
       .addCase(getNotaSpese.pending, (state) => {
         state.isLoading = true;
       })

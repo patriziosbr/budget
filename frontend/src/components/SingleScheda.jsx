@@ -308,7 +308,7 @@ function SingleScheda({scheda}) {
                                 </div>
                                 <div className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100" onClick={()=>handleShow("creaNotaModal")}>
                                     <FaPlus/>
-                                    <p className='mb-0'>&nbsp;New note</p>
+                                    <p className='mb-0'>&nbsp;Add note</p>
                                 </div>
                             </li>
                         </ul>
@@ -407,7 +407,7 @@ function SingleScheda({scheda}) {
         <div className="row">
             <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")} centered>
                 <Modal.Header closeButton>
-                <Modal.Title><b>Crea Nota in {scheda.titolo}</b></Modal.Title>
+                <Modal.Title><b>{ notaSpesaToEdit === null? ("Create") : ("Edit")} note in {scheda.titolo}</b></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>            
                     <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} />
@@ -416,7 +416,7 @@ function SingleScheda({scheda}) {
 
             <Modal show={modalState.shareModal} onHide={() => handleClose("shareModal")} centered>
                 <Modal.Header closeButton>
-                    <Modal.Title><b>Condividi "{scheda.titolo}"</b></Modal.Title>
+                    <Modal.Title><b>Share "{scheda.titolo}"</b></Modal.Title>
                 </Modal.Header>
                 <Modal.Body>            
                     <Form className="mb-3" onSubmit={editSharedUserSubmit}>
@@ -428,7 +428,7 @@ function SingleScheda({scheda}) {
                             emailListParent={scheda.condivisoConList} 
                         />
                         {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
-                        <h6>Utenti con accesso</h6>
+                        <h6>Shared users</h6>
                         <div >
                             {user._id === scheda.user && <div className="d-flex justify-content-between align-items-center my-3" >
                                 <div className="d-flex align-items-center">
@@ -457,7 +457,7 @@ function SingleScheda({scheda}) {
                                         <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)': ""}</p>
                                         <Form.Select aria-label="Default select example"   onChange={(e) => {if (e.target.value === "1") { removeSharedUser(userMail);}}}>
                                                 <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
-                                                <option className="text-danger" value="1">Rimuovi</option>
+                                                <option className="text-danger" value="1">Remove</option>
                                         </Form.Select>
                                     </div>
                                 </div>

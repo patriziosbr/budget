@@ -32,23 +32,24 @@ const createNotaSpese = async (notaSpeseData, token) => {
 }
 
 // // Update events
-// const updateNotaSpese = async (BudgetId, BudgetData, token) => {
-//   const config = {
-//     headers: {
-//       Authorization: `Bearer ${token}`,
-//     },
-//   }
+const updateNotaSpese = async (notaSpeseId, notaSpeseData, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
 
-//   const response = await axios.put(API_URL + BudgetId, BudgetData, config)
+  const response = await axios.put(API_URL + notaSpeseId, notaSpeseData, config)
 
-//   return response.data
-// }
+  return response.data
+}
 
 
 
 const notaSpeseService = {
   getNotaSpese,
   createNotaSpese,
+  updateNotaSpese
 }
 
 export default notaSpeseService

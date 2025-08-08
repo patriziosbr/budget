@@ -40,28 +40,25 @@ const setNotaSpese = asyncHandler(async (req, res) => {
     res.status(200).json(notaSpese)
 })
 
-// //@desc update Goals
+// //@desc update Nota
 // //@route PUT/PATCH /api/goals/:id
 // //@access Private
-// const updateGoal = asyncHandler(async (req, res) => {
-//     const goal = await Goal.findById(req.params.id)
-//     if(!goal) {
-//         throw new Error("add text in body")
-//     }
+const updateNotaSpese = asyncHandler(async (req, res) => {
+    const notaSpese = await NotaSpese.findById(req.params.id)
 
-//     //check user
-//     if(!req.user) {
-//         res.status(401)
-//         throw new Error("user not found")
-//     }
-//     //check if user is owner
-//     if(goal.user.toString() !== req.user.id){
-//         res.status(401)
-//         throw new Error("user not authorized")
-//     }
-//     const updatedGoal = await Goal.findByIdAndUpdate(req.params.id, req.body, {new : true})
-//     res.status(200).json(updatedGoal)
-// })
+    //check user
+    if(!req.user) {
+        res.status(401)
+        throw new Error("user not found")
+    }
+    //check if user is owner
+    if(notaSpese.user.toString() !== req.user.id){
+        res.status(401)
+        throw new Error("user not authorized")
+    }
+    const updatedNotaSpese = await NotaSpese.findByIdAndUpdate(req.params.id, req.body, {new : true})
+    res.status(200).json(updatedNotaSpese)
+})
 // //@desc cancel goals
 // //@route DELETE /api/goals/:id
 // //@access Private
@@ -89,6 +86,6 @@ const setNotaSpese = asyncHandler(async (req, res) => {
 module.exports = {
     getNotaSpese,
     setNotaSpese,
-    // updateGoal,
+    updateNotaSpese,
     // deleteGoal
 }

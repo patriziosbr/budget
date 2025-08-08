@@ -4,7 +4,7 @@ import { toast } from 'react-toastify'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
-import { createNotaSpese } from '../features/notaSpese/notaSpeseSlice'
+import { createNotaSpese, updateNotaSpese} from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 import { parseDate } from './utils/dateParser'
 
@@ -40,6 +40,7 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
       const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
       if(categoria_id.length > 0) categoriesArray.push(categoria_id);
       const notaSpeseData = {
+        notaID: notaToEdit._id,
         testo,
         inserimentoData: inserimentoData || new Date().toISOString(),
         importo: parseFloat(importo),
@@ -52,6 +53,7 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
       }
       if(notaToEdit !== null) {
         // go edit
+        fetchDispatch(notaSpeseData, true)
       } else {
         // crea nuovo
         fetchDispatch(notaSpeseData)
@@ -60,11 +62,17 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
     }
   }
 
-  const fetchDispatch = async (notaSpeseData) => {
+  const fetchDispatch = async (notaSpeseData, isEdit = false) => {
+    debugger
     setisDisabled(true);
     try {
       // Dispatch action to create a new nota spese
-      const response = await dispatch(createNotaSpese(notaSpeseData)).unwrap();
+      let response;
+      if(isEdit) {
+        await dispatch(updateNotaSpese(notaSpeseData)).unwrap();
+      } else {
+        await dispatch(createNotaSpese(notaSpeseData)).unwrap();
+      }
   
       toast.success("Nota spese creata con successo!");
   
@@ -135,9 +143,14 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
             onChange={onChange}
           />
         </Form.Group>
-        <Button type="submit" className="btn btn-primary" style={{ width: '100%' }} disabled={isDisabled}>
-          { notaToEdit === null? ("Crea") : ("Modifica")}  
-        </Button>
+        <div type="submit"
+         className="d-flex align-items-center justify-content-center btn bg-gradient-dark my-4" 
+         style={{ width: '100%' }}
+         disabled={isDisabled}>
+          <p className="mb-0 ">
+            { notaToEdit === null? ("Create") : ("Edit")}  
+          </p>
+        </div>
       </Form>
     </Container>
   )
