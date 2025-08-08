@@ -235,7 +235,7 @@ function DashboardPublic() {
 
   return (
     <>
-    <div className="container-fluid py-2">
+    <div className="container py-2">
       <div className="row">
         <h3 className="mb-0 h4 font-weight-bolder">Dashboard</h3>
         <p className="mb-4">
@@ -676,7 +676,7 @@ function DashboardPublic() {
       {/* se aggiungo le row sopra è da togliere il wrapper del footer e pure la classe main-content */}
       {/* <div className='w-100 position-fixed bottom-0 start-0 end-0'>
         <footer className="main-content footer py-4  ">
-          <div className="container-fluid">
+          <div className="container">
             <div className="row align-items-center justify-content-lg-between">
               <div className="col-lg-6 mb-lg-0 mb-4">
                 <div className="copyright text-center text-sm text-muted text-lg-start">

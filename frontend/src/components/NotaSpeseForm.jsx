@@ -4,11 +4,11 @@ import { toast } from 'react-toastify'
 import Button from 'react-bootstrap/Button'
 import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
-import { createNotaSpese, updateNotaSpese} from '../features/notaSpese/notaSpeseSlice'
+import { createNotaSpese, updateNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 import { parseDate } from './utils/dateParser'
 
-function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
+function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, onClick }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
 
@@ -38,7 +38,7 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
       toast.error('Please fill in all required fields')
     } else {
       const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
-      if(categoria_id.length > 0) categoriesArray.push(categoria_id);
+      if (categoria_id.length > 0) categoriesArray.push(categoria_id);
       const notaSpeseData = {
         notaID: notaToEdit._id,
         testo,
@@ -47,11 +47,11 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
         categoria_id: categoriesArray ?? [],
         inserimentoUser: {
           id: user._id,
-          email:user.email,
+          email: user.email,
           name: user.name
         }
       }
-      if(notaToEdit !== null) {
+      if (notaToEdit !== null) {
         // go edit
         fetchDispatch(notaSpeseData, true)
       } else {
@@ -68,14 +68,14 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
     try {
       // Dispatch action to create a new nota spese
       let response;
-      if(isEdit) {
+      if (isEdit) {
         await dispatch(updateNotaSpese(notaSpeseData)).unwrap();
       } else {
         await dispatch(createNotaSpese(notaSpeseData)).unwrap();
       }
-  
+
       toast.success("Nota spese creata con successo!");
-  
+
       // Update schedaSpese with new notaSpese
       const data = {
         notaSpeseData: response,
@@ -83,7 +83,7 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
       };
       await dispatch(updateSchedaSpese(data)).unwrap();
       await dispatch(getSchedaSpese()).unwrap();
-      
+
     } catch (error) {
       console.error("Error Response:", error);
       toast.error(error.message || "Errore nella creazione della nota spese");
@@ -95,7 +95,7 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
   return (
     <Container>
       <Form className="mb-3" onSubmit={onSubmit}>
-        
+
         <Form.Group className="mb-3">
           <Form.Label>Inserimento Data</Form.Label>
           <Form.Control
@@ -143,15 +143,31 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null }) {
             onChange={onChange}
           />
         </Form.Group>
-        <div type="submit"
-         className="d-flex align-items-center justify-content-center btn bg-gradient-dark my-4" 
-         style={{ width: '100%' }}
-         disabled={isDisabled}>
-          <p className="mb-0 ">
-            { notaToEdit === null? ("Create") : ("Edit")}  
-          </p>
+
+        <div className="row mt-4 mb-3">
+            <div className="col-3">
+          {notaToEdit !== null &&
+              <div
+                style={{ cursor: "pointer" }}
+                className='text-danger btn border border-1 border-danger w-100'
+                onClick={onClick}>
+                Delete
+              </div>
+          }
+            </div>
+          <div className="col-9">
+            <div type="submit"
+              className="d-flex align-items-center justify-content-center btn bg-gradient-dark"
+              disabled={isDisabled}>
+              <p className="mb-0 ">
+                {notaToEdit === null ? ("Create") : ("Edit")}
+              </p>
+            </div>
+          </div>
+
         </div>
       </Form>
+
     </Container>
   )
 }

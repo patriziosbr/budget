@@ -784,7 +784,7 @@ progress {
 }
 
 .container,
-.container-fluid,
+.container,
 .container-xxl,
 .container-xl,
 .container-lg,
@@ -4939,7 +4939,7 @@ fieldset:disabled .btn {
 }
 
 .navbar>.container,
-.navbar>.container-fluid,
+.navbar>.container,
 .navbar>.container-sm,
 .navbar>.container-md,
 .navbar>.container-lg,

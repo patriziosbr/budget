@@ -21,15 +21,15 @@ function SchedaSpese() {
   useEffect(() => {
     if (user) {
       dispatch(getSchedaSpese()).unwrap()
-      .then((response) => {
-        console.log("tuttook");
-      })
-      .catch((error) => {
-        if(error.includes('500')){
-          toast.error("Service unavailable, try again later");
-        }
-        console.error("Error Response:", error); // Debugging
-      });
+        .then((response) => {
+          console.log("tuttook");
+        })
+        .catch((error) => {
+          if (error.includes('500')) {
+            toast.error("Service unavailable, try again later");
+          }
+          console.error("Error Response:", error); // Debugging
+        });
     }
   }, []);
   //è per il margine inferiore della pagina
@@ -61,7 +61,7 @@ function SchedaSpese() {
     return (
       <p className="text-danger">Error: {message}
         <br />
-        Please 
+        Please
         <span className='text-primary' role="button" onClick={() => goToLogin()}>
           <u>login </u>
         </span>
@@ -83,7 +83,7 @@ function SchedaSpese() {
   }
   return (
     <>
-      <section className='container-fluid py-2'>
+      <section>
         {schedaSpese.length > 0 ? (
           // {{schedaSpese.slice(-1)}}
           schedaSpese.map((scheda, i, arr) => (
@@ -96,14 +96,14 @@ function SchedaSpese() {
           ))
         ) : (
           <>
-            {user ? (<p>No schede available.</p>) : 
-            (<p>
-              Please
-              <span className='text-primary' role="button" onClick={() => goToLogin()}>
-                <u> login </u>
-              </span>
-              to continue
-            </p>)}  
+            {user ? (<p>No schede available.</p>) :
+              (<p>
+                Please
+                <span className='text-primary' role="button" onClick={() => goToLogin()}>
+                  <u> login </u>
+                </span>
+                to continue
+              </p>)}
           </>
         )}
       </section>
