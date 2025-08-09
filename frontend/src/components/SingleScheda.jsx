@@ -26,12 +26,13 @@ function SingleScheda({ scheda }) {
         shareModal: false,
         deleteModal: false,
         deleteNotaModal: false,
+        editNotaModal: false,
     });
     const [longPressCount, setlongPressCount] = useState(0)
     const [formData, setFormData] = useState({ titolo: scheda.titolo })
     const { titolo } = formData
     const dispatch = useDispatch()
-    const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
+    // const sharedUserLetter = scheda.condivisoConList.length > 0 ? true : false
 
     const [sharedUserUpdateForm, setSharedUserUpdateForm] = useState({
         titolo: scheda.titolo,
@@ -91,7 +92,8 @@ function SingleScheda({ scheda }) {
             [modalType]: false,
         }));
         setIsFormModified(false); // Reset form modified state
-        if (modalType === "creaNotaModal") setNotaSpesaToEdit(null)
+        if (modalType !== "editNotaModal") setNotaSpesaToEdit(null)
+        if (modalType === "deleteNotaModal") setNotaSpesaToEdit(null);
     };
 
     const [notaSpesaToEdit, setNotaSpesaToEdit] = useState(null);
@@ -199,7 +201,7 @@ function SingleScheda({ scheda }) {
     }
 
     const closeCreateEditModal = () => {
-        handleClose("creaNotaModal")
+        handleClose("editNotaModal")
         handleShow("deleteNotaModal")
     }
 
@@ -306,7 +308,7 @@ function SingleScheda({ scheda }) {
                                                         />
                                                         {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                                                     </div>
-                                                    <div role="button" className="d-flex flex-column" onClick={() => editNota("creaNotaModal", notaSpesa)}>
+                                                    <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}>
                                                         <h6 className="mb-1 text-dark text-sm"><u>{notaSpesa.testo ?? notaSpesa.testo}</u></h6>
                                                         <span className="text-xs"><u>{parseDate(notaSpesa.inserimentoData)}</u></span>
                                                     </div>
@@ -362,9 +364,17 @@ function SingleScheda({ scheda }) {
 
 
             <div className="row">
-                <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")} centered>
+                <Modal show={modalState.creaNotaModal }  onHide={() => handleClose("creaNotaModal")} centered>
                     <Modal.Header closeButton>
-                        <Modal.Title><b>{notaSpesaToEdit === null ? ("Create") : ("Edit")} note in {scheda.titolo}</b></Modal.Title>
+                        <Modal.Title><b>Create note in {scheda.titolo}</b></Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} />
+                    </Modal.Body>
+                </Modal>
+                <Modal show={modalState.editNotaModal}  onHide={() => handleClose("editNotaModal")} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title><b>Edit note in {scheda.titolo}</b></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} beforeDelete={() => closeCreateEditModal()} />
@@ -428,7 +438,7 @@ function SingleScheda({ scheda }) {
                     </Modal.Body>
                 </Modal>
 
-                <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal")} centered>
+                <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal") } centered>
                     <Modal.Header closeButton>
                         <Modal.Title><b>Confermi di eliminare la scheda: {scheda.titolo}?</b></Modal.Title>
                     </Modal.Header>
