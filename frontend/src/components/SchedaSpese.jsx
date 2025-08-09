@@ -11,7 +11,7 @@ const GestioneError = {
   message: "Cannot read properties of null (reading 'token')"
 };
 
-function SchedaSpese() {
+function SchedaSpese({ handleShow }) {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const { schedaSpese, isLoading, isError, message } = useSelector(
@@ -81,6 +81,7 @@ function SchedaSpese() {
       </>
     )
   }
+
   return (
     <>
       <section>
@@ -96,7 +97,19 @@ function SchedaSpese() {
           ))
         ) : (
           <>
-            {user ? (<p>No schede available.</p>) :
+            {user ?
+              (<>
+
+              <h5>Create a new list</h5>
+              <p>Expence list is empty, create a list to start your budget</p>
+              <div className="col-3">
+                <div className="btn bg-gradient-dark" onClick={handleShow}>
+                  <p className="mb-0">
+                    Create list
+                  </p>
+                </div>
+              </div>
+              </>) :
               (<p>
                 Please
                 <span className='text-primary' role="button" onClick={() => goToLogin()}>

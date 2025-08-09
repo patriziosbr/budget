@@ -8,7 +8,7 @@ import { createNotaSpese, updateNotaSpese } from '../features/notaSpese/notaSpes
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
 import { parseDate } from './utils/dateParser'
 
-function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, onClick }) {
+function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
 
@@ -30,64 +30,99 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, onClick }) {
     }))
   }
 
+const onSubmit = async (e) => {
+  e.preventDefault()
+  if (!testo || !importo) {
+    toast.error('Please fill in all required fields')
+  } else {
 
-  const onSubmit = async (e) => {
-    e.preventDefault()
+    const notaSpeseData = {
+      testo,
+      inserimentoData: inserimentoData || new Date().toISOString(),
+      importo: parseFloat(importo),
+      categoria_id: null,
+      inserimentoUser: {
+        id: user._id,
+        email: user.email,
+        name: user.name
+      }
+    };
 
-    if (!testo || !importo) {
-      toast.error('Please fill in all required fields')
+    if (notaToEdit !== null) {
+      notaSpeseData.notaID = notaToEdit._id;
+      fetchDispatch(notaSpeseData, true);
     } else {
-      const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
-      if (categoria_id.length > 0) categoriesArray.push(categoria_id);
-      const notaSpeseData = {
-        notaID: notaToEdit._id,
-        testo,
-        inserimentoData: inserimentoData || new Date().toISOString(),
-        importo: parseFloat(importo),
-        categoria_id: categoriesArray ?? [],
-        inserimentoUser: {
-          id: user._id,
-          email: user.email,
-          name: user.name
-        }
-      }
-      if (notaToEdit !== null) {
-        // go edit
-        fetchDispatch(notaSpeseData, true)
-      } else {
-        // crea nuovo
-        fetchDispatch(notaSpeseData)
-      }
-
+      fetchDispatch(notaSpeseData);
     }
   }
+}
+
+  // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
+  // const onSubmit = async (e) => {
+  //   e.preventDefault()
+  //   if (!testo || !importo) {
+  //     toast.error('Please fill in all required fields')
+  //   } else {
+  //     const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
+  //     if (categoria_id.length > 0) categoriesArray.push(categoria_id);
+  //     const notaSpeseData = {
+  //       notaID: notaToEdit ? notaToEdit._id : null,
+  //       testo,
+  //       inserimentoData: inserimentoData || new Date().toISOString(),
+  //       importo: parseFloat(importo),
+  //       categoria_id: categoriesArray,
+  //       inserimentoUser: {
+  //         id: user._id,
+  //         email: user.email,
+  //         name: user.name
+  //       }
+  //     };
+
+  //     if (notaToEdit !== null) {
+  //       // Edit: pass the correct notaID and data
+  //       fetchDispatch(notaSpeseData, true);
+  //     } else {
+  //       // Create: do not pass notaID
+  //       const notaSpeseDataNew = {
+  //         testo,
+  //         inserimentoData: inserimentoData || new Date().toISOString(),
+  //         importo: parseFloat(importo),
+  //         categoria_id: categoriesArray,
+  //         inserimentoUser: {
+  //           id: user._id,
+  //           email: user.email,
+  //           name: user.name
+  //         }
+  //       };
+  //       fetchDispatch(notaSpeseDataNew);
+  //     }
+
+  //   }
+  // }
 
   const fetchDispatch = async (notaSpeseData, isEdit = false) => {
-    debugger
     setisDisabled(true);
     try {
-      // Dispatch action to create a new nota spese
       let response;
       if (isEdit) {
-        await dispatch(updateNotaSpese(notaSpeseData)).unwrap();
+        response = await dispatch(updateNotaSpese(notaSpeseData)).unwrap();
+        toast.success("Nota spese modificata con successo!");
       } else {
-        await dispatch(createNotaSpese(notaSpeseData)).unwrap();
+        response = await dispatch(createNotaSpese(notaSpeseData)).unwrap();
+        toast.success("Nota spese creata con successo!");
+        // Update schedaSpese with new notaSpese
+        const data = {
+          notaSpeseData: response,
+          schedaId: schedaId,
+        };
+        await dispatch(updateSchedaSpese(data)).unwrap();
       }
-
-      toast.success("Nota spese creata con successo!");
-
-      // Update schedaSpese with new notaSpese
-      const data = {
-        notaSpeseData: response,
-        schedaId: schedaId,
-      };
-      await dispatch(updateSchedaSpese(data)).unwrap();
       await dispatch(getSchedaSpese()).unwrap();
-
     } catch (error) {
       console.error("Error Response:", error);
       toast.error(error.message || "Errore nella creazione della nota spese");
     } finally {
+      onSuccess();
       setisDisabled(false);
     }
   };
@@ -145,24 +180,24 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, onClick }) {
         </Form.Group>
 
         <div className="row mt-4 mb-3">
-            <div className="col-3">
-          {notaToEdit !== null &&
+          <div className="col-3">
+            {notaToEdit !== null &&
               <div
                 style={{ cursor: "pointer" }}
                 className='text-danger btn border border-1 border-danger w-100'
-                onClick={onClick}>
+                onClick={beforeDelete}>
                 Delete
               </div>
-          }
-            </div>
+            }
+          </div>
           <div className="col-9">
-            <div type="submit"
-              className="d-flex align-items-center justify-content-center btn bg-gradient-dark"
+            <button type="submit"
+              className="d-flex align-items-center justify-content-center btn bg-gradient-dark w-100"
               disabled={isDisabled}>
               <p className="mb-0 ">
                 {notaToEdit === null ? ("Create") : ("Edit")}
               </p>
-            </div>
+            </button>
           </div>
 
         </div>

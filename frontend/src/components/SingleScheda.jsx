@@ -91,7 +91,7 @@ function SingleScheda({ scheda }) {
             [modalType]: false,
         }));
         setIsFormModified(false); // Reset form modified state
-        // setNotaSpesaToEdit(null)
+        if (modalType === "creaNotaModal") setNotaSpesaToEdit(null)
     };
 
     const [notaSpesaToEdit, setNotaSpesaToEdit] = useState(null);
@@ -198,7 +198,7 @@ function SingleScheda({ scheda }) {
 
     }
 
-    const closeCreateEditModal = () => { 
+    const closeCreateEditModal = () => {
         handleClose("creaNotaModal")
         handleShow("deleteNotaModal")
     }
@@ -265,19 +265,25 @@ function SingleScheda({ scheda }) {
                                 </>
                             }
                             {longPressCount > 0 &&
-                                <div className='col-12 col-md-8 col-lg-8 d-grid ' style={{ gridTemplateColumns: '2fr 1fr 1fr' }} >
-                                    <Form.Group>
-                                        <Form.Control className='d-flex align-self-center' type="titolo" id='titolo' maxlength="21" name="titolo" value={titolo} placeholder='titolo' onChange={onChange} />
-                                        {erroLength && <small className='text-danger'>Max characters exceeded</small>}
-                                    </Form.Group>
-                                    {/* <input className='w-100 h-100 rounded' maxlength="21" name="titolo" type='text' value={titolo} onChange={onChange}/> */}
-                                    <div className='d-flex justify-content-center align-items-center'>
-                                        <FaRegCheckCircle size={20} onClick={() => updateSchedataTitolo()} />
+                                <>
+                                    <div className='col-9'>
+                                        <Form.Group>
+                                            <Form.Control className='d-flex align-self-center' type="titolo" id='titolo' maxlength="21" name="titolo" value={titolo} placeholder='titolo' onChange={onChange} />
+
+                                        </Form.Group>
                                     </div>
-                                    <div className='d-flex justify-content-center align-items-center'>
-                                        <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
+                                    <div className='col-3 d-flex justify-content-center align-items-center gap-5'>
+                                        <div role="button" className='d-flex justify-content-center align-items-center'>
+                                            <FaRegTimesCircle size={20} onClick={() => setlongPressCount(longPressCount - 1)} />
+                                        </div>
+                                        <div role="button" className='d-flex justify-content-center align-items-center'>
+                                            <FaRegCheckCircle size={20} onClick={() => updateSchedataTitolo()} />
+                                        </div>
                                     </div>
-                                </div>
+                                    <div>
+                                        {erroLength && <small className='text-danger'>Limit characters reached</small>}
+                                    </div>
+                                </>
                             }
                         </div>
                     </div>
@@ -325,31 +331,31 @@ function SingleScheda({ scheda }) {
                             </li>
                         </ul>
                     </div>
+                    {scheda.notaSpese.length > 0 &&
+                        <div className="row p-3">
+                            <div className="col-md-6 col-6">
+                                <div className="card">
+                                    <div className="card-body text-center">
+                                        <h6 className="text-center mb-0">Higher expence</h6>
+                                        <span className="text-xs">user name</span>
+                                        <hr className="horizontal dark my-1" />
+                                        <h5 className="mb-0">€ 0</h5>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="col-md-6 col-6">
+                                <div className="card">
+                                    <div className="card-body text-center">
+                                        <h6 className="text-center mb-0">Total</h6>
+                                        <span className="text-xs">&nbsp;</span>
+                                        <hr className="horizontal dark mt-0 mb-2" />
+                                        <h5 className="mb-0">€ {getTotale(scheda.notaSpese)}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>}
                 </div>
-
-                {scheda.notaSpese > 0 && <div className="row">
-                    <div className="col-md-6 col-6">
-                        <div className="card">
-                            <div className="card-body p-3 text-center">
-                                <h6 className="text-center mb-0">Higher expence</h6>
-                                <span className="text-xs">user name</span>
-                                <hr className="horizontal dark my-3" />
-                                <h5 className="mb-0">€ 0</h5>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="col-md-6 col-6">
-                        <div className="card">
-                            <div className="card-body p-3 text-center">
-                                <h6 className="text-center mb-0">Total</h6>
-                                <span className="text-xs">&nbsp;</span>
-                                <hr className="horizontal dark my-3" />
-                                <h5 className="mb-0">€ {getTotale(scheda.notaSpese)}</h5>
-                            </div>
-                        </div>
-                    </div>
-                </div>}
 
             </div>
 
@@ -361,7 +367,7 @@ function SingleScheda({ scheda }) {
                         <Modal.Title><b>{notaSpesaToEdit === null ? ("Create") : ("Edit")} note in {scheda.titolo}</b></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} onClick={ () => closeCreateEditModal() } />
+                        <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} beforeDelete={() => closeCreateEditModal()} />
                     </Modal.Body>
                 </Modal>
 
@@ -407,7 +413,7 @@ function SingleScheda({ scheda }) {
                                         <div className="">
                                             <p className='m-0'>{userMail.email} {user.email === userMail.email ? '(you)' : ""}</p>
                                             <Form.Select aria-label="Default select example" onChange={(e) => { if (e.target.value === "1") { removeSharedUser(userMail); } }}>
-                                                <option>{userMail.role === "write" && 'Lettura e scrittura/Editor'}</option>
+                                                <option>{userMail.role === "write" && 'Read and write/Editor'}</option>
                                                 <option className="text-danger" value="1">Remove</option>
                                             </Form.Select>
                                         </div>
@@ -438,21 +444,38 @@ function SingleScheda({ scheda }) {
                     </Modal.Body>
                 </Modal>
 
-                      <Modal show={modalState.deleteNotaModal} onHide={() => handleClose("deleteNotaModal")} centered>
-                        <Modal.Header closeButton>
-                          <Modal.Title><b>Confirm to delete: "{notaSpesaToEdit?.testo}"?</b></Modal.Title>
-                        </Modal.Header>
-                        <Modal.Body>
-                          <div className="d-flex gap-5 flex-column">
-                            <Button type="submit" className="btn btn-danger w-100">
-                              Conferma
-                            </Button>
-                            <Button type="submit" className="btn btn-secondary w-100">
-                              Annulla
-                            </Button>
-                          </div>
-                        </Modal.Body>
-                      </Modal>
+                <Modal show={modalState.deleteNotaModal} onHide={() => handleClose("deleteNotaModal")} centered>
+                    <Modal.Header closeButton>
+                        <Modal.Title><b>Confirm to delete: "{notaSpesaToEdit?.testo}"?</b></Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <p>Are you sure to delete this note <i>"{notaSpesaToEdit?.testo}"</i>, <b>this action can be undone</b> </p>
+                        <div className="row mt-4 mb-3">
+                            <div className="col-3">
+                                           <button
+                                    className=" text-dark btn btn-outline-dark btn-sm mb-0 w-100"
+                                    onClick={() => handleClose("deleteNotaModal")}
+                                    >
+                                    <p className="mb-0 ">
+                                       cancel
+                                    </p>
+                                </button>
+
+                                
+                            </div>
+                            <div className="col-9">
+                                    <button
+                                        type="submit"
+                                        
+                                        className='text-danger btn border border-1 border-danger w-100 '
+                                        >
+                                        Delete
+                                    </button>
+                            </div>
+
+                        </div>
+                    </Modal.Body>
+                </Modal>
             </div>
         </>
     );

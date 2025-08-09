@@ -49,13 +49,12 @@ function EmailShareList({
             onChange={(e) => setEmailToShare(e.target.value)}
             onKeyPress={handleKeyPress}
           />
-          <button
-            role="button" 
-            className="text-dark btn btn-outline-dark btn-sm d-flex align-items-center border-circle p-2 mb-0"
+          <Button
+            className="text-dark bg-white btn btn-outline-dark btn-sm d-flex align-items-center border-circle p-2 mb-0"
             onClick={handleAddEmail}
           >
           <FaPlus />
-          </button>
+          </Button>
         </div>
       </Form.Group>
 
@@ -65,11 +64,12 @@ function EmailShareList({
             <ListGroup.Item key={index} className="d-flex justify-content-between align-items-center">
               {entry.email}
               <Button 
+                className="mb-0"
                 variant="outline-danger" 
                 size="sm" 
                 onClick={() => onRemoveEmail(entry.email)}
               >
-                Rimuovi
+                Remove
               </Button>
             </ListGroup.Item>
           ))}

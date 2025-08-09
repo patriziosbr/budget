@@ -11,9 +11,7 @@ function DashboardSchedaSpese() {
   const [show, setShow] = useState(false);
   const handleShow = () => setShow(true);
   const { user } = useSelector((state) => state.auth);
-  const { schedaSpese, isLoading, isError, message } = useSelector(
-    (state) => state.schedaSpese
-  )
+
   const handleClose = () => {
     setShow(false); // Reset Redux state when closing the modal
   };
@@ -25,7 +23,7 @@ function DashboardSchedaSpese() {
           <div className="row">
             <div className="col-12 col-md-8 m-auto">
               <div className='d-flex justify-content-between align-items-center mb-4 mt-0'>
-                <h2 className='mb-0 align-self-center mt-sm-4'>Expence list</h2>
+                <h2 className='mb-0 align-self-center'>Expence list</h2>
                 <div className=" btn bg-gradient-dark mb-0" onClick={handleShow}>
                   <p className="mb-0">
                     Create list
@@ -36,19 +34,19 @@ function DashboardSchedaSpese() {
           </div>
         </div>
       }
-      {schedaSpese.length > 0 ?
-        (
+
           <div className="container ">
             <div className="row">
               <div className="col-12 col-md-8 m-auto">
-                <><SchedaSpese /></>
+                <><SchedaSpese handleShow={() => handleShow()} /></>
               </div>
             </div>
           </div>
-        ) : (
+        {/* ) : (
           <>
-            <div className="container">
+ <div className="container">
               <div className="row">
+                <div className="col-12 col-md-8 m-auto">
                   <h5>Create a new list</h5>
                   <p>Expence list are empty, create a list to start your budget</p>
                   <div className="col-3">
@@ -58,10 +56,12 @@ function DashboardSchedaSpese() {
                       </p>
                     </div>
                   </div>
+
+                </div>
               </div>
-            </div>
+            </div> 
           </>
-        )}
+        )} */}
 
 
       <Modal show={show} onHide={handleClose} centered>
