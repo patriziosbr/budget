@@ -92,14 +92,12 @@ const deleteNotaSpese = asyncHandler(async (req, res) => {
 const deleteManyNotaSpese = asyncHandler(async (req, res) => {
     const idsToDelete = req.map(nota => nota.id);
     //check user
-    if(!req[0].user) {
-        res.status(401)
-        throw new Error("user not found")
-    }
-    console.log(res, "-------------deleteManyNotaSpese----------"); // Debugging
-    
+    // if(!req[0]?.user) {
+    //     res.status(401)
+    //     throw new Error("user not found")
+    // }    
     await NotaSpese.deleteMany({ _id: { $in: idsToDelete } }).catch((error) => console.log(error))
-    res.status(200).json({message: "All user notes deleted"});
+    // res.status(200).json({message: "All user notes deleted"});
 })
 
 

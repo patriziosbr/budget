@@ -197,12 +197,14 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
         notaObjData.push({id:notaId.toString(), user: req.user});
     })
     
-    deleteManyNotaSpese(notaObjData);
+    deleteManyNotaSpese(notaObjData, res);
 
 
     // await Goal.findByIdAndDelete(req.params.id) //soluzione mia al volo rifaccio la query 
     await schedaSpese.deleteOne(); //remove() is not a function ??
-    res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 
+    // res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 
+    res.status(200).json({message: "List deleted"});
+
 })
 
 module.exports = {
