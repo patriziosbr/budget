@@ -44,12 +44,25 @@ const updateNotaSpese = async (notaSpeseId, notaSpeseData, token) => {
   return response.data
 }
 
+// Delete scheda spese
+const deleteNotaSpese = async (notaSpeseId, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  }
+  const response = await axios.delete(API_URL + notaSpeseId, config)
+  // return response.data
+  return { id: notaSpeseId };
+}
+
 
 
 const notaSpeseService = {
   getNotaSpese,
   createNotaSpese,
-  updateNotaSpese
+  updateNotaSpese,
+  deleteNotaSpese
 }
 
 export default notaSpeseService

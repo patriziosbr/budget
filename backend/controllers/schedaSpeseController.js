@@ -8,7 +8,7 @@ const ObjectId = Types.ObjectId;
 const { all } = require('axios');
 const baseUrl = "https://budget-fe.onrender.com/"; 
 const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTemplate/condivisioneSchedaSpese");
-
+const { deleteManyNotaSpese } = require("./notaSpeseController");
 //@desc get goals
 //@route GET /api/goals
 //@access Private
@@ -179,7 +179,6 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
     if(req.params.id) {
         schedaSpese = await SchedaSpese.findById(req.params.id);
     }
-
     if(!schedaSpese) {
         throw new Error("scheda not found")
     }
@@ -193,6 +192,14 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
         res.status(401)
         throw new Error("user not authorized")
     }
+    const notaObjData = [] 
+    schedaSpese.notaSpese.map((notaId) => {
+        notaObjData.push({id:notaId.toString(), user: req.user});
+    })
+    
+    deleteManyNotaSpese(notaObjData);
+
+
     // await Goal.findByIdAndDelete(req.params.id) //soluzione mia al volo rifaccio la query 
     await schedaSpese.deleteOne(); //remove() is not a function ??
     res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 

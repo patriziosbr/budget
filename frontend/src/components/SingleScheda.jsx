@@ -13,6 +13,7 @@ import useLongPress from "./utils/useLongPress.js";
 import { useSelector, useDispatch } from 'react-redux'
 import RandomColorCircle from './utils/RandomColorCircle.js';
 import { getSchedaSpese, updateSchedaSpese, deleteSchedaSpese, singleSchedaSpeseGet } from '../features/schedaSpese/schedaSpeseSlice'
+import { deleteNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import EmailShareList from './utils/EmailShareList';
 import { useNavigate, NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify';
@@ -205,6 +206,23 @@ function SingleScheda({ scheda }) {
         handleShow("deleteNotaModal")
     }
 
+    const deleteNotaSpeseAction = async (notaId) => {
+        debugger
+        try {
+            await dispatch(deleteNotaSpese(notaId)).unwrap()
+            // .then(() => {
+            //     toast.success("Nota spese eliminata con successo!");
+            // }).complete(async () => {
+            //     handleClose("deleteNotaModal");
+            //     await dispatch(getSchedaSpese()).unwrap();
+            // })
+        } catch (error) {
+            console.log("Error Response:", error);
+        
+            toast.error(`Error deleting note: ${error.message}`)
+        }
+    }
+
     return (
         < >
             <div className="">
@@ -364,7 +382,7 @@ function SingleScheda({ scheda }) {
 
 
             <div className="row">
-                <Modal show={modalState.creaNotaModal }  onHide={() => handleClose("creaNotaModal")} centered>
+                <Modal show={modalState.creaNotaModal} onHide={() => handleClose("creaNotaModal")} centered>
                     <Modal.Header closeButton>
                         <Modal.Title><b>Create note in {scheda.titolo}</b></Modal.Title>
                     </Modal.Header>
@@ -372,7 +390,7 @@ function SingleScheda({ scheda }) {
                         <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} />
                     </Modal.Body>
                 </Modal>
-                <Modal show={modalState.editNotaModal}  onHide={() => handleClose("editNotaModal")} centered>
+                <Modal show={modalState.editNotaModal} onHide={() => handleClose("editNotaModal")} centered>
                     <Modal.Header closeButton>
                         <Modal.Title><b>Edit note in {scheda.titolo}</b></Modal.Title>
                     </Modal.Header>
@@ -438,7 +456,7 @@ function SingleScheda({ scheda }) {
                     </Modal.Body>
                 </Modal>
 
-                <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal") } centered>
+                <Modal show={modalState.deleteModal} onHide={() => handleClose("deleteModal")} centered>
                     <Modal.Header closeButton>
                         <Modal.Title><b>Confermi di eliminare la scheda: {scheda.titolo}?</b></Modal.Title>
                     </Modal.Header>
@@ -462,25 +480,30 @@ function SingleScheda({ scheda }) {
                         <p>Are you sure to delete this note <i>"{notaSpesaToEdit?.testo}"</i>, <b>this action can be undone</b> </p>
                         <div className="row mt-4 mb-3">
                             <div className="col-3">
-                                           <button
+                                <button
                                     className=" text-dark btn btn-outline-dark btn-sm mb-0 w-100"
                                     onClick={() => handleClose("deleteNotaModal")}
-                                    >
+                                >
                                     <p className="mb-0 ">
-                                       cancel
+                                        cancel
                                     </p>
                                 </button>
 
-                                
+
                             </div>
                             <div className="col-9">
-                                    <button
-                                        type="submit"
-                                        
-                                        className='text-danger btn border border-1 border-danger w-100 '
-                                        >
-                                        Delete
-                                    </button>
+                                <p>
+                                {JSON.stringify(notaSpesaToEdit)}
+
+                                </p>
+                                <button
+                                    type="submit"
+
+                                    className='text-danger btn border border-1 border-danger w-100 '
+                                    onClick={() => deleteNotaSpeseAction(notaSpesaToEdit._id)}
+                                >
+                                    Delete
+                                </button>
                             </div>
 
                         </div>

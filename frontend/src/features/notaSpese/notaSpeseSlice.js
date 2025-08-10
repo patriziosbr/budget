@@ -75,6 +75,22 @@ export const updateNotaSpese = createAsyncThunk(
   }
 );
 
+// Delete deleteNotaSpese
+export const deleteNotaSpese = createAsyncThunk(
+  'notaSpese/delete',
+  async (notaId, thunkAPI) => {
+    debugger
+    try {
+      const token = thunkAPI.getState().auth.user.token;
+      return await notaSpeseService.deleteNotaSpese(notaId, token);
+    } catch (error) {
+      const message =
+        (error.response?.data?.message) || error.message || error.toString();
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
+
 const notaSpeseSlice = createSlice({
   name: 'notaSpese',
   initialState,
@@ -121,6 +137,22 @@ const notaSpeseSlice = createSlice({
         state.notaSpese = action.payload;
       })
       .addCase(getNotaSpese.rejected, (state, action) => {
+        state.isLoading = false;
+        state.isError = true;
+        state.message = action.payload;
+      })
+      .addCase(deleteNotaSpese.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(deleteNotaSpese.fulfilled, (state, action) => {
+        state.isLoading = false;
+        state.isSuccess = true;
+        // Remove the deleted scheda from the array
+        // state.schedaSpese = state.schedaSpese.filter(
+        //   (scheda) => scheda._id !== action.payload.id
+        // );
+      })
+      .addCase(deleteNotaSpese.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
         state.message = action.payload;

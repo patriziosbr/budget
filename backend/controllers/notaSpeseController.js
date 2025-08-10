@@ -62,30 +62,52 @@ const updateNotaSpese = asyncHandler(async (req, res) => {
 // //@desc cancel goals
 // //@route DELETE /api/goals/:id
 // //@access Private
-// const deleteGoal = asyncHandler(async (req, res) => {
-//     const goal = await Goal.findById(req.params.id);
-//     if(!goal) {
-//         throw new Error("goal not found")
-//     }
+const deleteNotaSpese = asyncHandler(async (req, res) => {
+    const notaID = req?.params?.id
 
-//     //check user
-//     if(!req.user) {
-//         res.status(401)
-//         throw new Error("user not found")
-//     }
-//     //check if user is owner
-//     if(goal.user.toString() !== req.user.id){
-//         res.status(401)
-//         throw new Error("user not authorized")
-//     }
-//     // await Goal.findByIdAndDelete(req.params.id) //soluzione mia al volo rifaccio la query 
-//     await goal.deleteOne(); //remove() is not a function ??
-//     res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 
-// })
+    const notaSpese = await NotaSpese.findById(notaID);
+    if(!notaSpese) {
+        throw new Error("delete notaSpese not found")
+    }
+    //check user
+    if(!req.user) {
+        res.status(401)
+        throw new Error("user not found")
+    }
+    //check if user is owner
+    if(notaSpese.user.toString() !== req.user.id){
+        res.status(401)
+        throw new Error("user not authorized")
+    }
+
+    // await notaSpese.findByIdAndDelete(req.params.id) //soluzione mia al volo rifaccio la query 
+        await notaSpese.deleteOne(); //remove() is not a function ??
+        res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 
+
+
+})
+
+
+// //@access Private
+const deleteManyNotaSpese = asyncHandler(async (req, res) => {
+    const idsToDelete = req.map(nota => nota.id);
+    //check user
+    if(!req[0].user) {
+        res.status(401)
+        throw new Error("user not found")
+    }
+    console.log(res, "-------------deleteManyNotaSpese----------"); // Debugging
+    
+    await NotaSpese.deleteMany({ _id: { $in: idsToDelete } }).catch((error) => console.log(error))
+    res.status(200).json({message: "All user notes deleted"});
+})
+
+
 
 module.exports = {
     getNotaSpese,
     setNotaSpese,
     updateNotaSpese,
-    // deleteGoal
+    deleteNotaSpese,
+    deleteManyNotaSpese
 }
