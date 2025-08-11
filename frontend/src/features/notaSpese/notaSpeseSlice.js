@@ -43,7 +43,6 @@ export const createNotaSpese = createAsyncThunk(
 export const updateNotaSpese = createAsyncThunk(
   'notaSpese/update',
   async (data, thunkAPI) => {
-    debugger
     if(data) {
       try {
         const token = thunkAPI.getState().auth.user.token;
@@ -78,11 +77,10 @@ export const updateNotaSpese = createAsyncThunk(
 // Delete deleteNotaSpese
 export const deleteNotaSpese = createAsyncThunk(
   'notaSpese/delete',
-  async (notaId, thunkAPI) => {
-    debugger
+  async (body, thunkAPI) => {
     try {
       const token = thunkAPI.getState().auth.user.token;
-      return await notaSpeseService.deleteNotaSpese(notaId, token);
+      return await notaSpeseService.deleteNotaSpese(body.notaId, body.schedaId, token);
     } catch (error) {
       const message =
         (error.response?.data?.message) || error.message || error.toString();

@@ -193,7 +193,7 @@ function SingleScheda({ scheda }) {
             initialValue,
         );
 
-        return importoSummed.toFixed(2);
+        return importoSummed?.toFixed(2);
     }
 
     const goToDettagolioScheda = (schedaID) => {
@@ -201,21 +201,24 @@ function SingleScheda({ scheda }) {
 
     }
 
-    const closeCreateEditModal = () => {
-        handleClose("editNotaModal")
-        handleShow("deleteNotaModal")
+    const [refSchedaId, SetRefSchedaId] = useState(null);
+    const closeCreateEditModal = (schedaID) => {
+        handleClose("editNotaModal");
+        handleShow("deleteNotaModal");
+        SetRefSchedaId(schedaID);
     }
 
     const deleteNotaSpeseAction = async (notaId) => {
-        debugger
+        let body = {
+            notaId, 
+            schedaId: refSchedaId
+        }
+
         try {
-            await dispatch(deleteNotaSpese(notaId)).unwrap()
-            // .then(() => {
-            //     toast.success("Nota spese eliminata con successo!");
-            // }).complete(async () => {
-            //     handleClose("deleteNotaModal");
-            //     await dispatch(getSchedaSpese()).unwrap();
-            // })
+            const response = await dispatch(deleteNotaSpese(body)).unwrap();
+            await dispatch(getSchedaSpese()).unwrap();
+            handleClose("deleteNotaModal");
+            toast.success(response.message || "Note succesfull deleted");
         } catch (error) {
             console.log("Error Response:", error);
         
@@ -316,7 +319,7 @@ function SingleScheda({ scheda }) {
                             ) : (
                                 <>
                                     {scheda.notaSpese.map((notaSpesa, i) => (
-                                        notaSpesa.testo && i < 5 && (
+                                        notaSpesa && i < 5 && (
                                             <li key={notaSpesa._id} className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg">
                                                 <div className="d-flex align-items-center">
                                                     <div className="d-flex align-items-center">
@@ -326,13 +329,14 @@ function SingleScheda({ scheda }) {
                                                         />
                                                         {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                                                     </div>
-                                                    <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}>
-                                                        <h6 className="mb-1 text-dark text-sm"><u>{notaSpesa.testo ?? notaSpesa.testo}</u></h6>
-                                                        <span className="text-xs"><u>{parseDate(notaSpesa.inserimentoData)}</u></span>
+                                                    {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
+                                                    <div role="button" className="d-flex flex-column"onClick={notaSpesa.testo ? () => editNota("editNotaModal", notaSpesa) : undefined}>
+                                                        <h6 className="mb-1 text-dark text-sm"><u>{notaSpesa.testo ? notaSpesa.testo : "Note not available" }</u></h6>
+                                                        <span className="text-xs"><u>{parseDate(notaSpesa?.inserimentoData)}</u></span>
                                                     </div>
                                                 </div>
                                                 <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
-                                                    € {notaSpesa.importo.toFixed(2)}
+                                                    € {notaSpesa?.importo?.toFixed(2)}
                                                 </div>
                                             </li>
                                         )
@@ -395,7 +399,7 @@ function SingleScheda({ scheda }) {
                         <Modal.Title><b>Edit note in {scheda.titolo}</b></Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
-                        <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} beforeDelete={() => closeCreateEditModal()} />
+                        <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} notaToEdit={notaSpesaToEdit} beforeDelete={() => closeCreateEditModal(scheda._id)} />
                     </Modal.Body>
                 </Modal>
 
@@ -492,10 +496,6 @@ function SingleScheda({ scheda }) {
 
                             </div>
                             <div className="col-9">
-                                <p>
-                                {JSON.stringify(notaSpesaToEdit)}
-
-                                </p>
                                 <button
                                     type="submit"
 

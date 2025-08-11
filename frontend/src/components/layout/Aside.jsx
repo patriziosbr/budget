@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { FaSignInAlt, FaSignOutAlt, FaUser, FaDollarSign, FaList, FaHome } from 'react-icons/fa'
+import { FaSignInAlt, FaSignOutAlt, FaUser, FaDollarSign, FaList, FaHome, FaTimes } from 'react-icons/fa'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import { logout, reset } from '../../features/auth/authSlice'
 import { useSelector, useDispatch } from 'react-redux'
@@ -16,7 +16,7 @@ const Aside = () => {
         dispatch(logout())
         dispatch(reset())
         navigate('/')
-        dispatch(toggleMenu())
+        dispatch(closeMenu())
     }
 
     return (
@@ -24,10 +24,10 @@ const Aside = () => {
         <div className={`bg-gray-100 ${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
-                    <NavLink to='/' className="navbar-brand px-4 py-3 m-0" type="button" onClick={()=> dispatch(closeMenu())}>
-                        <FaHome className="mr-1" />
-                        <span className="ms-1 text-sm text-dark"> Home</span>
-                    </NavLink>
+                    <div className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" role="button" onClick={()=> dispatch(closeMenu())}>
+                        <FaTimes className="mr-1" />
+                        <span className="ms-1 text-sm text-dark"> Close</span>
+                    </div>
                 </div>
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">

@@ -44,19 +44,17 @@ const updateNotaSpese = async (notaSpeseId, notaSpeseData, token) => {
   return response.data
 }
 
-// Delete scheda spese
-const deleteNotaSpese = async (notaSpeseId, token) => {
+// Delete nota spese
+const deleteNotaSpese = async (notaId, schedaId, token) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
+    data: { schedaId }
   }
-  const response = await axios.delete(API_URL + notaSpeseId, config)
-  // return response.data
-  return { id: notaSpeseId };
+  const response = await axios.delete(API_URL + notaId, config)
+  return response.data
 }
-
-
 
 const notaSpeseService = {
   getNotaSpese,

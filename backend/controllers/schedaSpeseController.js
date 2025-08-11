@@ -8,7 +8,7 @@ const ObjectId = Types.ObjectId;
 const { all } = require('axios');
 const baseUrl = "https://budget-fe.onrender.com/"; 
 const { condivisioneSchedaSpese, rimossoSchedaSpese } = require("../utils/mailTemplate/condivisioneSchedaSpese");
-const { deleteManyNotaSpese } = require("./notaSpeseController");
+const { deleteManyNotaSpese } = require("../utils/nota");
 //@desc get goals
 //@route GET /api/goals
 //@access Private
@@ -55,13 +55,31 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
             return NotaSpese.findById(notaId);
           })
         );
+
+        // Replace nulls with a mock object
+        const notaSpeseWithMock = notaSpeseResolved.map((nota, idx) => {
+        if (nota === null) {
+            // You can customize the mock as needed
+            return {
+            _id: scheda.notaSpese[idx],
+            testo: null,
+            importo: 0,
+            categoria_id: null,
+            inserimentoData: null,
+            user: null,
+            deleted: true
+            };
+        }
+        return nota;
+        });
         // if (notaSpeseResolved.length > 5) {
         //     // notaSpeseResolved.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // da fare chiamata per ordinamento
         //     notaSpeseResolved.splice(5, Infinity);
         // }
+        
         // You might want to attach the resolved notaSpese to the scheda
-        notaSpeseResolved.sort((a, b) => new Date(b.inserimentoData) - new Date(a.inserimentoData));
-        return { ...scheda.toObject(), notaSpese: notaSpeseResolved};
+        // notaSpeseResolved.sort((a, b) => new Date(b?.inserimentoData) - new Date(a?.inserimentoData));
+        return { ...scheda.toObject(), notaSpese: notaSpeseWithMock};
       })
     );
 
@@ -170,7 +188,13 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
     res.status(200).json(updatedScheda);
 });
 
-
+//@ remove nota from scheda 
+const removeNotaFromScheda = asyncHandler(async (schedaId, notaId) => {
+    await SchedaSpese.updateOne(
+        { _id: schedaId },
+        { $pull: { notaSpese: notaId } }
+    );
+});
 // //@desc cancel SchedaSpese
 // //@route DELETE /api/schedaSpese/:id
 // //@access Private
@@ -197,14 +221,11 @@ const deleteSchedaSpese = asyncHandler(async (req, res) => {
         notaObjData.push({id:notaId.toString(), user: req.user});
     })
     
-    deleteManyNotaSpese(notaObjData, res);
+    await deleteManyNotaSpese(notaObjData);
 
-
-    // await Goal.findByIdAndDelete(req.params.id) //soluzione mia al volo rifaccio la query 
     await schedaSpese.deleteOne(); //remove() is not a function ??
-    // res.status(200).json({id:req.params.id}) //porta in FE solo ID dell'elemento eliminato 
-    res.status(200).json({message: "List deleted"});
 
+    res.status(200).json({message: "List deleted"});
 })
 
 module.exports = {
@@ -212,5 +233,6 @@ module.exports = {
     getSchedaSpese,
     setSchedaSpese,
     updateSchedaSpese,
-    deleteSchedaSpese
+    deleteSchedaSpese,
+    removeNotaFromScheda
 }
