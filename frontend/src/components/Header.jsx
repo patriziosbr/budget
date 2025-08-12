@@ -37,7 +37,7 @@ function Header() {
         data-scroll="true"
       >
         <div className="container-fluid py-3">
-        <div className="">
+        <div  >
             <ul className="navbar-nav d-flex flex-row">
               <li
                 role="button"
@@ -58,7 +58,7 @@ function Header() {
           </ol> */}
           </nav>
           {/* da fare un componente di breadcrumbs */}
-          <div className="">
+          <div  >
             <ul className="navbar-nav d-flex flex-row">
               <li
                 onClick={(e) => {

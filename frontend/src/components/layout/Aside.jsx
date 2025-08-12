@@ -21,12 +21,22 @@ const Aside = () => {
 
     return (
     <>
-        <div className={`bg-gray-100 ${showMenu ? 'g-sidenav-show ' : ''}`}>
+        <div className={`${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
                     <div className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" role="button" onClick={()=> dispatch(closeMenu())}>
-                        <FaTimes className="mr-1" />
-                        <span className="ms-1 text-sm text-dark"> Close</span>
+                    {!showMenu ? 
+                    (
+                        <>
+                            <FaTimes className="mr-1" />
+                            <span className="ms-1 text-sm text-dark"> Close</span>
+                        </>
+                    ):(
+                        <>
+                            <FaHome className="mr-1" />
+                            <span className="ms-1 text-sm text-dark"> Budget</span>
+                        </>
+                    )}
                     </div>
                 </div>
                 
