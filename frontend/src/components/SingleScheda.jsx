@@ -249,58 +249,74 @@ function SingleScheda({ scheda }) {
     }
   };
 
-  const [expencersWithTotals, SetExpencersWithTotals] = useState(null);
-  const [maxExpencer, setMaxExpencer] = useState(null);
-  const [expencersDiff, SetExpencersDiff] = useState(null);
+const [expencersWithTotals, setExpencersWithTotals] = useState([]);
+const [maxExpencer, setMaxExpencer] = useState(null);
+const [expencersDiff, setExpencersDiff] = useState([]);
 
-  const findExpencer = (scheda) => {
-    if (!scheda?.notaSpese?.length) return;
-    const expencersTotals = [];
-    scheda.notaSpese.forEach((item) => {
-      const expIndex = expencersTotals.findIndex(
-        (ex) => ex.userId === item.user
-      );
-      if (expIndex !== -1) {
-        expencersTotals[expIndex].totalExp += item.importo;
-      } else {
-        expencersTotals.push({
-          userId: item?.user,
-          userName: item?.inserimentoUser?.name,
-          totalExp: item?.importo,
+const findExpencersWithTotals = (scheda) => {
+  if (!scheda?.notaSpese?.length) {
+    setExpencersWithTotals([]);
+    setMaxExpencer(null);
+    setExpencersDiff([]);
+    return;
+  }
+
+  // Calculate totals per user
+  const totalsMap = {};
+  scheda.notaSpese.forEach((item) => {
+    const userId = item.user;
+    if (!totalsMap[userId]) {
+      totalsMap[userId] = {
+        userId,
+        userName: item?.inserimentoUser?.name || "Unknown",
+        totalExp: 0,
+      };
+    }
+    totalsMap[userId].totalExp += item.importo || 0;
+  });
+
+  const totalsArray = Object.values(totalsMap);
+  setExpencersWithTotals(totalsArray);
+
+  // Find max spender
+  if (totalsArray.length === 0) {
+    setMaxExpencer(null);
+    setExpencersDiff([]);
+    return;
+  }
+
+  const max = totalsArray.reduce((prev, curr) => {
+    if (prev.totalExp === curr.totalExp) {
+      return {
+        userId: null,
+        userName: "Users spent equal",
+        totalExp: curr.totalExp,
+      };
+    }
+    return prev.totalExp > curr.totalExp ? prev : curr;
+  });
+
+  setMaxExpencer(max);
+
+  // Calculate differences
+  let resDiff = [];
+  if (max.userName !== "Users spent equal") {
+    totalsArray
+      .filter((item) => item.userId !== max.userId)
+      .forEach((item) => {
+        resDiff.push({
+          userHigh: max.userName,
+          userLess: item.userName,
+          diff: (max.totalExp - item.totalExp).toFixed(2),
         });
-      }
-    });
-    // console.log(expencersTotals, "------------expencersTotals");
-    
-    const max = expencersTotals.reduce((prev, curr) => {
-      if(prev.totalExp === curr.totalExp) {
-        return {  "userId": null,
-                    "userName": "Users spent equal",
-                    "totalExp": curr.totalExp};
-        }
-      return prev.totalExp > curr.totalExp ? prev : curr;
-    });
-    // console.log(max, "------------max");
-    
-    const sumExpClean = expencersTotals.filter((item) => item !== max);
-    const resDiff = [];
-    sumExpClean.forEach((item) => {
-      resDiff.push({
-        userHigh: max.userName,
-        userLess: item.userName,
-        diff: max.totalExp - item.totalExp,
       });
-    });
-    // console.log(resDiff, "------------resDiff");
-    SetExpencersWithTotals(expencersTotals);
-    setMaxExpencer(max);
-    SetExpencersDiff(resDiff)
-  };
+  }
+  setExpencersDiff(resDiff);
+};
 
-  useEffect(() => {
-    findExpencer(scheda);
-  }, [scheda.notaSpese]);
-
+useEffect(() => {
+  findExpencersWithTotals(scheda);
+}, [scheda.notaSpese]);
   return (
     <>
       <div>
@@ -484,15 +500,12 @@ function SingleScheda({ scheda }) {
           </div>
           {scheda.notaSpese.length > 0 && (
             <>
-              {/* {findExpencer(scheda)} */}
-              {/* {findExpencerWithTotals(scheda)} */}
-
               <div className="row px-3 mt-3">
               {(expencersWithTotals && expencersWithTotals.length > 1) && (
                   <div className="col-12 my-2">
                     <div className="card">
                       <div className="card-body">
-                        <h6>Users and totals</h6>
+                        <h6>Users totals</h6>
                         {expencersWithTotals.map((item) => (
                           <p className="mb-0 text-sm" key={item.userId}>
                             {item.userName}: <b>€ {item.totalExp}</b>
@@ -510,7 +523,6 @@ function SingleScheda({ scheda }) {
                         <h6>Compair</h6>
                         {expencersDiff.map((item, index) => (
                           <p className="mb-0 text-sm" key={index}>
-
                             <b>{item.userHigh}</b> VS <b>{item.userLess}</b> spent over <b>€ {item.diff}</b>
                           </p>
                         ))}
