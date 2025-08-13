@@ -33,10 +33,12 @@ import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
+import { getUserById } from "../features/auth/authSlice";
 
 function SingleScheda({ scheda }) {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
+  const { userById } = useSelector((state) => state.auth);
   const [modalState, setModalState] = useState({
     creaNotaModal: false,
     shareModal: false,
@@ -249,74 +251,76 @@ function SingleScheda({ scheda }) {
     }
   };
 
-const [expencersWithTotals, setExpencersWithTotals] = useState([]);
-const [maxExpencer, setMaxExpencer] = useState(null);
-const [expencersDiff, setExpencersDiff] = useState([]);
+  const [expencersWithTotals, setExpencersWithTotals] = useState([]);
+  const [maxExpencer, setMaxExpencer] = useState(null);
+  const [expencersDiff, setExpencersDiff] = useState([]);
 
-const findExpencersWithTotals = (scheda) => {
-  if (!scheda?.notaSpese?.length) {
-    setExpencersWithTotals([]);
-    setMaxExpencer(null);
-    setExpencersDiff([]);
-    return;
-  }
-
-  // Calculate totals per user
-  const totalsMap = {};
-  scheda.notaSpese.forEach((item) => {
-    const userId = item.user;
-    if (!totalsMap[userId]) {
-      totalsMap[userId] = {
-        userId,
-        userName: item?.inserimentoUser?.name || "Unknown",
-        totalExp: 0,
-      };
+  const findExpencersWithTotals = (scheda) => {
+    if (!scheda?.notaSpese?.length) {
+      setExpencersWithTotals([]);
+      setMaxExpencer(null);
+      setExpencersDiff([]);
+      return;
     }
-    totalsMap[userId].totalExp += item.importo || 0;
-  });
 
-  const totalsArray = Object.values(totalsMap);
-  setExpencersWithTotals(totalsArray);
+    // Calculate totals per user
+    const totalsMap = {};
+    scheda.notaSpese.forEach((item) => {
+      const userId = item.user;
+      if (!totalsMap[userId]) {
+        totalsMap[userId] = {
+          userId,
+          userName: item?.inserimentoUser?.name || "Unknown",
+          totalExp: 0,
+        };
+      }
+      totalsMap[userId].totalExp += item.importo || 0;
+    });
 
-  // Find max spender
-  if (totalsArray.length === 0) {
-    setMaxExpencer(null);
-    setExpencersDiff([]);
-    return;
-  }
+    const totalsArray = Object.values(totalsMap);
+    setExpencersWithTotals(totalsArray);
 
-  const max = totalsArray.reduce((prev, curr) => {
-    if (prev.totalExp === curr.totalExp) {
-      return {
-        userId: null,
-        userName: "Users spent equal",
-        totalExp: curr.totalExp,
-      };
+    // Find max spender
+    if (totalsArray.length === 0) {
+      setMaxExpencer(null);
+      setExpencersDiff([]);
+      return;
     }
-    return prev.totalExp > curr.totalExp ? prev : curr;
-  });
 
-  setMaxExpencer(max);
+    const max = totalsArray.reduce((prev, curr) => {
+      if (prev.totalExp === curr.totalExp) {
+        return {
+          userId: null,
+          userName: "Users spent equal",
+          totalExp: curr.totalExp,
+        };
+      }
+      return prev.totalExp > curr.totalExp ? prev : curr;
+    });
 
-  // Calculate differences
-  let resDiff = [];
-  if (max.userName !== "Users spent equal") {
-    totalsArray
-      .filter((item) => item.userId !== max.userId)
-      .forEach((item) => {
-        resDiff.push({
-          userHigh: max.userName,
-          userLess: item.userName,
-          diff: (max.totalExp - item.totalExp).toFixed(2),
+    setMaxExpencer(max);
+
+    // Calculate differences
+    let resDiff = [];
+    if (max.userName !== "Users spent equal") {
+      totalsArray
+        .filter((item) => item.userId !== max.userId)
+        .forEach((item) => {
+          resDiff.push({
+            userHigh: max.userName,
+            userLess: item.userName,
+            diff: (max.totalExp - item.totalExp).toFixed(2),
+          });
         });
-      });
-  }
-  setExpencersDiff(resDiff);
-};
+    }
+    setExpencersDiff(resDiff);
+  };
 
-useEffect(() => {
-  findExpencersWithTotals(scheda);
-}, [scheda.notaSpese]);
+
+  useEffect(() => {
+    findExpencersWithTotals(scheda);
+    dispatch(getUserById(scheda.user))
+  }, [scheda.notaSpese]);
   return (
     <>
       <div>
@@ -346,7 +350,12 @@ useEffect(() => {
                   <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
                     {/* <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'> */}
                     <div
-                      style={{ gridTemplateColumns: "1fr 1fr 1fr" }}
+                      style={{
+                        gridTemplateColumns:
+                          user._id === scheda.user
+                            ? "1fr 1fr 1fr"
+                            : "1fr 1fr"
+                      }}
                       className="d-grid gap-4"
                     >
                       <div
@@ -354,22 +363,22 @@ useEffect(() => {
                         className="d-flex justify-content-center align-items-center text-dark-emphasis"
                         onClick={() => onLongPress()}
                       >
-                        <FaPencilAlt size={20} />
+                        <FaPencilAlt size={15} />
                       </div>
                       <div
                         style={{ cursor: "pointer" }}
                         className="d-flex justify-content-center align-items-center text-dark-emphasis"
                         onClick={() => handleShow("shareModal")}
                       >
-                        <FaUserPlus size={20} />
+                        <FaUserPlus size={15} />
                       </div>
-                      <div
+                      {user._id === scheda.user && <div
                         style={{ cursor: "pointer" }}
                         className="d-flex justify-content-center align-items-center text-danger "
                         onClick={() => handleShow("deleteModal")}
                       >
-                        <FaTrash size={20} />
-                      </div>
+                        <FaTrash size={15} />
+                      </div>}
                       {/* </div> */}
                     </div>
                   </div>
@@ -383,7 +392,7 @@ useEffect(() => {
                         className="d-flex align-self-center"
                         type="titolo"
                         id="titolo"
-                        maxlength="21"
+                        maxLength="21"
                         name="titolo"
                         value={titolo}
                         placeholder="titolo"
@@ -397,8 +406,11 @@ useEffect(() => {
                       className="d-flex justify-content-center align-items-center w-100"
                     >
                       <FaRegTimesCircle
-                        size={20}
-                        onClick={() => setlongPressCount(longPressCount - 1)}
+                        size={15}
+                        onClick={() => {
+                          setlongPressCount(longPressCount - 1);
+                          setFormData({ titolo: scheda.titolo });
+                        }}
                         className="w-100"
                       />
                     </div>
@@ -407,7 +419,7 @@ useEffect(() => {
                       className="d-flex justify-content-center align-items-center w-100"
                     >
                       <FaRegCheckCircle
-                        size={20}
+                        size={15}
                         onClick={() => updateSchedataTitolo()}
                         className="w-100"
                       />
@@ -444,8 +456,8 @@ useEffect(() => {
                             <div className="d-flex align-items-center">
                               {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                               <RandomColorCircle
-                                letter={notaSpesa.inserimentoUser?.name}
-                                tooltip={notaSpesa.inserimentoUser?.name}
+                                letter={notaSpesa.inserimentoUser?.email}
+                                tooltip={notaSpesa.inserimentoUser?.email}
                                 email={notaSpesa.inserimentoUser?.email}
                               />
                               {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
@@ -480,10 +492,10 @@ useEffect(() => {
                   )}
                 </>
               )}
-              <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
+              <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
                 {scheda.notaSpese.length > 0 && (
                   <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 w-100 me-4 "
+                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-4 w-25 "
                     onClick={() => goToDettagolioScheda(scheda._id)}
                   >
                     <p className="mb-0 text-center">&nbsp;Show all</p>
@@ -500,44 +512,14 @@ useEffect(() => {
           </div>
           {scheda.notaSpese.length > 0 && (
             <>
-              <div className="row px-3 mt-3">
-              {(expencersWithTotals && expencersWithTotals.length > 1) && (
-                  <div className="col-12 my-2">
-                    <div className="card">
-                      <div className="card-body">
-                        <h6>Users totals</h6>
-                        {expencersWithTotals.map((item) => (
-                          <p className="mb-0 text-sm" key={item.userId}>
-                            {item.userName}: <b>€ {item.totalExp}</b>
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-              )}
-
-              {(expencersDiff[0] && expencersDiff[0]?.userHigh !== "Users spent equal") && (
-                  <div className="col-12 my-2">
-                    <div className="card">
-                      <div className="card-body">
-                        <h6>Compair</h6>
-                        {expencersDiff.map((item, index) => (
-                          <p className="mb-0 text-sm" key={index}>
-                            <b>{item.userHigh}</b> VS <b>{item.userLess}</b> spent over <b>€ {item.diff}</b>
-                          </p>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-              )}
-              </div>
-
               <div className="row p-3">
                 <div className="col-md-6 col-6">
                   <div className="card">
                     <div className="card-body text-center">
                       <h6 className="text-center mb-0">Higher expence</h6>
-                      <span className="text-xs"><b>{maxExpencer?.userName ?? maxExpencer}</b></span>
+                      <span className="text-xs">
+                        <b>{maxExpencer?.userName ?? maxExpencer}</b>
+                      </span>
                       <hr className="horizontal dark my-1" />
                       <h5 className="mb-0">€ {maxExpencer?.totalExp}</h5>
                     </div>
@@ -554,6 +536,40 @@ useEffect(() => {
                     </div>
                   </div>
                 </div>
+              </div>
+
+              <div className="row px-3 mt-3">
+                {expencersWithTotals && expencersWithTotals.length > 1 && (
+                  <div className="col-12 my-2">
+                    <div className="card">
+                      <div className="card-body">
+                        <h6>Users totals</h6>
+                        {expencersWithTotals.map((item) => (
+                          <p className="mb-0 text-sm" key={item.userId}>
+                            {item.userName}: <b>€ {item.totalExp}</b>
+                          </p>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {expencersDiff[0] &&
+                  expencersDiff[0]?.userHigh !== "Users spent equal" && (
+                    <div className="col-12 my-2">
+                      <div className="card">
+                        <div className="card-body">
+                          <h6>Compair</h6>
+                          {expencersDiff.map((item, index) => (
+                            <p className="mb-0 text-sm" key={index}>
+                              <b>{item.userHigh}</b> VS <b>{item.userLess}</b>{" "}
+                              spent over <b>€ {item.diff}</b>
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
               </div>
             </>
           )}
@@ -617,7 +633,21 @@ useEffect(() => {
               {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
               <h6>Shared users</h6>
               <div>
-                {user._id === scheda.user && (
+                {(userById && user._id !== scheda.user) ? (
+                  <div className="d-flex justify-content-between align-items-center my-3">
+                    <div className="d-flex align-items-center">
+                      <RandomColorCircle
+                        letter={userById.email[0]}
+                        tooltip={userById.email}
+                        email={userById.email}
+                      />
+                      <p className="ms-2 m-0">{userById.email}</p>
+                    </div>
+                    <div>
+                      <p className="m-0">Admin</p>
+                    </div>
+                  </div>
+                ) : (
                   <div className="d-flex justify-content-between align-items-center my-3">
                     <div className="d-flex align-items-center">
                       <RandomColorCircle
@@ -631,7 +661,9 @@ useEffect(() => {
                       <p className="m-0">Admin</p>
                     </div>
                   </div>
-                )}
+
+                )
+                }
                 {scheda.condivisoConList.map((userMail) => (
                   <div
                     className="d-flex align-items-center mb-3"
@@ -644,12 +676,12 @@ useEffect(() => {
                         email={userMail.email}
                       />
                     </div>
-                    <div  >
+                    <div>
                       <p className="m-0">
                         {userMail.email}{" "}
                         {user.email === userMail.email ? "(you)" : ""}
                       </p>
-                      <Form.Select
+                      {user.email !== userMail.email &&<Form.Select
                         aria-label="Default select example"
                         onChange={(e) => {
                           if (e.target.value === "1") {
@@ -663,7 +695,7 @@ useEffect(() => {
                         <option className="text-danger" value="1">
                           Remove
                         </option>
-                      </Form.Select>
+                      </Form.Select>}
                     </div>
                   </div>
                 ))}
@@ -697,21 +729,34 @@ useEffect(() => {
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              <b>Confermi di eliminare la scheda: {scheda.titolo}?</b>
+              <b>
+                Confirm to delete: <i>{scheda.titolo}</i>?
+              </b>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div className="d-flex gap-5 flex-column">
-              <Button
-                type="submit"
-                className="btn btn-danger w-100"
-                onClick={() => dispatch(deleteSchedaSpese(scheda._id))}
-              >
-                Conferma
-              </Button>
-              <Button type="submit" className="btn btn-secondary w-100">
-                Annulla
-              </Button>
+            <p>
+              Are you sure to delete this note <i>"{scheda.titolo}"</i>
+              ,<br /> <b>this action can be undone</b>{" "}
+            </p>
+            <div className="row mt-4 mb-3">
+              <div className="col-3">
+                <button
+                  className=" text-dark btn btn-outline-dark btn-sm mb-0 w-100"
+                  onClick={() => handleClose("deleteModal")}
+                >
+                  <p className="mb-0 ">cancel</p>
+                </button>
+              </div>
+              <div className="col-9">
+                <button
+                  type="submit"
+                  className="text-danger btn border border-1 border-danger w-100 "
+                  onClick={() => dispatch(deleteSchedaSpese(scheda._id))}
+                >
+                  Delete
+                </button>
+              </div>
             </div>
           </Modal.Body>
         </Modal>
@@ -723,13 +768,15 @@ useEffect(() => {
         >
           <Modal.Header closeButton>
             <Modal.Title>
-              <b>Confirm to delete: "{notaSpesaToEdit?.testo}"?</b>
+              <b>
+                Confirm to delete: <i>{notaSpesaToEdit?.testo}</i>?
+              </b>
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <p>
               Are you sure to delete this note <i>"{notaSpesaToEdit?.testo}"</i>
-              , <b>this action can be undone</b>{" "}
+              ,<br /> <b>this action can be undone</b>{" "}
             </p>
             <div className="row mt-4 mb-3">
               <div className="col-3">

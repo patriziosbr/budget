@@ -21,7 +21,7 @@ function DashboardSchedaSpese() {
       {user &&
         <div className="container">
           <div className="row">
-            <div className="col-12 col-md-8 m-auto">
+            {/* <div className="col-12 col-md-8 m-auto">
               <div className='d-flex justify-content-between align-items-center mb-4 mt-0'>
                 <h2 className='mb-0 align-self-center'>Expence list</h2>
                 <div className=" btn bg-gradient-dark mb-0" onClick={handleShow}>
@@ -30,7 +30,7 @@ function DashboardSchedaSpese() {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
       }

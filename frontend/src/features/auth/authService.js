@@ -3,7 +3,7 @@ import axios from 'axios'
 // const API_URL = "https://budget-7ehi.onrender.com/api/users/"; //OK per deploy inchiodato!!!
 const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.REACT_APP_BASE_URL + "/api/users/" : '/api/users/'; 
 
-console.log(API_URL, "------------ API_URL") // Debugging;
+// console.log(API_URL, "------------ API_URL") // Debugging;
 
 // Register user
 const register = async (userData) => {
@@ -33,10 +33,27 @@ const logout = () => {
   localStorage.removeItem('user')
 }
 
+// getUserById
+const getUserById = async (req, token) => {
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: {
+      req
+    }
+  }
+
+  const response = await axios.get(API_URL+"getUserById/", config)
+
+  return response.data
+}
+
 const authService = {
   register,
   logout,
   login,
+  getUserById
 }
 
 export default authService

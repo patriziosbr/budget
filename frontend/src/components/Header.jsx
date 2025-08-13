@@ -13,7 +13,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { logout, reset } from "../features/auth/authSlice";
 import { toggleMenu, closeMenu } from "../features/utils/menuSlice";
 import { FaRegUserCircle } from "react-icons/fa";
-
+import RandomColorCircle from "./utils/RandomColorCircle.js";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
@@ -37,7 +37,7 @@ function Header() {
         data-scroll="true"
       >
         <div className="container-fluid py-3">
-        <div  >
+          <div>
             <ul className="navbar-nav d-flex flex-row">
               <li
                 role="button"
@@ -58,7 +58,7 @@ function Header() {
           </ol> */}
           </nav>
           {/* da fare un componente di breadcrumbs */}
-          <div  >
+          <div>
             <ul className="navbar-nav d-flex flex-row">
               <li
                 onClick={(e) => {
@@ -70,10 +70,21 @@ function Header() {
                   to={`${user ? "/profileTODO" : "/login"}`}
                   className="d-flex flex-column justify-content-center align-items-center ps-3 ps-sm-5 nav-link"
                 >
-                  <FaRegUserCircle size="20" className="text-body p-0" />
-                  <small className="text-capitalize">{`${
-                    user ? user.name : "Profile"
-                  }`}</small>
+                  {user ? (
+                    <>
+                      <RandomColorCircle
+                        letter={user.email[0]}
+                        tooltip={user.email}
+                        email={user.email}
+                      />
+                      {/* <small className=""></small> */}
+                    </>
+                  ) : (
+                    <>
+                      <FaRegUserCircle size="20" className="text-body p-0" />
+                      <small className="">Profile</small>
+                    </>
+                  )}
                 </NavLink>
               </li>
             </ul>
