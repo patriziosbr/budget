@@ -523,10 +523,10 @@ function SingleScheda({ scheda }) {
                   </div>
                 )}
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-50"
+                  className="btn bg-gradient-dark btn-sm mb-0 w-75"
                   onClick={() => handleShow("creaNotaModal")}
                 >
-                  <p className="mb-0">&nbsp;Add note</p>
+                  <p className="mb-0">Add note</p>
                 </div>
               </li>
             </ul>
