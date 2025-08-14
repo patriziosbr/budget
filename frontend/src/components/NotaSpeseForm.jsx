@@ -36,7 +36,7 @@ const onSubmit = async (e) => {
     toast.error('Please fill in all required fields')
   } else {
     if (parseFloat(importo) > 10000) {return toast.error('Limit amount 10000')  }
-    debugger
+    
     const notaSpeseData = {
       testo,
       inserimentoData: inserimentoData || new Date().toISOString(),

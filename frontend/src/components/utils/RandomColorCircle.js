@@ -86,11 +86,24 @@ function RandomColorCircle({ letter = "X", tooltip = "", email = null,  classNam
 
   const [showTooltip, setShowTooltip] = React.useState(false);
   const targetRef = useRef(null);
-  
+
+
+  const stringToColor = (string) => {
+  let hash = 0;
+  for (let i = 0; i < string?.length; i += 1) {
+    hash = string.charCodeAt(i) + ((hash << 5) - hash);
+  }
+  // Use hash to generate HSL values for matte color
+  const hue = Math.abs(hash) % 360;
+  const saturation = 45; // matte: low saturation
+  const lightness = 45;  // matte: mid-low lightness
+  return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+};
+
   // Generate a random color on component mount
-  const randomColor = React.useMemo(() => {
-    return '#' + Math.floor(Math.random()*16777215).toString(16);
-  }, []);
+  // const randomColor = React.useMemo(() => {
+  //   return '#' + Math.floor(Math.random()*16777215).toString(16);
+  // }, []);
   
   // Calculate text color based on background color brightness
   const getContrastColor = (hexColor) => {
@@ -106,50 +119,26 @@ function RandomColorCircle({ letter = "X", tooltip = "", email = null,  classNam
     return brightness > 128 ? '#000000' : '#ffffff';
   };
   
-  const textColor = getContrastColor(randomColor);
-
-  if(email) {
-    userNameColor.push({email,randomColor,textColor})
-  }
-
-  const stringToColor = (string) => {
-  let hash = 0;
-  let i;
-
-  /* eslint-disable no-bitwise */
-  for (i = 0; i < string?.length; i += 1) {
-    hash = string.charCodeAt(i) + ((hash << 5) - hash);
-  }
-
-  let color = '#';
-
-  for (i = 0; i < 3; i += 1) {
-    const value = (hash >> (i * 8)) & 0xff;
-    color += `00${value.toString(16)}`.slice(-2);
-  }
-  /* eslint-enable no-bitwise */
-
-  return color;
-}
+  const textColor = getContrastColor(stringToColor(email));
 
   return (
     <>
-      <span 
+      <div 
         ref={targetRef}
         className={`text-capitalize circle ${className || ''}`}
         style={{ 
+          position: "relative",
           backgroundColor: stringToColor(email),
-          color: userNameColor.find((item) => item.email === email)?.textColor ?? textColor,
-
+          color: textColor,
         }}
         onMouseEnter={() => setShowTooltip(true)}
         onMouseLeave={() => setShowTooltip(false)}
         {...props}
       >
-      <p className='text-bold mb-0'> 
+      <p className='text-bold mb-0 w-100 h-100' style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "13px" }}> 
         {Array.isArray(letter) ? letter.join('') : letter[0]}
       </p>
-      </span>
+      </div>
       
       {tooltip && (
         <Overlay target={targetRef.current} show={showTooltip} placement="top">

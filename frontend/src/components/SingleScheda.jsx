@@ -164,7 +164,10 @@ function SingleScheda({ scheda }) {
 
   const updateSchedataTitolo = async () => {
     const updatePayload = { titolo: titolo };
-
+    if(scheda.titolo === titolo) {
+      setlongPressCount(0)
+      return
+    }
     await dispatch(
       updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
     ).unwrap();
@@ -316,10 +319,9 @@ function SingleScheda({ scheda }) {
     setExpencersDiff(resDiff);
   };
 
-
   useEffect(() => {
     findExpencersWithTotals(scheda);
-    dispatch(getUserById(scheda.user))
+    dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
   return (
     <>
@@ -331,20 +333,36 @@ function SingleScheda({ scheda }) {
                 <>
                   <div className="col-6">
                     <div
-                      className="d-flex align-items-center text-dark-emphasis"
+                      className="d-flex text-dark-emphasis"
                       onClick={() => goToDettagolioScheda(scheda._id)}
                       style={{ cursor: "pointer" }}
                     >
+                      
+                      
+                      {scheda?.condivisoConList?.length > 0 &&
+                        scheda?.condivisoConList?.map((sharedEl) => (
+                          <>
+                            <div style={{ height: "", width: "15px" }}>
+                              <RandomColorCircle
+                                letter={sharedEl?.email}
+                                tooltip={sharedEl?.email}
+                                email={sharedEl?.email}
+                                className={"circle-small"}
+                              />
+                            </div>
+                          </>
+                        ))}
                       <h5
                         style={{
                           textTransform: "Capitalize",
                           textDecoration: "underline",
                         }}
                         role="button"
-                        className="mb-0 w-100"
+                        className="ms-2 mb-0 w-100"
                       >
                         {scheda.titolo}
                       </h5>
+
                     </div>
                   </div>
                   <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
@@ -352,9 +370,7 @@ function SingleScheda({ scheda }) {
                     <div
                       style={{
                         gridTemplateColumns:
-                          user._id === scheda.user
-                            ? "1fr 1fr 1fr"
-                            : "1fr 1fr"
+                          user._id === scheda.user ? "1fr 1fr 1fr" : "1fr 1fr",
                       }}
                       className="d-grid gap-4"
                     >
@@ -372,13 +388,15 @@ function SingleScheda({ scheda }) {
                       >
                         <FaUserPlus size={15} />
                       </div>
-                      {user._id === scheda.user && <div
-                        style={{ cursor: "pointer" }}
-                        className="d-flex justify-content-center align-items-center text-danger "
-                        onClick={() => handleShow("deleteModal")}
-                      >
-                        <FaTrash size={15} />
-                      </div>}
+                      {user._id === scheda.user && (
+                        <div
+                          style={{ cursor: "pointer" }}
+                          className="d-flex justify-content-center align-items-center text-danger "
+                          onClick={() => handleShow("deleteModal")}
+                        >
+                          <FaTrash size={15} />
+                        </div>
+                      )}
                       {/* </div> */}
                     </div>
                   </div>
@@ -465,15 +483,22 @@ function SingleScheda({ scheda }) {
                             {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id ? 'text-decoration-underline' : ''}`}
+                              className={`d-flex flex-column pe-3 ${
+                                notaSpesa?.inserimentoUser?.id === user?._id
+                                  ? "text-decoration-underline"
+                                  : ""
+                              }`}
                               onClick={
-                                (notaSpesa.testo && notaSpesa.inserimentoUser?.id === user?._id ) ? () => editNota("editNotaModal", notaSpesa) : undefined
+                                notaSpesa.testo &&
+                                notaSpesa.inserimentoUser?.id === user?._id
+                                  ? () => editNota("editNotaModal", notaSpesa)
+                                  : undefined
                               }
                             >
                               <h6 className="mb-1 text-dark text-sm">
-                                
-                                {notaSpesa.testo ? notaSpesa.testo : "Note not available"}
-                                
+                                {notaSpesa.testo
+                                  ? notaSpesa.testo
+                                  : "Note not available"}
                               </h6>
                               <span className="text-xs">
                                 {parseDate(notaSpesa?.inserimentoData)}
@@ -629,7 +654,7 @@ function SingleScheda({ scheda }) {
               {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
               <h6>Shared users</h6>
               <div>
-                {(user._id !== scheda.user) ? (
+                {user._id !== scheda.user ? (
                   <div className="d-flex justify-content-between align-items-center my-3">
                     <div className="d-flex align-items-center">
                       <RandomColorCircle
@@ -657,9 +682,7 @@ function SingleScheda({ scheda }) {
                       <p className="m-0">Admin</p>
                     </div>
                   </div>
-
-                )
-                }
+                )}
                 {scheda.condivisoConList.map((userMail) => (
                   <div
                     className="d-flex align-items-center mb-3"
@@ -677,21 +700,24 @@ function SingleScheda({ scheda }) {
                         {userMail.email}{" "}
                         {user.email === userMail.email ? "(you)" : ""}
                       </p>
-                      {user.email !== userMail.email &&<Form.Select
-                        aria-label="Default select example"
-                        onChange={(e) => {
-                          if (e.target.value === "1") {
-                            removeSharedUser(userMail);
-                          }
-                        }}
-                      >
-                        <option>
-                          {userMail.role === "write" && "Read and write/Editor"}
-                        </option>
-                        <option className="text-danger" value="1">
-                          Remove
-                        </option>
-                      </Form.Select>}
+                      {user.email !== userMail.email && (
+                        <Form.Select
+                          aria-label="Default select example"
+                          onChange={(e) => {
+                            if (e.target.value === "1") {
+                              removeSharedUser(userMail);
+                            }
+                          }}
+                        >
+                          <option>
+                            {userMail.role === "write" &&
+                              "Read and write/Editor"}
+                          </option>
+                          <option className="text-danger" value="1">
+                            Remove
+                          </option>
+                        </Form.Select>
+                      )}
                     </div>
                   </div>
                 ))}
