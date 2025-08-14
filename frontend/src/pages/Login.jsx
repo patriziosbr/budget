@@ -134,38 +134,5 @@ function Login() {
     </>
   )
 }
-      {/* <Container>
-        <section style={styleMtop} className='d-flex align-items-center'>
-          <div style={{backgroundColor: "#f2f6ff",
-            borderRadius: "50%",
-            aspectRatio: "1",
-            display: "flex",
-            height: "90px",
-            marginRight: "15px",
-            justifyContent: "center",
-            alignItems: "center",
-            marginBottom: "15px"
-          }}>
-            <FaSignInAlt style={{fontSize:"60px", color:"#0d6efd" }}/>
-          </div>
-          <div className='h-100'>
-            <h1>Login</h1>
-            <p>Login and save your budget</p>
-          </div>
-        </section>
-        <Form className="mb-3" onSubmit={onSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Label>Email</Form.Label>
-            <Form.Control type="email" id='email' name="email" value={email} placeholder='Enter your email' onChange={onChange} />
-          </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Password</Form.Label>
-            <Form.Control type="password" id='password' name="password" value={password} placeholder='Enter password' onChange={onChange} />
-          </Form.Group>
-          <Button type="submit" className='btn btn-primary' style={{width:"100%"}}>
-            Submit
-          </Button>
-        </Form>
-      </Container> */}
 
 export default Login
