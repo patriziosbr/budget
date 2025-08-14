@@ -55,7 +55,8 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
             return NotaSpese.findById(notaId);
           })
         );
-
+        // You might want to attach the resolved notaSpese to the scheda
+        notaSpeseResolved.sort((a, b) => new Date(b?.inserimentoData) - new Date(a?.inserimentoData));
         // Replace nulls with a mock object
         const notaSpeseWithMock = notaSpeseResolved.map((nota, idx) => {
         if (nota === null) {
@@ -77,8 +78,6 @@ const getSchedaSpese = asyncHandler(async (req, res) => {
         //     notaSpeseResolved.splice(5, Infinity);
         // }
         
-        // You might want to attach the resolved notaSpese to the scheda
-        // notaSpeseResolved.sort((a, b) => new Date(b?.inserimentoData) - new Date(a?.inserimentoData));
         return { ...scheda.toObject(), notaSpese: notaSpeseWithMock};
       })
     );

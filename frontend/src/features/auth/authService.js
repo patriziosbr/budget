@@ -39,8 +39,8 @@ const getUserById = async (req, token) => {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-    body: {
-      req
+    params: {
+      id: req
     }
   }
 

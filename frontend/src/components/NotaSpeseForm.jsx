@@ -35,7 +35,8 @@ const onSubmit = async (e) => {
   if (!testo || !importo) {
     toast.error('Please fill in all required fields')
   } else {
-
+    if (parseFloat(importo) > 10000) {return toast.error('Limit amount 10000')  }
+    debugger
     const notaSpeseData = {
       testo,
       inserimentoData: inserimentoData || new Date().toISOString(),
@@ -180,7 +181,7 @@ const onSubmit = async (e) => {
         </Form.Group>
 
         <div className="row mt-4 mb-3">
-          <div className="col-3">
+          <div className="col-4">
             {notaToEdit !== null &&
               <div
                 style={{ cursor: "pointer" }}
@@ -190,7 +191,7 @@ const onSubmit = async (e) => {
               </div>
             }
           </div>
-          <div className="col-9">
+          <div className="col-8">
             <button type="submit"
               className="d-flex align-items-center justify-content-center btn bg-gradient-dark w-100"
               disabled={isDisabled}>

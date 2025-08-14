@@ -465,22 +465,18 @@ function SingleScheda({ scheda }) {
                             {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className="d-flex flex-column"
+                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id ? 'text-decoration-underline' : ''}`}
                               onClick={
-                                notaSpesa.testo
-                                  ? () => editNota("editNotaModal", notaSpesa)
-                                  : undefined
+                                (notaSpesa.testo && notaSpesa.inserimentoUser?.id === user?._id ) ? () => editNota("editNotaModal", notaSpesa) : undefined
                               }
                             >
                               <h6 className="mb-1 text-dark text-sm">
-                                <u>
-                                  {notaSpesa.testo
-                                    ? notaSpesa.testo
-                                    : "Note not available"}
-                                </u>
+                                
+                                {notaSpesa.testo ? notaSpesa.testo : "Note not available"}
+                                
                               </h6>
                               <span className="text-xs">
-                                <u>{parseDate(notaSpesa?.inserimentoData)}</u>
+                                {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
                           </div>
@@ -495,14 +491,14 @@ function SingleScheda({ scheda }) {
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
                 {scheda.notaSpese.length > 0 && (
                   <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-4 w-25 "
+                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 w-25 "
                     onClick={() => goToDettagolioScheda(scheda._id)}
                   >
-                    <p className="mb-0 text-center">&nbsp;Show all</p>
+                    <p className="mb-0 text-nowrap">See all</p>
                   </div>
                 )}
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-100"
+                  className="btn bg-gradient-dark btn-sm mb-0 w-50"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">&nbsp;Add note</p>
@@ -633,15 +629,15 @@ function SingleScheda({ scheda }) {
               {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
               <h6>Shared users</h6>
               <div>
-                {(userById && user._id !== scheda.user) ? (
+                {(user._id !== scheda.user) ? (
                   <div className="d-flex justify-content-between align-items-center my-3">
                     <div className="d-flex align-items-center">
                       <RandomColorCircle
-                        letter={userById.email[0]}
-                        tooltip={userById.email}
-                        email={userById.email}
+                        letter={userById[scheda.user]?.email}
+                        tooltip={userById[scheda.user]?.email}
+                        email={userById[scheda.user]?.email}
                       />
-                      <p className="ms-2 m-0">{userById.email}</p>
+                      <p className="ms-2 m-0">{userById[scheda.user]?.email}</p>
                     </div>
                     <div>
                       <p className="m-0">Admin</p>
@@ -651,9 +647,9 @@ function SingleScheda({ scheda }) {
                   <div className="d-flex justify-content-between align-items-center my-3">
                     <div className="d-flex align-items-center">
                       <RandomColorCircle
-                        letter={user.email[0]}
-                        tooltip={user.email}
-                        email={user.email}
+                        letter={user?.email[0]}
+                        tooltip={user?.email}
+                        email={user?.email}
                       />
                       <p className="ms-2 m-0">{user.email} (you)</p>
                     </div>
@@ -740,7 +736,7 @@ function SingleScheda({ scheda }) {
               ,<br /> <b>this action can be undone</b>{" "}
             </p>
             <div className="row mt-4 mb-3">
-              <div className="col-3">
+              <div className="col-4">
                 <button
                   className=" text-dark btn btn-outline-dark btn-sm mb-0 w-100"
                   onClick={() => handleClose("deleteModal")}
@@ -748,7 +744,7 @@ function SingleScheda({ scheda }) {
                   <p className="mb-0 ">cancel</p>
                 </button>
               </div>
-              <div className="col-9">
+              <div className="col-8">
                 <button
                   type="submit"
                   className="text-danger btn border border-1 border-danger w-100 "
@@ -779,7 +775,7 @@ function SingleScheda({ scheda }) {
               ,<br /> <b>this action can be undone</b>{" "}
             </p>
             <div className="row mt-4 mb-3">
-              <div className="col-3">
+              <div className="col-4">
                 <button
                   className=" text-dark btn btn-outline-dark btn-sm mb-0 w-100"
                   onClick={() => handleClose("deleteNotaModal")}
@@ -787,7 +783,7 @@ function SingleScheda({ scheda }) {
                   <p className="mb-0 ">cancel</p>
                 </button>
               </div>
-              <div className="col-9">
+              <div className="col-8">
                 <button
                   type="submit"
                   className="text-danger btn border border-1 border-danger w-100 "

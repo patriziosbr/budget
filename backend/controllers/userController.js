@@ -68,12 +68,16 @@ const getMe = asyncHandler(async (req, res) => {
     res.status(200).json(req.user)
 })
 const getUserById = asyncHandler(async (req, res) => {
-    console.log(req.body, "-----------USER");
-    const {userId} = req.body;
-    const user = await User.findOne({userId})
-    res.status(200).json(user)
+    const userId = req.query.id;
+    const user = await User.findOne({_id: userId})
+    if (!user) {
+        res.status(404).json({ message: "User not found" });
+        return;
+    }
+    console.log(user, "user --- user");
+    
+    res.status(200).json(user);
 })
-
 
 //generate JWT
 const generateToken = (id) => {

@@ -10,7 +10,7 @@ const initialState = {
   isSuccess: false,
   isLoading: false,
   message: '',
-  userById: null
+  userById: {}
 }
 
 // Register user
@@ -115,7 +115,7 @@ export const authSlice = createSlice({
       .addCase(getUserById.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.userById = action.payload;
+        state.userById[action.payload._id] = action.payload;
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false;
