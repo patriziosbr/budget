@@ -109,7 +109,7 @@ function Header() {
     //                   style={{ marginRight: '10px', textDecoration: "none" }}
     //                   className="text-dark nav-item"
     //                   activeclassname="active"
-    //                   to='/DashboardNotaSpese'
+    //                   to='/note-spese'
     //                 >
     //                   <FaList /> Expense List
     //                 </NavLink>
@@ -149,7 +149,7 @@ function Header() {
     //               style={{ textDecoration: "none" }}
     //               className="text-dark nav-item"
     //               activeclassname="active"
-    //               to='/DashboardNotaSpese'
+    //               to='/note-spese'
     //             >
     //               <FaList />
     //               <span>Expenses</span>

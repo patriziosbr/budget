@@ -225,7 +225,7 @@ function SingleSchedaAllNote({ scheda }) {
   };
 
   const goToDettagolioScheda = (schedaID) => {
-    navigate(`/DashboardNotaSpese/${schedaID}`);
+    navigate(`/note-spese/${schedaID}`);
   };
 
   const [refSchedaId, SetRefSchedaId] = useState(null);

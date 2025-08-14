@@ -48,7 +48,7 @@ const Aside = () => {
                     </NavLink>
                     </li>
                     <li className="nav-item">
-                    {user && <NavLink className="nav-link text-dark" to='/DashboardNotaSpese' onClick={()=> dispatch(closeMenu())}>
+                    {user && <NavLink className="nav-link text-dark" to='/note-spese' onClick={()=> dispatch(closeMenu())}>
                         <span className="nav-link-text ms-1">Expence list</span>
                     </NavLink>}
                     </li>

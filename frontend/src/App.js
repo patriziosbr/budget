@@ -32,8 +32,8 @@ function App() {
             <Route exact path='/dashboard' element={<DashboardPublic />} />
             <Route exact path='/dashboardPrivate' element={<DashboardUser />} />
             {/* <Route exact path='/notaSpese' element={<NotaSpese />} /> */}
-            <Route exact path='/DashboardNotaSpese' element={<DashboardNotaSpese />} />
-            <Route exact path='/DashboardNotaSpese/:id' element={<SchedaSpesaDettaglio />} />
+            <Route exact path='/note-spese' element={<DashboardNotaSpese />} />
+            <Route exact path='/note-spese/:id' element={<SchedaSpesaDettaglio />} />
           </Routes>
         </main>
         {/* </div> */}

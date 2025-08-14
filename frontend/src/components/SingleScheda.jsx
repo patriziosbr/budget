@@ -226,7 +226,7 @@ function SingleScheda({ scheda }) {
   };
 
   const goToDettagolioScheda = (schedaID) => {
-    navigate(`/DashboardNotaSpese/${schedaID}`);
+    navigate(`/note-spese/${schedaID}`);
     dispatch(reset());
   };
 
