@@ -16,8 +16,6 @@ export const singleSchedaSpeseGet = createAsyncThunk(
   'singleSchedaSpese/get',
   async (data, thunkAPI) => {
     try {
-      console.log(data, "-------------schedaSpeseschedaSpese------data----"); // Debugging
-      
       const token = thunkAPI.getState().auth.user.token;
       return await schedaSpeseService.singleSchedaSpeseGet(data, token);
     } catch (error) {

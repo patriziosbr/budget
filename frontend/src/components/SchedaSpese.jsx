@@ -120,8 +120,6 @@ function SchedaSpese({ handleShow }) {
               }}
               key={scheda._id}
             >
-              {/* {JSON.stringify(scheda)} */}
-              {/* {getTotale(scheda)} */}
               <SingleScheda key={scheda._id} scheda={scheda} />
             </div>
           ))

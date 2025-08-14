@@ -1,45 +1,63 @@
-import { useParams } from 'react-router';
-import { useSelector, useDispatch } from 'react-redux'
-import { useEffect } from 'react';
-import { singleSchedaSpeseGet } from '../features/schedaSpese/schedaSpeseSlice'
+import { useParams } from "react-router";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { singleSchedaSpeseGet } from "../features/schedaSpese/schedaSpeseSlice";
 import { FaArrowLeft } from "react-icons/fa";
 
+import SingleSchedaAllNote from "../components/SingleSchedaAllNote";
+
 function SchedaSpesaDettaglio() {
-    const { id } = useParams();
-    const dispatch = useDispatch();
+  const { id } = useParams();
+  const dispatch = useDispatch();
 
-    // Get the singleSchedaSpese from the Redux store
-    const singleScheda = useSelector((state) => state.schedaSpese.singleSchedaSpese);
+  // Get the singleSchedaSpese from the Redux store
+  const singleScheda = useSelector(
+    (state) => state.schedaSpese.singleSchedaSpese
+  );
 
-    useEffect(() => {
-        if (id) {
-            dispatch(singleSchedaSpeseGet(id))
-                .unwrap()
-                .catch((error) => console.error('Error fetching single scheda:', error));
-        }
-    }, [id, dispatch]);
-
-    const navigateBack = () => {
-        window.history.back();
+  useEffect(() => {
+    if (id) {
+      dispatch(singleSchedaSpeseGet(id))
+        .unwrap()
+        .catch((error) =>
+          console.error("Error fetching single scheda:", error)
+        );
     }
+  }, [id, dispatch]);
 
-    return (
-        <>
-        <div className='container mt-sm-5'>
-            <div className='d-flex align-items-center pt-3'>
-                <FaArrowLeft className='mb-0 me-3' onClick={()=>navigateBack()}/>
-                <h1 className='mb-0'>Dettaglio Scheda Spesa</h1>
+  const navigateBack = () => {
+    window.history.back();
+  };
+
+  return (
+    <>
+      <div className="container ">
+        <div className="row">
+          <div className="col-12 col-md-8 m-auto">
+            <div className="d-flex align-items-center mb-4 mt-0">
+              <FaArrowLeft
+                className="mb-0 me-3"
+                onClick={() => navigateBack()}
+              />
+
+              <h2 className="mb-0 align-self-center">Dettaglio Scheda Spesa</h2>
             </div>
+
             <div>
-                {singleScheda ? (
-                    <pre>{JSON.stringify(singleScheda, null, 2)}</pre>
-                ) : (
-                    <p>Loading...</p>
-                )}
+              {singleScheda ? (
+                <>
+                  <SingleSchedaAllNote key={singleScheda._id} scheda={singleScheda} />
+                </>
+              ) : (
+                // <pre>{JSON.stringify(singleScheda, null, 2)}</pre>
+                <p>Loading...</p>
+              )}
             </div>
+          </div>
         </div>
-        </>
-    );
+      </div>
+    </>
+  );
 }
 
-export default SchedaSpesaDettaglio
+export default SchedaSpesaDettaglio;

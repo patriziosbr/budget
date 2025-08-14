@@ -27,7 +27,6 @@ import {
   getSchedaSpese,
   updateSchedaSpese,
   deleteSchedaSpese,
-  reset
 } from "../features/schedaSpese/schedaSpeseSlice";
 import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
@@ -35,7 +34,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
 
-function SingleScheda({ scheda }) {
+function SingleSchedaAllNote({ scheda }) {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { userById } = useSelector((state) => state.auth);
@@ -227,7 +226,6 @@ function SingleScheda({ scheda }) {
 
   const goToDettagolioScheda = (schedaID) => {
     navigate(`/DashboardNotaSpese/${schedaID}`);
-    dispatch(reset());
   };
 
   const [refSchedaId, SetRefSchedaId] = useState(null);
@@ -466,7 +464,7 @@ function SingleScheda({ scheda }) {
                   {scheda.notaSpese.map(
                     (notaSpesa, i) =>
                       notaSpesa &&
-                      i < 5 && (
+
                         <li
                           key={notaSpesa._id}
                           className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg"
@@ -510,7 +508,7 @@ function SingleScheda({ scheda }) {
                             € {notaSpesa?.importo?.toFixed(2)}
                           </div>
                         </li>
-                      )
+                      
                   )}
                 </>
               )}
@@ -827,4 +825,4 @@ function SingleScheda({ scheda }) {
   );
 }
 
-export default SingleScheda;
+export default SingleSchedaAllNote;
