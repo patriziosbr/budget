@@ -6,6 +6,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
+import Spinner from "./Spinner";
 
 const GestioneError = {
   message: "Cannot read properties of null (reading 'token')",
@@ -64,7 +65,13 @@ function SchedaSpese({ handleShow }) {
     );
   }
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) {
+    return (
+    <>
+      <Spinner/>
+    </>
+    )
+  }
   if (isError) {
     return (
       <p className="text-danger">
@@ -98,7 +105,6 @@ function SchedaSpese({ handleShow }) {
   return (
     <>
       <section>
-
         <div className="d-flex justify-content-between align-items-center mb-4 mt-0">
           <h2 className="mb-0 align-self-center">Expence list</h2>
           {schedaSpese.length > 0 && (
@@ -107,7 +113,6 @@ function SchedaSpese({ handleShow }) {
             </div>
           )}
         </div>
-
 
         {schedaSpese.length > 0 ? (
           // {{schedaSpese.slice(-1)}}
