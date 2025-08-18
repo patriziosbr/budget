@@ -73,7 +73,7 @@ export const authSlice = createSlice({
       state.isSuccess = false
       state.isError = false
       state.message = ''
-      state.userById = null
+      state.userById = {}
     },
   },
   extraReducers: (builder) => {
@@ -116,6 +116,8 @@ export const authSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         state.userById[action.payload._id] = action.payload;
+
+        debugger
       })
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false;

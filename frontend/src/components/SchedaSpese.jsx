@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { getSchedaSpese } from "../features/schedaSpese/schedaSpeseSlice";
+import { getSchedaSpese, reset } from "../features/schedaSpese/schedaSpeseSlice";
 import SingleScheda from "./SingleScheda";
 import { useNavigate, NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
-import { logout } from "../features/auth/authSlice";
+import { logout, getUserById } from "../features/auth/authSlice";
 
 const GestioneError = {
   message: "Cannot read properties of null (reading 'token')",
@@ -17,22 +17,32 @@ function SchedaSpese({ handleShow }) {
   const { schedaSpese, isLoading, isError, message } = useSelector(
     (state) => state.schedaSpese
   );
-  const { user } = useSelector((state) => state.auth);
+  const { user, userById } = useSelector((state) => state.auth);
   useEffect(() => {
-    if (user) {
-      dispatch(getSchedaSpese())
-        .unwrap()
-        .then((response) => {
-          console.log("tuttook");
-        })
-        .catch((error) => {
-          if (error.includes("500")) {
+    const fetchData = async () => {
+      if (user) {
+        try {
+          const schede = await dispatch(getSchedaSpese()).unwrap();
+          if (schede) {
+            const userIds = [...new Set(schede.map((s) => s.user))];
+            userIds.forEach((id) => {
+              dispatch(getUserById(id));
+            });
+          }
+        } catch (error) {
+          if (error.message.includes("500")) {
             toast.error("Service unavailable, try again later");
           }
           console.error("Error Response:", error); // Debugging
-        });
-    }
-  }, []);
+        }
+      }
+    };
+    fetchData();
+
+    return () => {
+      dispatch(reset());
+    };
+  }, [user, dispatch]);
   //è per il margine inferiore della pagina
   const isLastElement = (arr) => {
     const lastElement = arr[arr.length - 1];
@@ -110,9 +120,7 @@ function SchedaSpese({ handleShow }) {
 
 
         {schedaSpese.length > 0 ? (
-          // {{schedaSpese.slice(-1)}}
           schedaSpese.map((scheda, i, arr) => (
-            // <div  style={{ marginBottom: '100px'}} key={scheda._id}>
             <div
               style={{
                 marginBottom:
@@ -120,7 +128,7 @@ function SchedaSpese({ handleShow }) {
               }}
               key={scheda._id}
             >
-              <SingleScheda key={scheda._id} scheda={scheda} />
+              <SingleScheda key={scheda._id} scheda={scheda} schedaOwner={userById ? userById[scheda.user] : null} />
             </div>
           ))
         ) : (

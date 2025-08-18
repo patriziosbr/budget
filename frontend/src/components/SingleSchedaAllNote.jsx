@@ -333,28 +333,11 @@ function SingleSchedaAllNote({ scheda }) {
                   <div className="col-6">
                     <div
                       className="d-flex text-dark-emphasis"
-                      onClick={() => goToDettagolioScheda(scheda._id)}
-                      style={{ cursor: "pointer" }}
                     >
-                      
-                      
-                      {scheda?.condivisoConList?.length > 0 &&
-                        scheda?.condivisoConList?.map((sharedEl) => (
-                          <>
-                            <div style={{ height: "", width: "15px" }}>
-                              <RandomColorCircle
-                                letter={sharedEl?.email}
-                                tooltip={sharedEl?.email}
-                                email={sharedEl?.email}
-                                className={"circle-small"}
-                              />
-                            </div>
-                          </>
-                        ))}
+
                       <h5
                         style={{
                           textTransform: "Capitalize",
-                          textDecoration: "underline",
                         }}
                         role="button"
                         className="ms-2 mb-0 w-100"
@@ -513,16 +496,8 @@ function SingleSchedaAllNote({ scheda }) {
                 </>
               )}
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
-                {scheda.notaSpese.length > 0 && (
-                  <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 w-25 "
-                    onClick={() => goToDettagolioScheda(scheda._id)}
-                  >
-                    <p className="mb-0 text-nowrap">See all</p>
-                  </div>
-                )}
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-75"
+                  className="btn bg-gradient-dark btn-sm mb-0 w-100"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">Add note</p>
@@ -593,6 +568,10 @@ function SingleSchedaAllNote({ scheda }) {
               </div>
             </>
           )}
+        </div>
+        {/* <SharedUser> */}
+        <div className="card h-100 mb-2">
+          
         </div>
       </div>
 

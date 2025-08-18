@@ -33,12 +33,11 @@ import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
-import { getUserById } from "../features/auth/authSlice";
 
-function SingleScheda({ scheda }) {
+
+function SingleScheda({ scheda, schedaOwner }) {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const { userById } = useSelector((state) => state.auth);
   const [modalState, setModalState] = useState({
     creaNotaModal: false,
     shareModal: false,
@@ -319,11 +318,11 @@ function SingleScheda({ scheda }) {
     }
     setExpencersDiff(resDiff);
   };
-
-  useEffect(() => {
+useEffect(() => {
+  if (scheda.notaSpese && user && user.token) {
     findExpencersWithTotals(scheda);
-    dispatch(getUserById(scheda.user));
-  }, [scheda.notaSpese]);
+  }
+}, [scheda.notaSpese, user]);
   return (
     <>
       <div>
@@ -341,9 +340,8 @@ function SingleScheda({ scheda }) {
                       
                       
                       {scheda?.condivisoConList?.length > 0 &&
-                        scheda?.condivisoConList?.map((sharedEl) => (
-                          <>
-                            <div style={{ height: "", width: "15px" }}>
+                        scheda?.condivisoConList?.map((sharedEl, i) => (
+                            <div style={{ height: "", width: "15px" }} key={i}>
                               <RandomColorCircle
                                 letter={sharedEl?.email}
                                 tooltip={sharedEl?.email}
@@ -351,7 +349,6 @@ function SingleScheda({ scheda }) {
                                 className={"circle-small"}
                               />
                             </div>
-                          </>
                         ))}
                       <h5
                         style={{
@@ -655,15 +652,15 @@ function SingleScheda({ scheda }) {
               {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
               <h6>Shared users</h6>
               <div>
-                {user._id !== scheda.user ? (
+                {schedaOwner && user._id !== scheda.user ? (
                   <div className="d-flex justify-content-between align-items-center my-3">
                     <div className="d-flex align-items-center">
                       <RandomColorCircle
-                        letter={userById[scheda.user]?.email}
-                        tooltip={userById[scheda.user]?.email}
-                        email={userById[scheda.user]?.email}
+                        letter={schedaOwner?.email}
+                        tooltip={schedaOwner?.email}
+                        email={schedaOwner?.email}
                       />
-                      <p className="ms-2 m-0">{userById[scheda.user]?.email}</p>
+                      <p className="ms-2 m-0">{schedaOwner?.email}</p>
                     </div>
                     <div>
                       <p className="m-0">Admin</p>

@@ -44,7 +44,7 @@ const getUserById = async (req, token) => {
     }
   }
 
-  const response = await axios.get(API_URL+"getUserById/", config)
+  const response = await axios.get(API_URL+"getUserById", config)
 
   return response.data
 }
