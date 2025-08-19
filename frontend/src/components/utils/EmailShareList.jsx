@@ -50,10 +50,15 @@ function EmailShareList({
             onKeyPress={handleKeyPress}
           />
           <Button
-            className="text-dark bg-white btn btn-outline-dark btn-sm d-flex align-items-center border-circle p-2 mb-0"
+            className="text-dark bg-white btn btn-outline-dark btn-sm d-flex  justify-content-center  align-items-center border-circle px-2 mb-0 w-25"
             onClick={handleAddEmail}
           >
+          <div className='d-flex align-items-center gap-2'>
           <FaPlus />
+          <p className='m-0'>
+          Add
+          </p >
+          </div>
           </Button>
         </div>
       </Form.Group>

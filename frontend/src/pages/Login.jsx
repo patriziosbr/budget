@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate, NavLink } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../features/auth/authSlice'
-import Spinner from '../components/Spinner'
+import Spinner from '../components/utils/Spinner'
 import { toggleMenu, closeMenu } from '../features/utils/menuSlice';
 
 import Button from 'react-bootstrap/Button';

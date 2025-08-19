@@ -24,20 +24,22 @@ const Aside = () => {
         <div className={`${showMenu ? 'g-sidenav-show ' : ''}`}>
             <aside className="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
                 <div className="sidenav-header">
-                    <div className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" role="button" onClick={()=> dispatch(closeMenu())}>
                     {!showMenu ? 
                     (
                         <>
+                        <div className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" role="button" onClick={()=> dispatch(closeMenu())}>
                             <FaTimes className="mr-1" />
                             <span className="ms-1 text-sm text-dark"> Close</span>
+                        </div>
                         </>
                     ):(
                         <>
+                        <NavLink className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" to={`/`} onClick={()=> dispatch(closeMenu())}>
                             <FaHome className="mr-1" />
                             <span className="ms-1 text-sm text-dark"> Budget</span>
+                        </NavLink>
                         </>
                     )}
-                    </div>
                 </div>
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">

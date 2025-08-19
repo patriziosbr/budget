@@ -16,7 +16,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
-import NotaSpeseForm from "../components/NotaSpeseForm";
+import NotaSpeseFormAllNote from "../components/NotaSpeseFormAllNote";
 import Table from "react-bootstrap/Table";
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
@@ -27,6 +27,7 @@ import {
   getSchedaSpese,
   updateSchedaSpese,
   deleteSchedaSpese,
+  singleSchedaSpeseGet
 } from "../features/schedaSpese/schedaSpeseSlice";
 import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
@@ -167,10 +168,18 @@ function SingleSchedaAllNote({ scheda }) {
       setlongPressCount(0)
       return
     }
-    await dispatch(
-      updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
-    ).unwrap();
-    await dispatch(getSchedaSpese()).unwrap();
+    try{
+      await dispatch(
+        updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
+      ).unwrap();
+      await dispatch(singleSchedaSpeseGet(scheda._id)).unwrap();
+    } catch (error) {
+      console.error("Error Response:", error);
+      toast.error(error.message || "Error while update scheda title");
+    } finally {
+      toast.success("Title update success");
+      setlongPressCount(0)
+    }
   };
 
   const parseDate = (dateString) => {
@@ -205,8 +214,8 @@ function SingleSchedaAllNote({ scheda }) {
     } catch (error) {
       toast.error(`Error updating shared users: ${error.message}`);
     }
-    await dispatch(getSchedaSpese()).unwrap();
-    // handleClose("shareModal")
+    await dispatch(singleSchedaSpeseGet(scheda._id)).unwrap();
+    handleClose("shareModal")
   };
 
   const getTotale = (notaSpese) => {
@@ -243,15 +252,29 @@ function SingleSchedaAllNote({ scheda }) {
 
     try {
       const response = await dispatch(deleteNotaSpese(body)).unwrap();
-      await dispatch(getSchedaSpese()).unwrap();
+      await dispatch(singleSchedaSpeseGet(body.schedaId)).unwrap();
       handleClose("deleteNotaModal");
       toast.success(response.message || "Note succesfull deleted");
     } catch (error) {
       console.log("Error Response:", error);
-
       toast.error(`Error deleting note: ${error.message}`);
     }
   };
+
+  const deleteSchedaFromDetail = async () => {
+    try {
+      const response = await dispatch(deleteSchedaSpese(scheda._id)).unwrap();
+      toast.success(response.message || "Scheda succesfull deleted");
+      if(response?.id) {
+        navigate('/note-spese')
+      }
+    } catch (error) {
+      console.log("Error Response:", error);
+      toast.error(`Error deleting scheda: ${error.message}`);
+    } finally {
+      handleClose("deleteModal")
+    }
+  }
 
   const [expencersWithTotals, setExpencersWithTotals] = useState([]);
   const [maxExpencer, setMaxExpencer] = useState(null);
@@ -325,7 +348,7 @@ function SingleSchedaAllNote({ scheda }) {
   return (
     <>
       <div>
-        <div className="card h-100 mb-2">
+        <div className="card h-100 pb-2 mb-2">
           <div className="card-header py-2 px-3">
             <div className="row">
               {longPressCount < 1 && (
@@ -333,8 +356,6 @@ function SingleSchedaAllNote({ scheda }) {
                   <div className="col-6">
                     <div
                       className="d-flex text-dark-emphasis"
-                      onClick={() => goToDettagolioScheda(scheda._id)}
-                      style={{ cursor: "pointer" }}
                     >
                       
                       
@@ -354,9 +375,9 @@ function SingleSchedaAllNote({ scheda }) {
                       <h5
                         style={{
                           textTransform: "Capitalize",
-                          textDecoration: "underline",
+                          cursor: "default",
                         }}
-                        role="button"
+                        
                         className="ms-2 mb-0 w-100"
                       >
                         {scheda.titolo}
@@ -513,16 +534,8 @@ function SingleSchedaAllNote({ scheda }) {
                 </>
               )}
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
-                {scheda.notaSpese.length > 0 && (
-                  <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 w-25 "
-                    onClick={() => goToDettagolioScheda(scheda._id)}
-                  >
-                    <p className="mb-0 text-nowrap">See all</p>
-                  </div>
-                )}
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-75"
+                  className="btn bg-gradient-dark btn-sm mb-0 w-100"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">Add note</p>
@@ -532,7 +545,7 @@ function SingleSchedaAllNote({ scheda }) {
           </div>
           {scheda.notaSpese.length > 0 && (
             <>
-              <div className="row p-3">
+              <div className="row px-3">
                 <div className="col-md-6 col-6">
                   <div className="card">
                     <div className="card-body text-center">
@@ -558,9 +571,9 @@ function SingleSchedaAllNote({ scheda }) {
                 </div>
               </div>
 
-              <div className="row px-3 mt-3">
+              <div className="row px-3">
                 {expencersWithTotals && expencersWithTotals.length > 1 && (
-                  <div className="col-12 my-2">
+                  <div className="col-12 mt-2">
                     <div className="card">
                       <div className="card-body">
                         <h6>Users totals</h6>
@@ -608,7 +621,7 @@ function SingleSchedaAllNote({ scheda }) {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} />
+            <NotaSpeseFormAllNote onSuccess={()=>handleClose("creaNotaModal")} schedaId={scheda._id} />
           </Modal.Body>
         </Modal>
         <Modal
@@ -622,8 +635,8 @@ function SingleSchedaAllNote({ scheda }) {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <NotaSpeseForm
-              onSuccess={handleClose}
+            <NotaSpeseFormAllNote
+              onSuccess={() => handleClose("editNotaModal")}
               schedaId={scheda._id}
               notaToEdit={notaSpesaToEdit}
               beforeDelete={() => closeCreateEditModal(scheda._id)}
@@ -650,7 +663,7 @@ function SingleSchedaAllNote({ scheda }) {
                 onRemoveEmail={removeEmail}
                 emailListParent={scheda.condivisoConList}
               />
-              {/* <NotaSpeseForm onSuccess={handleClose} schedaId={scheda._id} /> */}
+              {/* <NotaSpeseFormAllNote onSuccess={handleClose} schedaId={scheda._id} /> */}
               <h6>Shared users</h6>
               <div>
                 {user._id !== scheda.user ? (
@@ -773,7 +786,8 @@ function SingleSchedaAllNote({ scheda }) {
                 <button
                   type="submit"
                   className="text-danger btn border border-1 border-danger w-100 "
-                  onClick={() => dispatch(deleteSchedaSpese(scheda._id))}
+                  // onClick={() => dispatch(deleteSchedaSpese(scheda._id))}
+                  onClick={() => deleteSchedaFromDetail()}
                 >
                   Delete
                 </button>

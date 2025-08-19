@@ -10,10 +10,10 @@ import {
 import { FaBars } from "react-icons/fa";
 import { useNavigate, NavLink } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { logout, reset } from "../features/auth/authSlice";
-import { toggleMenu, closeMenu } from "../features/utils/menuSlice";
+import { logout, reset } from "../../features/auth/authSlice.js";
+import { toggleMenu, closeMenu } from "../../features/utils/menuSlice.js";
 import { FaRegUserCircle } from "react-icons/fa";
-import RandomColorCircle from "./utils/RandomColorCircle.js";
+import RandomColorCircle from "../utils/RandomColorCircle.js";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";

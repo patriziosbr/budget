@@ -20,7 +20,7 @@ const singleSchedaSpeseGet = asyncHandler(async (req, res) => {
         return NotaSpese.findById(notaId);
         })
     );
-    schedaSpese.notaSpese = noteSpeseResolved;
+    schedaSpese.notaSpese = noteSpeseResolved.sort((a, b) => new Date(b?.inserimentoData) - new Date(a?.inserimentoData));
     // console.log('noteSpeseResolved noteSpeseResolved ------------------- controller', schedaSpese);
 
     // da fare paginazione e filtri

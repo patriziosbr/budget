@@ -6,7 +6,7 @@ import { useNavigate, NavLink } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
-import Spinner from "./Spinner";
+import Spinner from "./utils/Spinner";
 
 const GestioneError = {
   message: "Cannot read properties of null (reading 'token')",
@@ -121,7 +121,7 @@ function SchedaSpese({ handleShow }) {
             <div
               style={{
                 marginBottom:
-                  isLastElement(schedaSpese) === scheda._id ? "120px" : "",
+                  isLastElement(schedaSpese) === scheda._id ? "80px" : "20px",
               }}
               key={scheda._id}
             >

@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { singleSchedaSpeseGet } from "../features/schedaSpese/schedaSpeseSlice";
 import { FaArrowLeft } from "react-icons/fa";
 
+import Spinner from "../components/utils/Spinner";
 import SingleSchedaAllNote from "../components/SingleSchedaAllNote";
 
 function SchedaSpesaDettaglio() {
@@ -40,7 +41,7 @@ function SchedaSpesaDettaglio() {
                 onClick={() => navigateBack()}
               />
 
-              <h2 className="mb-0 align-self-center">Dettaglio Scheda Spesa</h2>
+              <h2 className="mb-0 align-self-center">Expence detail</h2>
             </div>
 
             <div>
@@ -49,8 +50,9 @@ function SchedaSpesaDettaglio() {
                   <SingleSchedaAllNote key={singleScheda._id} scheda={singleScheda} />
                 </>
               ) : (
-                // <pre>{JSON.stringify(singleScheda, null, 2)}</pre>
-                <p>Loading...</p>
+                <>
+                  <Spinner/>
+                </>
               )}
             </div>
           </div>

@@ -5,7 +5,6 @@ import { BsFillInfoCircleFill } from "react-icons/bs";
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 import { login, reset } from '../../features/auth/authSlice'
-import Spinner from '../Spinner'
 
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';

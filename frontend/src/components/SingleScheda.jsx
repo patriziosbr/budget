@@ -327,7 +327,7 @@ function SingleScheda({ scheda }) {
   return (
     <>
       <div>
-        <div className="card h-100 mb-2">
+        <div className="card h-100 pb-2 mb-2">
           <div className="card-header py-2 px-3">
             <div className="row">
               {longPressCount < 1 && (
@@ -534,7 +534,8 @@ function SingleScheda({ scheda }) {
           </div>
           {scheda.notaSpese.length > 0 && (
             <>
-              <div className="row p-3">
+              {/* se aggiunta la row sotto rimovere mb-2 qui sotto  */}
+              <div className="row px-3">
                 <div className="col-md-6 col-6">
                   <div className="card">
                     <div className="card-body text-center">
@@ -560,9 +561,9 @@ function SingleScheda({ scheda }) {
                 </div>
               </div>
 
-              <div className="row px-3 mt-3">
+              {/* <div className="row px-3">
                 {expencersWithTotals && expencersWithTotals.length > 1 && (
-                  <div className="col-12 my-2">
+                  <div className="col-12 mt-2">
                     <div className="card">
                       <div className="card-body">
                         <h6>Users totals</h6>
@@ -592,7 +593,7 @@ function SingleScheda({ scheda }) {
                       </div>
                     </div>
                   )}
-              </div>
+              </div> */}
             </>
           )}
         </div>
