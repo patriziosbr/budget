@@ -13,6 +13,8 @@ import DashboardNotaSpese from './pages/DashboardSchedaSpese.jsx'
 import SchedaSpesaDettaglio from './pages/SchedaSpesaDettaglio.jsx'
 import DashboardPublic from './components/dashboards/DashboardPublic.jsx'
 import DashboardUser from './components/dashboards/DashboardUser'
+import ForgotPassword from './pages/ForgotPassword.jsx';
+import ResetPassword from './pages/ResetPassword.jsx';
 function App() {
 
   
@@ -34,6 +36,8 @@ function App() {
             {/* <Route exact path='/notaSpese' element={<NotaSpese />} /> */}
             <Route exact path='/note-spese' element={<DashboardNotaSpese />} />
             <Route exact path='/note-spese/:id' element={<SchedaSpesaDettaglio />} />
+            <Route exact path='/forgot-password' element={<ForgotPassword />} />
+            <Route exact path='/reset-password' element={<ResetPassword />} />
           </Routes>
         </main>
         {/* </div> */}

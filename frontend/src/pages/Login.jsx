@@ -109,7 +109,7 @@ function Login() {
                   </Form.Group>
                   <p className="mt-2 text-sm text-end">
 
-                    <NavLink className="text-primary text-gradient font-weight-bold" to='/' >
+                    <NavLink className="text-primary text-gradient font-weight-bold" to='/reset-password' >
                         <span className="nav-link-text ms-1">Forgot password?</span>
                     </NavLink>
                   </p>

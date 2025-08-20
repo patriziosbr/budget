@@ -1,14 +1,3 @@
-// function Spinner() {
-//   return (
-//     <div className='loadingSpinnerContainer'>
-//       <div className='loadingSpinner'></div>
-//     </div>
-//   )
-// }
-
-// export default Spinner
-
-
 import { useEffect, useState } from "react";
 
 const Spinner = () => {

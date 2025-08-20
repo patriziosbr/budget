@@ -44,6 +44,13 @@ const Aside = () => {
                 
                 <div className="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
                 <ul className="navbar-nav">
+                    {!showMenu && !user && 
+                    <li className="nav-item">
+                        <NavLink className="nav-link text-dark" to={`/`} onClick={()=> dispatch(closeMenu())}>
+                            <span className="ms-1 text-sm text-dark"> Home</span>
+                        </NavLink>
+                    </li>
+                    }
                     <li className="nav-item">
                     <NavLink className="nav-link text-dark" to={`${user ? '/dashboardPrivate' : '/dashboard'}`} onClick={()=> dispatch(closeMenu())}>
                         <span className="nav-link-text ms-1">Dashboard</span>

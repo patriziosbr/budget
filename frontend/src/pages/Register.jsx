@@ -66,14 +66,6 @@ function Register() {
     }
   }
 
-  const addHtml = () => {
-    return (
-      <span>
-        I agree to the <b>hello</b>
-      </span>
-    )
-  }
-
   if (isLoading) {
     return <Spinner />
   }
