@@ -1,112 +1,117 @@
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs")
-const asyncHandler = require('express-async-handler')
-const User = require("../model/userModel")
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+const asyncHandler = require("express-async-handler");
+const User = require("../model/userModel");
 const nodemailer = require("nodemailer");
 
 //@desc Register new User
 //@route POST /api/users
 //@access Public
 const registerUser = asyncHandler(async (req, res) => {
-    const { name, email, password } = req.body;
-    if(!name || !email || !password) {
-        res.status(400)
-        throw new Error("Please fill in all fields") //restituisce l'errore in html per ricevere un json vedere ./middleware 
-    }
-    //check if user exist 
-    const userExists = await User.findOne({ email });
-    if(userExists) {
-        res.status(400)
-        throw new Error("email exists") //restituisce l'errore in html per ricevere un json vedere ./middleware 
-    }
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    res.status(400);
+    throw new Error("Please fill in all fields"); //restituisce l'errore in html per ricevere un json vedere ./middleware
+  }
+  //check if user exist
+  const userExists = await User.findOne({ email });
+  if (userExists) {
+    res.status(400);
+    throw new Error("email exists"); //restituisce l'errore in html per ricevere un json vedere ./middleware
+  }
 
-    //hash password
-    const salt = await bcrypt.genSalt(10)
-    const hashedPass = await bcrypt.hash(password, salt)
+  //hash password
+  const salt = await bcrypt.genSalt(10);
+  const hashedPass = await bcrypt.hash(password, salt);
 
-    //create user
-    const user = await User.create({ name, email, password: hashedPass })
+  //create user
+  const user = await User.create({ name, email, password: hashedPass });
 
-    if(user) {
-        res.status(201).json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
-        })
-    } else {
-        res.status(400)
-        throw new Error("invalid user data")
-    }
-})
-
+  if (user) {
+    res.status(201).json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("invalid user data");
+  }
+});
 
 //@desc Authenticate a User
 //@route POST /api/users/login
 //@access Public
 const loginUser = asyncHandler(async (req, res) => {
-    const {email, password} = req.body;
-    //check user
-    const user = await User.findOne({email})
-    if(user && (await bcrypt.compare(password, user.password))) {
-        res.json({
-            _id: user.id,
-            name: user.name,
-            email: user.email,
-            token: generateToken(user._id)
-        })
-    } else {
-        res.status(400)
-        throw new Error("invalid credential")
-    }
-})
+  const { email, password } = req.body;
+  //check user
+  const user = await User.findOne({ email });
+  if (user && (await bcrypt.compare(password, user.password))) {
+    res.json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } else {
+    res.status(400);
+    throw new Error("invalid credential");
+  }
+});
 
 //@desc Get User data
 //@route GET /api/users/me
 //@access Private
 const getMe = asyncHandler(async (req, res) => {
-    res.status(200).json(req.user)
-})
+  res.status(200).json(req.user);
+});
 
 //@desc Get User data by id
 //@route GET /api/users/getUserById
 //@access Private
 const getUserById = asyncHandler(async (req, res) => {
-    const userId = req.query.id;
-    const user = await User.findOne({_id: userId})
-    if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
-    }
-    res.status(200).json(user);
-})
+  const userId = req.query.id;
+  const user = await User.findOne({ _id: userId });
+  if (!user) {
+    res.status(404).json({ message: "User not found" });
+    return;
+  }
+  res.status(200).json(user);
+});
 
 const requestPasswordReset = asyncHandler(async (req, res, next) => {
-    const email = req.body.mail;
+  const email = req.body.mail;
 
-    try {
-        const user = await User.findOne({ email });
+  try {
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User doesn't exist" });
 
     const secret = process.env.JWT + user.password;
-    const token = jwt.sign({ id: user._id, email: user.email }, secret, { expiresIn: '1h' });
+    const token = jwt.sign({ id: user._id, email: user.email }, secret, {
+      expiresIn: "1h",
+    });
 
-     const resetURL = `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'https://budget-fe.onrender.com/'}reset-password?token=${token}`;
+    const resetURL = `${
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000/"
+        : "https://budget-fe.onrender.com/"
+    }reset-password?token=${token}`;
 
     const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 465,
-        secure: true, // true for 465, false for other ports
-        auth: {
-            user: "tommasoversetto@gmail.com",
-            pass:  process.env.GOOGLE_SMTP_PASS,
-        },
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // true for 465, false for other ports
+      auth: {
+        user: "tommasoversetto@gmail.com",
+        pass: process.env.GOOGLE_SMTP_PASS,
+      },
     });
 
     const mailOptions = {
       to: user.email,
       from: process.env.EMAIL,
-      subject: 'Reset Your Password',
+      subject: "Reset Your Password",
       html: `
       
 <!doctype html>
@@ -151,7 +156,9 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
                                 </tr>
                                 <tr>
                                     <td style="padding:0 35px;">
-                                        <h3 style="color:#1e1e2d; font-weight:500; margin:0;font-family:'Rubik',sans-serif;">Hello ${user.name || ''}</h3>
+                                        <h3 style="color:#1e1e2d; font-weight:500; margin:0;font-family:'Rubik',sans-serif;">Hello ${
+                                          user.name || ""
+                                        }</h3>
                                         <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
                                             requested to reset your password</h1>
                                         <span
@@ -195,39 +202,29 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
 
     await transporter.sendMail(mailOptions);
 
-    res.status(200).json({ message: 'Password reset link sent' });
+    res.status(200).json({ message: "Password reset link sent" });
   } catch (error) {
-    console.log(error, "weeoere --------------------");
-    
-    res.status(500).json({ message: 'Something went wrong' });
+    res.status(500).json({ message: "Something went wrong" });
   }
-}); 
-
+});
 
 const resetPassword = async (req, res, next) => {
-  console.log(req.body, "req.body --------------------");
-
   const { password, paramToken } = req.body.userData;
-
   try {
     const decoded = jwt.decode(paramToken);
     const user = await User.findOne({ _id: decoded.id });
     if (!user) {
       return res.status(400).json({ message: "User not exists!" });
     }
-
     const secret = process.env.JWT + user.password;
-
     // Verify token
     try {
       jwt.verify(paramToken, secret);
     } catch (err) {
       return res.status(401).json({ message: "Invalid or expired token" });
     }
-
-    const salt = await bcrypt.genSalt(10)
-    const hashedPass = await bcrypt.hash(password, salt)
-
+    const salt = await bcrypt.genSalt(10);
+    const hashedPass = await bcrypt.hash(password, salt);
     await User.updateOne(
       {
         _id: user._id,
@@ -239,34 +236,30 @@ const resetPassword = async (req, res, next) => {
       }
     );
 
-
     await user.save();
 
-    res.status(200).json({ message: 'Password has been reset' });
+    res.status(200).json({ message: "Password has been reset" });
   } catch (error) {
     console.log(error);
-    res.status(500).json({ message: 'Something went wrong' });
+    res.status(500).json({ message: "Something went wrong" });
   }
 };
 
-
 //generate JWT
 const generateToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET, {
-        expiresIn: '30d'
-    })
-}
-
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 module.exports = {
-    registerUser,
-    loginUser,
-    getMe,
-    getUserById,
-    requestPasswordReset,
-    resetPassword
-}
-
+  registerUser,
+  loginUser,
+  getMe,
+  getUserById,
+  requestPasswordReset,
+  resetPassword,
+};
 
 // ESEMPI BASE PER TESTARE LE ROTTE IN POSTMAN
 // //@desc Authenticate a User

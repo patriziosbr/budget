@@ -136,24 +136,55 @@ function RandomColorCircle({ letter = "X", tooltip = "", email = null,  classNam
         onMouseLeave={() => setShowTooltip(false)}
         {...props}
       >
-      {className === "circle-small" ? (
-        <>
-        <p
-          className='text-bold mb-0 w-100 h-100'
-          style={{position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "13px" }}
-        >
-          {Array.isArray(letter) ? letter.join('') : letter[0]}
-        </p>
-        </>
-      ) : (<>
-          <p
-            className='text-bold mb-0 w-100 h-100'
-            style={{position: "absolute", top: "14px", left: "50%", transform: "translate(-50%, -50%)", fontSize: "14px" }}
-          >
-            {Array.isArray(letter) ? letter.join('') : letter[0]}
-          </p>
-      
-      </>)} 
+        {(() => {
+          switch (className) {
+            case "circle-small":
+              return (
+                <p
+                  className='text-bold mb-0 w-100 h-100'
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "13px"
+                  }}
+                >
+                  {Array.isArray(letter) ? letter.join('') : letter[0]}
+                </p>
+              );
+            case "circle-large":
+              return (
+                <p
+                  className='text-bold mb-0 w-100 h-100'
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "50px"
+                  }}
+                >
+                  {Array.isArray(letter) ? letter.join('') : letter[0]}
+                </p>
+              );
+            default:
+              return (
+                <p
+                  className='text-bold mb-0 w-100 h-100'
+                  style={{
+                    position: "absolute",
+                    top: "14px",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    fontSize: "14px"
+                  }}
+                >
+                  {Array.isArray(letter) ? letter.join('') : letter[0]}
+                </p>
+              );
+          }
+        })()}
       </div>
       
       {tooltip && (

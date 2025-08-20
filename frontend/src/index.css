@@ -124,3 +124,8 @@ a:has(.threedots) {
   width: 20px !important;
   height: 20px !important;
 }
+
+.circle-large {
+  width: 80px !important;
+  height: 80px !important;
+}
