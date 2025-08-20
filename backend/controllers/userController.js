@@ -91,7 +91,7 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
     const secret = process.env.JWT + user.password;
     const token = jwt.sign({ id: user._id, email: user.email }, secret, { expiresIn: '1h' });
 
-     const resetURL = `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'https://budget-fe.onrender.com/'}resetpassword?token=${token}`;
+     const resetURL = `${process.env.NODE_ENV === 'development' ? 'http://localhost:3000/' : 'https://budget-fe.onrender.com/'}reset-password?token=${token}`;
 
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
