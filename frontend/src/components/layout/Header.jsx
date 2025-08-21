@@ -73,8 +73,7 @@ function Header() {
                   {user ? (
                     <>
                       <RandomColorCircle
-                        letter={user.email[0]}
-                        tooltip={user.email}
+                        letter={user?.email[0]}
                         email={user.email}
                       />
                       {/* <small className=""></small> */}

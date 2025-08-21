@@ -252,6 +252,33 @@ const generateToken = (id) => {
   });
 };
 
+const updateUser = asyncHandler(async (req, res, next) => {
+  const { name, email, paramToken } = req.body;
+  try {
+    const decoded = jwt.decode(paramToken);
+    let user = await User.findOne({ _id: decoded.id });
+    if (!user) {
+      return res.status(400).json({ message: "User not exists!" });
+    }
+
+    await User.updateOne(
+      { _id: user._id },
+      { $set: { name: name, email: email } }
+    );
+
+    // Fetch the updated user and return only safe fields
+    user = await User.findOne({ _id: user._id });
+    res.status(200).json({
+      _id: user.id,
+      name: user.name,
+      email: user.email,
+      token: generateToken(user._id),
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Something went wrong" });
+  }
+});
+
 module.exports = {
   registerUser,
   loginUser,
@@ -259,6 +286,7 @@ module.exports = {
   getUserById,
   requestPasswordReset,
   resetPassword,
+  updateUser
 };
 
 // ESEMPI BASE PER TESTARE LE ROTTE IN POSTMAN

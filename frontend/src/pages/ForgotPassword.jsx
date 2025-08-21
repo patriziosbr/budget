@@ -103,7 +103,7 @@ function ForgotPassword() {
     setSendMailDisabled(true)
     axios
       .post(`${API_URL}requestPasswordReset`, { mail })
-      .then((res) => {
+      .then((res) => { 
         toast.success(<Msg />, {
           toastId: "err1",
           autoClose: false,
@@ -115,7 +115,8 @@ function ForgotPassword() {
       })
       .catch((error) => {
         console.log(error, "evvore");
-        toast.error(error);
+        toast.error(error.message || "Error");
+        setSendMailDisabled(false)
       });
   };
 
