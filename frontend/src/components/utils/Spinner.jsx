@@ -23,7 +23,8 @@ const [time, setTime] = useState(30);
   return (
     <div className="parent-timer">
       <div className='loadingSpinnerContainer'>
-      <div className='loadingSpinner'></div>
+      {/* <div className='loadingSpinner'></div> */}
+      <span class="loader"></span>
         <TimeBox value={time} />
       </div>
     </div>

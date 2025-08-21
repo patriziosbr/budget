@@ -10,9 +10,9 @@ const HeroAreaPublic = () => {
                     <div className="col-md-6">
                         <h1>Share Your Budget Expenses</h1>
                         <p className="lead">Easily share your budget with family, friends, and coworkers. Keep track of your expenses together.</p>
-                        <div className="row">
+                        <div className="row gap-sm-2 gap-md-3 gap-lg-1">
                             <div className="col-2">
-                                <button onClick={()=>navigate('/login')} className='btn bg-dark text-white'>Login</button>
+                                <button onClick={()=>navigate('/login')} className='btn bg-dark text-white border border-dark-1 me'>Login</button>
                             </div>
                             <div className="col-2">
                                 <button onClick={()=>navigate('/register')} className='text-dark bg-white btn btn-outline-dark '>Register</button>

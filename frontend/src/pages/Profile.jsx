@@ -1,6 +1,7 @@
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate, NavLink } from "react-router-dom";
 import RandomColorCircle from "../components/utils/RandomColorCircle";
+import { logout, reset } from "../features/auth/authSlice";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -9,6 +10,13 @@ const Profile = () => {
   const { user, isLoading, isError, isSuccess, message } = useSelector(
     (state) => state.auth
   );
+
+  const onLogout = () => {
+      dispatch(logout())
+      dispatch(reset())
+      navigate('/')
+  }
+
 
   return (
     <div className="container-fluid">
@@ -21,7 +29,7 @@ const Profile = () => {
       </div>
 
       <div className="row gutters-sm">
-        <div className="col-12 col-md-4">
+        <div className="col-12 col-md-4 mb-3">
           <div className="card h-100">
             <div className="card-body">
               <div className="d-flex flex-column align-items-center text-center">
@@ -33,14 +41,14 @@ const Profile = () => {
                   />
                   <h4 className="mt-4">{user.name}</h4>
                   <p className="text-muted font-size-sm">{user.email}</p>
-                  <button className="btn bg-dark text-white me-2">Edit</button>
-                  <button className="btn btn-outline-danger">Delete</button>
+                  <button className="btn btn-outline-dark" onClick={()=>onLogout()}>Logout</button>
+                  {/*<button className="btn btn-outline-danger">Delete</button> */}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="col-md-8">
+        <div className="col-md-8 mb-3">
           <div className="card h-100">
             <div className="card-body ">
               <div className="row">
