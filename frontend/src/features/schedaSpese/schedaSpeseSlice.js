@@ -59,7 +59,7 @@ export const createSchedaSpese = createAsyncThunk(
 export const updateSchedaSpese = createAsyncThunk(
   'schedaSpese/update',
   async (data, thunkAPI) => {
-    console.log(data, "-------------schedaSpeseschedaSpese----------"); // Debugging
+    // console.log(data, "-------------schedaSpeseschedaSpese----------"); // Debugging
     try {
       const state = thunkAPI.getState();
       const token = state.auth.user.token;
@@ -138,7 +138,6 @@ const schedaSpeseSlice = createSlice({
         state.isLoading = false;
         state.isSuccess = true;
         const index = state.schedaSpese.findIndex((scheda) => scheda._id === action.payload._id);
-        console.log(action.payload, '--------------action.payload'); // Debugging
         if (index !== -1) {
           state.schedaSpese[index] = action.payload;
         }

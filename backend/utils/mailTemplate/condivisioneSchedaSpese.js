@@ -35,7 +35,7 @@ const condivisioneSchedaSpese = async (req, userModel, emailList, baseUrl) => {
 
 
 const rimossoSchedaSpese = async (req, userModel, emailList) => {   
-            console.log(emailList, '--------------rimossoSchedaSpese emailList'); // Debugging
+            // console.log(emailList, '--------------rimossoSchedaSpese emailList'); // Debugging
             // Create a test account or replace with real credentials.
             const transporter = nodemailer.createTransport({
                 host: "smtp.gmail.com",

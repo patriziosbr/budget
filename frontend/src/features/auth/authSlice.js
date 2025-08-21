@@ -120,7 +120,7 @@ export const authSlice = createSlice({
       .addCase(getUserById.rejected, (state, action) => {
         state.isLoading = false;
         state.isError = true;
-        state.userById = null;
+        state.userById = {};
     })
   },
 })

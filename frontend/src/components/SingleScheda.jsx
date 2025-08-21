@@ -259,7 +259,7 @@ function SingleScheda({ scheda }) {
   const [maxExpencer, setMaxExpencer] = useState(null);
   const [expencersDiff, setExpencersDiff] = useState([]);
 
-  const findExpencersWithTotals = (scheda) => {
+  const findExpencersWithTotals = async (scheda) => {
     if (!scheda?.notaSpese?.length) {
       setExpencersWithTotals([]);
       setMaxExpencer(null);
@@ -268,22 +268,25 @@ function SingleScheda({ scheda }) {
     }
 
     // Calculate totals per user
-    const totalsMap = {};
-    scheda.notaSpese.forEach((item) => {
-      const userId = item.user;
-      if (!totalsMap[userId]) {
-        totalsMap[userId] = {
-          userId,
-          userName: item?.inserimentoUser?.name || "Unknown",
-          totalExp: 0,
-        };
-      }
-      totalsMap[userId].totalExp += item.importo || 0;
-    });
+  const totalsMap = {};
+  for (const item of scheda.notaSpese) {
+    const userId = item.user;
+    let resInserimentoUser;
+    if (userId) {
+      resInserimentoUser = await dispatch(getUserById(userId)).unwrap();
+    }
+    if (!totalsMap[userId]) {
+      totalsMap[userId] = {
+        userId,
+        userName: resInserimentoUser?.name || "Unknown",
+        totalExp: 0,
+      };
+    }
+    totalsMap[userId].totalExp += item.importo || 0;
+  }
 
     const totalsArray = Object.values(totalsMap);
     setExpencersWithTotals(totalsArray);
-
     // Find max spender
     if (totalsArray.length === 0) {
       setMaxExpencer(null);
@@ -475,9 +478,9 @@ function SingleScheda({ scheda }) {
                             <div className="d-flex align-items-center">
                               {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                               <RandomColorCircle
-                                letter={notaSpesa.inserimentoUser?.email}
-                                tooltip={notaSpesa.inserimentoUser?.email}
-                                email={notaSpesa.inserimentoUser?.email}
+                                letter={user.email}
+                                tooltip={user.email}
+                                email={user.email}
                               />
                               {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                             </div>
@@ -485,13 +488,13 @@ function SingleScheda({ scheda }) {
                             <div
                               role="button"
                               className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
+                                notaSpesa?.user === user?._id
                                   ? "text-decoration-underline"
                                   : ""
                               }`}
                               onClick={
                                 notaSpesa.testo &&
-                                notaSpesa.inserimentoUser?.id === user?._id
+                                notaSpesa.user === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }

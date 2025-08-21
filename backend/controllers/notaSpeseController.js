@@ -30,11 +30,11 @@ const setNotaSpese = asyncHandler(async (req, res) => {
     importo: req.body.importo,
     categoria_id: req.body.categoria_id,
     user: req.user.id,
-    inserimentoUser: {
-      id: req.user._id,
-      email: req.user.email,
-      name: req.user.name,
-    },
+    // inserimentoUser: {
+    //   id: req.user._id,
+    //   email: req.user.email,
+    //   name: req.user.name,
+    // },
   });
 
   res.status(200).json(notaSpese);

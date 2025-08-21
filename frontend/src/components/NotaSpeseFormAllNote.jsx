@@ -41,11 +41,11 @@ const onSubmit = async (e) => {
       inserimentoData: inserimentoData || new Date().toISOString(),
       importo: parseFloat(importo),
       categoria_id: null,
-      inserimentoUser: {
-        id: user._id,
-        email: user.email,
-        name: user.name
-      }
+      // inserimentoUser: {
+      //   id: user._id,
+      //   email: user.email,
+      //   name: user.name
+      // }
     };
 
     if (notaToEdit !== null) {

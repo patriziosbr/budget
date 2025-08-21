@@ -280,7 +280,7 @@ function SingleSchedaAllNote({ scheda }) {
   const [maxExpencer, setMaxExpencer] = useState(null);
   const [expencersDiff, setExpencersDiff] = useState([]);
 
-  const findExpencersWithTotals = (scheda) => {
+  const findExpencersWithTotals = async (scheda) => {
     if (!scheda?.notaSpese?.length) {
       setExpencersWithTotals([]);
       setMaxExpencer(null);
@@ -289,18 +289,34 @@ function SingleSchedaAllNote({ scheda }) {
     }
 
     // Calculate totals per user
-    const totalsMap = {};
-    scheda.notaSpese.forEach((item) => {
-      const userId = item.user;
-      if (!totalsMap[userId]) {
-        totalsMap[userId] = {
-          userId,
-          userName: item?.inserimentoUser?.name || "Unknown",
-          totalExp: 0,
-        };
-      }
-      totalsMap[userId].totalExp += item.importo || 0;
-    });
+const totalsMap = {};
+let lastUserId = null;
+
+for (const item of scheda.notaSpese) {
+  const userId = item.user;
+  let resInserimentoUser;
+
+  // Only fetch if userId is different from the previous one and not already in totalsMap
+  if (userId && userId !== lastUserId && !totalsMap[userId]) {
+    if (userById[userId]) {
+      resInserimentoUser = userById[userId];
+    } else {
+      resInserimentoUser = await dispatch(getUserById(userId)).unwrap();
+    }
+  } else if (totalsMap[userId]) {
+    resInserimentoUser = totalsMap[userId] 
+  }
+debugger
+  if (!totalsMap[userId]) {
+    totalsMap[userId] = {
+      userId,
+      userName: resInserimentoUser?.name || "Unknown",
+      totalExp: 0,
+    };
+  }
+  totalsMap[userId].totalExp += item.importo || 0;
+  lastUserId = userId;
+}
 
     const totalsArray = Object.values(totalsMap);
     setExpencersWithTotals(totalsArray);
@@ -342,8 +358,8 @@ function SingleSchedaAllNote({ scheda }) {
   };
 
   useEffect(() => {
-    findExpencersWithTotals(scheda);
     dispatch(getUserById(scheda.user));
+    findExpencersWithTotals(scheda);
   }, [scheda.notaSpese]);
   return (
     <>
@@ -494,9 +510,9 @@ function SingleSchedaAllNote({ scheda }) {
                             <div className="d-flex align-items-center">
                               {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                               <RandomColorCircle
-                                letter={notaSpesa.inserimentoUser?.email}
-                                tooltip={notaSpesa.inserimentoUser?.email}
-                                email={notaSpesa.inserimentoUser?.email}
+                                letter={userById?.email}
+                                tooltip={userById?.email}
+                                email={userById?.email}
                               />
                               {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                             </div>
@@ -504,13 +520,13 @@ function SingleSchedaAllNote({ scheda }) {
                             <div
                               role="button"
                               className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
+                                notaSpesa?.user === user?._id
                                   ? "text-decoration-underline"
                                   : ""
                               }`}
                               onClick={
                                 notaSpesa.testo &&
-                                notaSpesa.inserimentoUser?.id === user?._id
+                                notaSpesa.user === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }

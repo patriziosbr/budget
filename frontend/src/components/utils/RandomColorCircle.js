@@ -86,7 +86,7 @@ function RandomColorCircle({ letter = "X", tooltip = "", email = null,  classNam
 
   const [showTooltip, setShowTooltip] = React.useState(false);
   const targetRef = useRef(null);
-  console.log(className, "-----------");
+  // console.log(className, "-----------");
   
 
   const stringToColor = (string) => {

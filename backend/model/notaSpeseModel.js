@@ -22,21 +22,21 @@ const notaSpeseSchema = mongoose.Schema(
             type: Array,
             ref: 'Categoria'
         },
-        inserimentoUser: {
-            id: {
-                type: mongoose.Schema.Types.ObjectId,
-                required: true,
-                ref: 'User'
-            },
-            email: {
-                type: String,
-                required: true
-            },
-            name: {
-                type: String,
-                required: true
-            }
-        },
+        // inserimentoUser: {
+        //     id: {
+        //         type: mongoose.Schema.Types.ObjectId,
+        //         required: true,
+        //         ref: 'User'
+        //     },
+        //     email: {
+        //         type: String,
+        //         required: true
+        //     },
+        //     name: {
+        //         type: String,
+        //         required: true
+        //     }
+        // },
     },
     {
         timestamps: true
