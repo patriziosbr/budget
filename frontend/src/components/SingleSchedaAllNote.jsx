@@ -770,7 +770,7 @@ function SingleSchedaAllNote({ scheda }) {
           </Modal.Header>
           <Modal.Body>
             <p>
-              Are you sure to delete this note <i>"{scheda.titolo}"</i>
+              Are you sure to delete this scheda <i>"{scheda.titolo}"</i>
               ,<br /> <b>this action can be undone</b>{" "}
             </p>
             <div className="row mt-4 mb-3">
