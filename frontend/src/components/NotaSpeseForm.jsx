@@ -6,7 +6,9 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { createNotaSpese, updateNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import { getAllCategories } from '../features/categorie/categorieSlice'
 import { parseDate } from './utils/dateParser'
+import { useEffect } from 'react'
 
 function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
@@ -16,10 +18,10 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = 
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
     importo: notaToEdit?.importo ?? '',
-    categoria_id: []
+    categoria: notaToEdit?.categoria || ''
   })
   const [isDisabled, setisDisabled] = useState(false);
-  const { testo, inserimentoData, importo, categoria_id } = formData
+  const { testo, inserimentoData, importo, categoria } = formData
 
   const dispatch = useDispatch()
 
@@ -41,7 +43,7 @@ const onSubmit = async (e) => {
       testo,
       inserimentoData: inserimentoData || new Date().toISOString(),
       importo: parseFloat(importo),
-      categoria_id: null,
+      categoria: categoria,
       inserimentoUser: {
         id: user._id,
         email: user.email,
@@ -57,6 +59,13 @@ const onSubmit = async (e) => {
     }
   }
 }
+
+
+useEffect( async ()=> {
+  const res = await dispatch(getAllCategories()).unwrap();
+  console.log(res, "vvvvvvvvvvvvv");
+  
+}, [])
 
   // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
   // const onSubmit = async (e) => {
@@ -169,13 +178,13 @@ const onSubmit = async (e) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Categoria ID</Form.Label>
+          <Form.Label>Category</Form.Label>
           <Form.Control
             type="text"
-            id="categoria_id"
-            name="categoria_id"
-            value={categoria_id}
-            placeholder="Enter category ID"
+            id="categoria"
+            name="categoria"
+            value={categoria}
+            placeholder="Select a category"
             onChange={onChange}
           />
         </Form.Group>
