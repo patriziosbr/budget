@@ -16,13 +16,13 @@ import SelectSearch from './utils/SelectSearch'
 function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
-
+const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
     importo: notaToEdit?.importo ?? '',
     categoria: notaToEdit?.categoria || '',
-    categoriaToShow: notaToEdit?.categoriaToShow || ''
+    categoriaToShow: ''
   })
   const [isDisabled, setisDisabled] = useState(false);
   const { testo, inserimentoData, importo, categoria, categoriaToShow } = formData
@@ -63,15 +63,25 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = 
       }
     }
   }
-const [categories, setCategories] = useState([]);
+
 
 useEffect(() => {
   // Using async IIFE to handle the async operation
   (async () => {
     try {
       const res = await dispatch(getAllCategories()).unwrap();
-      console.log(res, "Categories loaded");
       setCategories(res);
+      
+      // Now that we have categories, find the matching one for notaToEdit
+      if (notaToEdit?.categoria) {
+        const matchedCategory = res.find(cat => cat._id === notaToEdit.categoria);
+        if (matchedCategory) {
+          setFormData(prevState => ({
+            ...prevState,
+            categoriaToShow: matchedCategory
+          }));
+        }
+      }
     } catch (error) {
       console.error("Error loading categories:", error);
     }
@@ -158,6 +168,7 @@ useEffect(() => {
 
   return (
     <Container>
+      {/* {JSON.stringify(categories)} */}
       <Form className="mb-3" onSubmit={onSubmit}>
 
         <Form.Group className="mb-3">
@@ -197,9 +208,9 @@ useEffect(() => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Category</Form.Label>
+          {/* <Form.Label>Category</Form.Label> */}
           <Form.Control
-            type="text"
+            type="hidden"
             id="categoria"
             name="categoria"
             value={categoria}
@@ -208,7 +219,7 @@ useEffect(() => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Category {categoria}</Form.Label>
+          <Form.Label>Category</Form.Label>
           <SelectSearch
             value={formData.categoria}
             onChange={handleCategoryChange}

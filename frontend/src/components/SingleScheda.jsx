@@ -34,6 +34,7 @@ import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
+import { getAllCategories } from "../features/categorie/categorieSlice";
 
 function SingleScheda({ scheda }) {
   const navigate = useNavigate();
@@ -164,7 +165,7 @@ function SingleScheda({ scheda }) {
 
   const updateSchedataTitolo = async () => {
     const updatePayload = { titolo: titolo };
-    if(scheda.titolo === titolo) {
+    if (scheda.titolo === titolo) {
       setlongPressCount(0)
       return
     }
@@ -324,6 +325,23 @@ function SingleScheda({ scheda }) {
     findExpencersWithTotals(scheda);
     dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
+
+
+  const [categories, setCategories] = useState([]);
+
+  // Add this useEffect near your other useEffects
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await dispatch(getAllCategories()).unwrap();
+        setCategories(res);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [dispatch]);
   return (
     <>
       <div>
@@ -338,8 +356,8 @@ function SingleScheda({ scheda }) {
                       onClick={() => goToDettagolioScheda(scheda._id)}
                       style={{ cursor: "pointer" }}
                     >
-                      
-                      
+
+
                       {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
@@ -484,14 +502,13 @@ function SingleScheda({ scheda }) {
                             {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
+                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id
                                   ? "text-decoration-underline"
                                   : ""
-                              }`}
+                                }`}
                               onClick={
                                 notaSpesa.testo &&
-                                notaSpesa.inserimentoUser?.id === user?._id
+                                  notaSpesa.inserimentoUser?.id === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }
@@ -505,6 +522,13 @@ function SingleScheda({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
+                              <div>
+                                {notaSpesa.categoria && (
+                                  <span className="badge bg-light text-dark mt-1" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
+                                    {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
+                                  </span>
+                                )}
+                              </div>
                           </div>
                           <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
                             € {notaSpesa?.importo?.toFixed(2)}
