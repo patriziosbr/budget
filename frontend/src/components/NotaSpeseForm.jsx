@@ -9,6 +9,9 @@ import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/sched
 import { getAllCategories } from '../features/categorie/categorieSlice'
 import { parseDate } from './utils/dateParser'
 import { useEffect } from 'react'
+import Select from 'react-select'
+import SelectSearch from './utils/SelectSearch'
+
 
 function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
@@ -18,10 +21,11 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = 
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
     importo: notaToEdit?.importo ?? '',
-    categoria: notaToEdit?.categoria || ''
+    categoria: notaToEdit?.categoria || '',
+    categoriaToShow: notaToEdit?.categoriaToShow || ''
   })
   const [isDisabled, setisDisabled] = useState(false);
-  const { testo, inserimentoData, importo, categoria } = formData
+  const { testo, inserimentoData, importo, categoria, categoriaToShow } = formData
 
   const dispatch = useDispatch()
 
@@ -32,40 +36,55 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = 
     }))
   }
 
-const onSubmit = async (e) => {
-  e.preventDefault()
-  if (!testo || !importo) {
-    toast.error('Please fill in all required fields')
-  } else {
-    if (parseFloat(importo) > 10000) {return toast.error('Limit amount 10000')  }
-    
-    const notaSpeseData = {
-      testo,
-      inserimentoData: inserimentoData || new Date().toISOString(),
-      importo: parseFloat(importo),
-      categoria: categoria,
-      inserimentoUser: {
-        id: user._id,
-        email: user.email,
-        name: user.name
-      }
-    };
-
-    if (notaToEdit !== null) {
-      notaSpeseData.notaID = notaToEdit._id;
-      fetchDispatch(notaSpeseData, true);
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    if (!testo || !importo) {
+      toast.error('Please fill in all required fields')
     } else {
-      fetchDispatch(notaSpeseData);
+      if (parseFloat(importo) > 10000) { return toast.error('Limit amount 10000') }
+
+      const notaSpeseData = {
+        testo,
+        inserimentoData: inserimentoData || new Date().toISOString(),
+        importo: parseFloat(importo),
+        categoria: categoria,
+        inserimentoUser: {
+          id: user._id,
+          email: user.email,
+          name: user.name
+        }
+      };
+
+      if (notaToEdit !== null) {
+        notaSpeseData.notaID = notaToEdit._id;
+        fetchDispatch(notaSpeseData, true);
+      } else {
+        fetchDispatch(notaSpeseData);
+      }
     }
   }
-}
+const [categories, setCategories] = useState([]);
 
+useEffect(() => {
+  // Using async IIFE to handle the async operation
+  (async () => {
+    try {
+      const res = await dispatch(getAllCategories()).unwrap();
+      console.log(res, "Categories loaded");
+      setCategories(res);
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  })();
+}, []); // Empty dependency array to run only once
 
-useEffect( async ()=> {
-  const res = await dispatch(getAllCategories()).unwrap();
-  console.log(res, "vvvvvvvvvvvvv");
-  
-}, [])
+  const handleCategoryChange = (selectedOption) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      categoria: selectedOption ? selectedOption._id : '',
+      categoriaToShow: selectedOption ? selectedOption : ''
+    }));
+  };
 
   // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
   // const onSubmit = async (e) => {
@@ -186,6 +205,15 @@ useEffect( async ()=> {
             value={categoria}
             placeholder="Select a category"
             onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Category {categoria}</Form.Label>
+          <SelectSearch
+            value={formData.categoria}
+            onChange={handleCategoryChange}
+            option={categories}
+            selected={categoriaToShow}
           />
         </Form.Group>
 
