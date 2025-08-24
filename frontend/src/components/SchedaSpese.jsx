@@ -134,7 +134,7 @@ function SchedaSpese({ handleShow }) {
               <>
                 <h5>Create a new list</h5>
                 <p>Expence list is empty, create a list to start your budget</p>
-                <div className="col-3">
+                <div className="col-4">
                   <div className="btn bg-gradient-dark" onClick={handleShow}>
                     <p className="mb-0">Create list</p>
                   </div>
