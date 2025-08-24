@@ -91,9 +91,11 @@ useEffect(() => {
   const handleCategoryChange = (selectedOption) => {
     setFormData((prevState) => ({
       ...prevState,
-      categoria: selectedOption ? selectedOption._id : '',
+      categoria: selectedOption ? selectedOption.value : '',
       categoriaToShow: selectedOption ? selectedOption : ''
+      
     }));
+    console.log(selectedOption, "selectedOption");
   };
 
   // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA

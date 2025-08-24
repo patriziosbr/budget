@@ -28,6 +28,7 @@ export const getNotaSpese = createAsyncThunk(
 export const createNotaSpese = createAsyncThunk(
   'notaSpese/create',
   async (notaSpeseData, thunkAPI) => {
+    console.log(notaSpeseData, "data ------------------- slice");
     try {
       const token = thunkAPI.getState().auth.user.token;
       return await notaSpeseService.createNotaSpese(notaSpeseData, token);
@@ -44,6 +45,8 @@ export const updateNotaSpese = createAsyncThunk(
   'notaSpese/update',
   async (data, thunkAPI) => {
     if(data) {
+      console.log(data, "data ------------------- slice");
+      
       try {
         const token = thunkAPI.getState().auth.user.token;
         const notaSpeseId = data.notaID;
