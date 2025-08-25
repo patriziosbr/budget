@@ -40,6 +40,7 @@ app.use(express.urlencoded({extended:false}))
 app.use('/api/users', require('./routes/userRoutes'))
 app.use('/api/notaSpese', require('./routes/notaSpeseRoutes'))
 app.use('/api/schedaSpese', require('./routes/schedaSpeseRoutes'))
+app.use('/api/categorie', require('./routes/categorieRoutes'))
 
 //serve frontend
     if (process.env.NODE_ENV === 'production') {

@@ -6,20 +6,25 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { createNotaSpese, updateNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import { getAllCategories } from '../features/categorie/categorieSlice'
 import { parseDate } from './utils/dateParser'
+import { useEffect } from 'react'
+import SelectSearch from './utils/SelectSearch'
+
 
 function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
-
+const [categories, setCategories] = useState([]);
   const [formData, setFormData] = useState({
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
     importo: notaToEdit?.importo ?? '',
-    categoria_id: []
+    categoria: notaToEdit?.categoria || '',
+    categoriaToShow: ''
   })
   const [isDisabled, setisDisabled] = useState(false);
-  const { testo, inserimentoData, importo, categoria_id } = formData
+  const { testo, inserimentoData, importo, categoria, categoriaToShow } = formData
 
   const dispatch = useDispatch()
 
@@ -30,33 +35,67 @@ function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = 
     }))
   }
 
-const onSubmit = async (e) => {
-  e.preventDefault()
-  if (!testo || !importo) {
-    toast.error('Please fill in all required fields')
-  } else {
-    if (parseFloat(importo) > 10000) {return toast.error('Limit amount 10000')  }
-    
-    const notaSpeseData = {
-      testo,
-      inserimentoData: inserimentoData || new Date().toISOString(),
-      importo: parseFloat(importo),
-      categoria_id: null,
-      inserimentoUser: {
-        id: user._id,
-        email: user.email,
-        name: user.name
-      }
-    };
-
-    if (notaToEdit !== null) {
-      notaSpeseData.notaID = notaToEdit._id;
-      fetchDispatch(notaSpeseData, true);
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    if (!testo || !importo) {
+      toast.error('Please fill in all required fields')
     } else {
-      fetchDispatch(notaSpeseData);
+      if (parseFloat(importo) > 10000) { return toast.error('Limit amount 10000') }
+
+      const notaSpeseData = {
+        testo,
+        inserimentoData: inserimentoData || new Date().toISOString(),
+        importo: parseFloat(importo),
+        categoria: categoria,
+        inserimentoUser: {
+          id: user._id,
+          email: user.email,
+          name: user.name
+        }
+      };
+
+      if (notaToEdit !== null) {
+        notaSpeseData.notaID = notaToEdit._id;
+        fetchDispatch(notaSpeseData, true);
+      } else {
+        fetchDispatch(notaSpeseData);
+      }
     }
   }
-}
+
+
+useEffect(() => {
+  // Using async IIFE to handle the async operation
+  (async () => {
+    try {
+      const res = await dispatch(getAllCategories()).unwrap();
+      setCategories(res);
+      
+      // Now that we have categories, find the matching one for notaToEdit
+      if (notaToEdit?.categoria) {
+        const matchedCategory = res.find(cat => cat._id === notaToEdit.categoria);
+        if (matchedCategory) {
+          setFormData(prevState => ({
+            ...prevState,
+            categoriaToShow: matchedCategory
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  })();
+}, []); // Empty dependency array to run only once
+
+  const handleCategoryChange = (selectedOption) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      categoria: selectedOption ? selectedOption.value : '',
+      categoriaToShow: selectedOption ? selectedOption : ''
+      
+    }));
+    console.log(selectedOption, "selectedOption");
+  };
 
   // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
   // const onSubmit = async (e) => {
@@ -130,6 +169,7 @@ const onSubmit = async (e) => {
 
   return (
     <Container>
+      {/* {JSON.stringify(categories)} */}
       <Form className="mb-3" onSubmit={onSubmit}>
 
         <Form.Group className="mb-3">
@@ -169,14 +209,23 @@ const onSubmit = async (e) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Categoria ID</Form.Label>
+          {/* <Form.Label>Category</Form.Label> */}
           <Form.Control
-            type="text"
-            id="categoria_id"
-            name="categoria_id"
-            value={categoria_id}
-            placeholder="Enter category ID"
+            type="hidden"
+            id="categoria"
+            name="categoria"
+            value={categoria}
+            placeholder="Select a category"
             onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Category</Form.Label>
+          <SelectSearch
+            value={formData.categoria}
+            onChange={handleCategoryChange}
+            option={categories}
+            selected={categoriaToShow}
           />
         </Form.Group>
 

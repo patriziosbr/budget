@@ -15,6 +15,8 @@ const getNotaSpese = asyncHandler(async (req, res) => {
 //@route POST /api/goals
 //@access Private
 const setNotaSpese = asyncHandler(async (req, res) => {
+  // console.log(req.body, "req.body ------------------- controller");
+
   if (!req.body.testo) {
     // return res.status(400).json({data: "add text in body"}) //soluzione mia con return
     res.status(400);
@@ -24,20 +26,28 @@ const setNotaSpese = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("add importo in body");
   }
-  const notaSpese = await NotaSpese.create({
-    testo: req.body.testo,
-    inserimentoData: req.body.inserimentoData,
-    importo: req.body.importo,
-    categoria_id: req.body.categoria_id,
-    user: req.user.id,
-    inserimentoUser: {
-      id: req.user._id,
-      email: req.user.email,
-      name: req.user.name,
-    },
-  });
+  try {
+    const notaSpese = await NotaSpese.create({
+      testo: req.body.testo,
+      inserimentoData: req.body.inserimentoData,
+      importo: req.body.importo,
+      categoria: req.body.categoria === "" ? null : req.body.categoria,
+      user: req.user.id,
+      inserimentoUser: {
+        id: req.user._id,
+        email: req.user.email,
+        name: req.user.name,
+      },
+    });
+    
+    res.status(200).json(notaSpese);
 
-  res.status(200).json(notaSpese);
+  } catch (error) {
+    console.error("Error in setNotaSpese:", error);
+    res.status(500);
+    throw new Error("Server error");
+  }
+  
 });
 
 // //@desc update Nota
@@ -67,7 +77,7 @@ const updateNotaSpese = asyncHandler(async (req, res) => {
 // //@route DELETE /api/goals/:id
 // //@access Private
 const deleteNotaSpese = asyncHandler(async (req, res) => {
-   
+
   const notaID = req?.params?.id;
 
   const notaSpese = await NotaSpese.findById(notaID);

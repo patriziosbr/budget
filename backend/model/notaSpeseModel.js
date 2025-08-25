@@ -18,9 +18,10 @@ const notaSpeseSchema = mongoose.Schema(
             type: Number,
             require: [true, 'Please add a importo value']
         },
-        categoria_id: {
-            type: Array,
-            ref: 'Categoria'
+        categoria: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: 'Categoria'
         },
         inserimentoUser: {
             id: {

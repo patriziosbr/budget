@@ -34,6 +34,7 @@ import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
+import { getAllCategories } from "../features/categorie/categorieSlice";
 
 function SingleSchedaAllNote({ scheda }) {
   const navigate = useNavigate();
@@ -345,6 +346,21 @@ function SingleSchedaAllNote({ scheda }) {
     findExpencersWithTotals(scheda);
     dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await dispatch(getAllCategories()).unwrap();
+        setCategories(res);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [dispatch]);
+
   return (
     <>
       <div>
@@ -524,6 +540,13 @@ function SingleSchedaAllNote({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
+                                                          <div>
+                                {notaSpesa.categoria !== "" && (
+                                  <span className="badge bg-light text-dark" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
+                                    {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
+                                  </span>
+                                )}
+                              </div>
                           </div>
                           <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
                             € {notaSpesa?.importo?.toFixed(2)}
@@ -535,7 +558,7 @@ function SingleSchedaAllNote({ scheda }) {
               )}
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-100"
+                  className="btn bg-gradient-dark btn-sm mb-0 px-4"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">Add note</p>

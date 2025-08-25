@@ -290,7 +290,6 @@ const updateUser = asyncHandler(async (req, res, next) => {
 // //@route DELETE /api/schedaSpese/:id
 // //@access Private
 const deleteUser = asyncHandler(async (req, res) => {
-  console.log(req.params, "222222222222222222222");
 
   const userId = req.params;
 

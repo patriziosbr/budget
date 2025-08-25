@@ -34,6 +34,7 @@ import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
+import { getAllCategories } from "../features/categorie/categorieSlice";
 
 function SingleScheda({ scheda }) {
   const navigate = useNavigate();
@@ -164,7 +165,7 @@ function SingleScheda({ scheda }) {
 
   const updateSchedataTitolo = async () => {
     const updatePayload = { titolo: titolo };
-    if(scheda.titolo === titolo) {
+    if (scheda.titolo === titolo) {
       setlongPressCount(0)
       return
     }
@@ -324,6 +325,23 @@ function SingleScheda({ scheda }) {
     findExpencersWithTotals(scheda);
     dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
+
+
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const res = await dispatch(getAllCategories()).unwrap();
+        setCategories(res);
+      } catch (error) {
+        console.error("Error loading categories:", error);
+      }
+    };
+
+    fetchCategories();
+  }, [dispatch]);
+
   return (
     <>
       <div>
@@ -338,8 +356,8 @@ function SingleScheda({ scheda }) {
                       onClick={() => goToDettagolioScheda(scheda._id)}
                       style={{ cursor: "pointer" }}
                     >
-                      
-                      
+
+
                       {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
@@ -356,10 +374,10 @@ function SingleScheda({ scheda }) {
                       <h5
                         style={{
                           textTransform: "Capitalize",
-                          textDecoration: "underline",
+                          // textDecoration: "underline",
                         }}
                         role="button"
-                        className="ms-2 mb-0 w-100"
+                        className="ms-2 mb-0 w-100 hover"
                       >
                         {scheda.titolo}
                       </h5>
@@ -469,9 +487,9 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg"
+                          className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg border-bottom"
                         >
-                          <div className="d-flex align-items-center">
+                          <div className="d-flex align-items-center ">
                             <div className="d-flex align-items-center">
                               {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                               <RandomColorCircle
@@ -484,14 +502,13 @@ function SingleScheda({ scheda }) {
                             {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? "text-decoration-underline"
+                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id
+                                  ? ""
                                   : ""
-                              }`}
+                                }`}
                               onClick={
                                 notaSpesa.testo &&
-                                notaSpesa.inserimentoUser?.id === user?._id
+                                  notaSpesa.inserimentoUser?.id === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }
@@ -505,6 +522,13 @@ function SingleScheda({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
+                              <div>
+                                {notaSpesa.categoria !== "" && (
+                                  <span className="badge bg-light text-dark" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
+                                    {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
+                                  </span>
+                                )}
+                              </div>
                           </div>
                           <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
                             € {notaSpesa?.importo?.toFixed(2)}
@@ -517,14 +541,14 @@ function SingleScheda({ scheda }) {
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
                 {scheda.notaSpese.length > 0 && (
                   <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 w-25 "
+                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 px-4"
                     onClick={() => goToDettagolioScheda(scheda._id)}
                   >
                     <p className="mb-0 text-nowrap">See all</p>
                   </div>
                 )}
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-75"
+                  className="btn bg-gradient-dark btn-sm mb-0 px-4"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">Add note</p>
