@@ -535,7 +535,7 @@ function SingleSchedaAllNote({ scheda }) {
               )}
               <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
                 <div
-                  className="btn bg-gradient-dark btn-sm mb-0 w-100"
+                  className="btn bg-gradient-dark btn-sm mb-0 px-4"
                   onClick={() => handleShow("creaNotaModal")}
                 >
                   <p className="mb-0">Add note</p>

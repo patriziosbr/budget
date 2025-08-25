@@ -9,7 +9,6 @@ import { getSchedaSpese, updateSchedaSpese } from '../features/schedaSpese/sched
 import { getAllCategories } from '../features/categorie/categorieSlice'
 import { parseDate } from './utils/dateParser'
 import { useEffect } from 'react'
-import Select from 'react-select'
 import SelectSearch from './utils/SelectSearch'
 
 
