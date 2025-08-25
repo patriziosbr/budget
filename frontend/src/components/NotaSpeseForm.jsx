@@ -15,7 +15,8 @@ import SelectSearch from './utils/SelectSearch'
 function NotaSpeseForm({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
-const [categories, setCategories] = useState([]);
+  const [categories, setCategories] = useState([]);
+  
   const [formData, setFormData] = useState({
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
@@ -96,49 +97,6 @@ useEffect(() => {
     }));
     console.log(selectedOption, "selectedOption");
   };
-
-  // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
-  // const onSubmit = async (e) => {
-  //   e.preventDefault()
-  //   if (!testo || !importo) {
-  //     toast.error('Please fill in all required fields')
-  //   } else {
-  //     const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
-  //     if (categoria_id.length > 0) categoriesArray.push(categoria_id);
-  //     const notaSpeseData = {
-  //       notaID: notaToEdit ? notaToEdit._id : null,
-  //       testo,
-  //       inserimentoData: inserimentoData || new Date().toISOString(),
-  //       importo: parseFloat(importo),
-  //       categoria_id: categoriesArray,
-  //       inserimentoUser: {
-  //         id: user._id,
-  //         email: user.email,
-  //         name: user.name
-  //       }
-  //     };
-
-  //     if (notaToEdit !== null) {
-  //       // Edit: pass the correct notaID and data
-  //       fetchDispatch(notaSpeseData, true);
-  //     } else {
-  //       // Create: do not pass notaID
-  //       const notaSpeseDataNew = {
-  //         testo,
-  //         inserimentoData: inserimentoData || new Date().toISOString(),
-  //         importo: parseFloat(importo),
-  //         categoria_id: categoriesArray,
-  //         inserimentoUser: {
-  //           id: user._id,
-  //           email: user.email,
-  //           name: user.name
-  //         }
-  //       };
-  //       fetchDispatch(notaSpeseDataNew);
-  //     }
-
-  //   }
-  // }
 
   const fetchDispatch = async (notaSpeseData, isEdit = false) => {
     setisDisabled(true);

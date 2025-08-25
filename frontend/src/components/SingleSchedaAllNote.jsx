@@ -27,7 +27,7 @@ import {
   getSchedaSpese,
   updateSchedaSpese,
   deleteSchedaSpese,
-  singleSchedaSpeseGet
+  singleSchedaSpeseGet,
 } from "../features/schedaSpese/schedaSpeseSlice";
 import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
@@ -165,11 +165,11 @@ function SingleSchedaAllNote({ scheda }) {
 
   const updateSchedataTitolo = async () => {
     const updatePayload = { titolo: titolo };
-    if(scheda.titolo === titolo) {
-      setlongPressCount(0)
-      return
+    if (scheda.titolo === titolo) {
+      setlongPressCount(0);
+      return;
     }
-    try{
+    try {
       await dispatch(
         updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
       ).unwrap();
@@ -179,7 +179,7 @@ function SingleSchedaAllNote({ scheda }) {
       toast.error(error.message || "Error while update scheda title");
     } finally {
       toast.success("Title update success");
-      setlongPressCount(0)
+      setlongPressCount(0);
     }
   };
 
@@ -216,7 +216,7 @@ function SingleSchedaAllNote({ scheda }) {
       toast.error(`Error updating shared users: ${error.message}`);
     }
     await dispatch(singleSchedaSpeseGet(scheda._id)).unwrap();
-    handleClose("shareModal")
+    handleClose("shareModal");
   };
 
   const getTotale = (notaSpese) => {
@@ -266,16 +266,16 @@ function SingleSchedaAllNote({ scheda }) {
     try {
       const response = await dispatch(deleteSchedaSpese(scheda._id)).unwrap();
       toast.success(response.message || "Scheda succesfull deleted");
-      if(response?.id) {
-        navigate('/note-spese')
+      if (response?.id) {
+        navigate("/note-spese");
       }
     } catch (error) {
       console.log("Error Response:", error);
       toast.error(`Error deleting scheda: ${error.message}`);
     } finally {
-      handleClose("deleteModal")
+      handleClose("deleteModal");
     }
-  }
+  };
 
   const [expencersWithTotals, setExpencersWithTotals] = useState([]);
   const [maxExpencer, setMaxExpencer] = useState(null);
@@ -370,11 +370,7 @@ function SingleSchedaAllNote({ scheda }) {
               {longPressCount < 1 && (
                 <>
                   <div className="col-6">
-                    <div
-                      className="d-flex text-dark-emphasis"
-                    >
-                      
-                      
+                    <div className="d-flex text-dark-emphasis">
                       {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
@@ -393,12 +389,10 @@ function SingleSchedaAllNote({ scheda }) {
                           textTransform: "Capitalize",
                           cursor: "default",
                         }}
-                        
                         className="ms-2 mb-0 w-100"
                       >
                         {scheda.titolo}
                       </h5>
-
                     </div>
                   </div>
                   <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
@@ -490,7 +484,7 @@ function SingleSchedaAllNote({ scheda }) {
               )}
             </div>
           </div>
-          <div className="card-body">
+          <div className="card-body px-0">
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
                 <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
@@ -500,11 +494,10 @@ function SingleSchedaAllNote({ scheda }) {
                 <>
                   {scheda.notaSpese.map(
                     (notaSpesa, i) =>
-                      notaSpesa &&
-
+                      notaSpesa && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg"
+                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg border-bottom"
                         >
                           <div className="d-flex align-items-center">
                             <div className="d-flex align-items-center">
@@ -521,7 +514,7 @@ function SingleSchedaAllNote({ scheda }) {
                               role="button"
                               className={`d-flex flex-column pe-3 ${
                                 notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? "text-decoration-underline"
+                                  ? ""
                                   : ""
                               }`}
                               onClick={
@@ -540,31 +533,41 @@ function SingleSchedaAllNote({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
-                                                          <div>
-                                {notaSpesa.categoria !== "" && (
-                                  <span className="badge bg-light text-dark" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
-                                    {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
-                                  </span>
-                                )}
-                              </div>
+                            <div>
+                              {notaSpesa.categoria !== "" && (
+                                <span
+                                  className="badge bg-light text-dark"
+                                  style={{
+                                    fontSize: "0.7rem",
+                                    alignSelf: "flex-start",
+                                  }}
+                                >
+                                  {categories.find(
+                                    (cat) => cat._id === notaSpesa.categoria
+                                  )?.name || "Uncategorized"}
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
                             € {notaSpesa?.importo?.toFixed(2)}
                           </div>
                         </li>
-                      
+                      )
                   )}
                 </>
               )}
-              <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
-                <div
-                  className="btn bg-gradient-dark btn-sm mb-0 px-4"
-                  onClick={() => handleShow("creaNotaModal")}
-                >
-                  <p className="mb-0">Add note</p>
-                </div>
-              </li>
             </ul>
+          </div>
+          <div className="row pt-0 p-3">
+            <div className="col-12 d-flex justify-content-end">
+              <div
+                className="btn bg-gradient-dark btn-sm mb-0 px-4"
+                onClick={() => handleShow("creaNotaModal")}
+              >
+                <p className="mb-0">Add note</p>
+              </div>
+            </div>
           </div>
           {scheda.notaSpese.length > 0 && (
             <>
@@ -644,7 +647,10 @@ function SingleSchedaAllNote({ scheda }) {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <NotaSpeseFormAllNote onSuccess={()=>handleClose("creaNotaModal")} schedaId={scheda._id} />
+            <NotaSpeseFormAllNote
+              onSuccess={() => handleClose("creaNotaModal")}
+              schedaId={scheda._id}
+            />
           </Modal.Body>
         </Modal>
         <Modal

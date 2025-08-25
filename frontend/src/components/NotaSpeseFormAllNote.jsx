@@ -6,19 +6,24 @@ import Form from 'react-bootstrap/Form'
 import Container from 'react-bootstrap/Container'
 import { createNotaSpese, updateNotaSpese } from '../features/notaSpese/notaSpeseSlice'
 import { singleSchedaSpeseGet, updateSchedaSpese } from '../features/schedaSpese/schedaSpeseSlice'
+import { getAllCategories } from '../features/categorie/categorieSlice'
+import { useEffect } from 'react'
+import SelectSearch from './utils/SelectSearch'
 
 function NotaSpeseFormAllNote({ onSuccess, schedaId, notaToEdit = null, beforeDelete = null }) {
   const { user } = useSelector((state) => state.auth);
   const today = new Date().toISOString().split('T')[0];
+  const [categories, setCategories] = useState([]);
 
   const [formData, setFormData] = useState({
     testo: notaToEdit?.testo ?? '',
     inserimentoData: notaToEdit?.inserimentoData.split('T')[0] ?? today,
     importo: notaToEdit?.importo ?? '',
-    categoria_id: []
+    categoria: notaToEdit?.categoria || '',
+    categoriaToShow: ''
   })
   const [isDisabled, setisDisabled] = useState(false);
-  const { testo, inserimentoData, importo, categoria_id } = formData
+  const { testo, inserimentoData, importo, categoria, categoriaToShow } = formData
 
   const dispatch = useDispatch()
 
@@ -40,7 +45,7 @@ const onSubmit = async (e) => {
       testo,
       inserimentoData: inserimentoData || new Date().toISOString(),
       importo: parseFloat(importo),
-      categoria_id: null,
+      categoria: categoria,
       inserimentoUser: {
         id: user._id,
         email: user.email,
@@ -57,48 +62,39 @@ const onSubmit = async (e) => {
   }
 }
 
-  // C'è LA BOZZA DELLA CATEGIA_ID MA NON È IMPLEMENTATA
-  // const onSubmit = async (e) => {
-  //   e.preventDefault()
-  //   if (!testo || !importo) {
-  //     toast.error('Please fill in all required fields')
-  //   } else {
-  //     const categoriesArray = ['53cb6b9b4f4ddef1ad47f943', "53cb6b9b4f4ddef1ad47f911"];
-  //     if (categoria_id.length > 0) categoriesArray.push(categoria_id);
-  //     const notaSpeseData = {
-  //       notaID: notaToEdit ? notaToEdit._id : null,
-  //       testo,
-  //       inserimentoData: inserimentoData || new Date().toISOString(),
-  //       importo: parseFloat(importo),
-  //       categoria_id: categoriesArray,
-  //       inserimentoUser: {
-  //         id: user._id,
-  //         email: user.email,
-  //         name: user.name
-  //       }
-  //     };
+useEffect(() => {
+  // Using async IIFE to handle the async operation
+  (async () => {
+    try {
+      const res = await dispatch(getAllCategories()).unwrap();
+      setCategories(res);
+      
+      // Now that we have categories, find the matching one for notaToEdit
+      if (notaToEdit?.categoria) {
+        const matchedCategory = res.find(cat => cat._id === notaToEdit.categoria);
+        if (matchedCategory) {
+          setFormData(prevState => ({
+            ...prevState,
+            categoriaToShow: matchedCategory
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Error loading categories:", error);
+    }
+  })();
+}, []); // Empty dependency array to run only once
 
-  //     if (notaToEdit !== null) {
-  //       // Edit: pass the correct notaID and data
-  //       fetchDispatch(notaSpeseData, true);
-  //     } else {
-  //       // Create: do not pass notaID
-  //       const notaSpeseDataNew = {
-  //         testo,
-  //         inserimentoData: inserimentoData || new Date().toISOString(),
-  //         importo: parseFloat(importo),
-  //         categoria_id: categoriesArray,
-  //         inserimentoUser: {
-  //           id: user._id,
-  //           email: user.email,
-  //           name: user.name
-  //         }
-  //       };
-  //       fetchDispatch(notaSpeseDataNew);
-  //     }
+  const handleCategoryChange = (selectedOption) => {
+    setFormData((prevState) => ({
+      ...prevState,
+      categoria: selectedOption ? selectedOption.value : '',
+      categoriaToShow: selectedOption ? selectedOption : ''
+      
+    }));
+    console.log(selectedOption, "selectedOption");
+  };
 
-  //   }
-  // }
 
   const fetchDispatch = async (notaSpeseData, isEdit = false) => {
     setisDisabled(true);
@@ -172,14 +168,23 @@ const onSubmit = async (e) => {
           />
         </Form.Group>
         <Form.Group className="mb-3">
-          <Form.Label>Categoria ID</Form.Label>
+          {/* <Form.Label>Category</Form.Label> */}
           <Form.Control
-            type="text"
-            id="categoria_id"
-            name="categoria_id"
-            value={categoria_id}
-            placeholder="Enter category ID"
+            type="hidden"
+            id="categoria"
+            name="categoria"
+            value={categoria}
+            placeholder="Select a category"
             onChange={onChange}
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Label>Category</Form.Label>
+          <SelectSearch
+            value={formData.categoria}
+            onChange={handleCategoryChange}
+            option={categories}
+            selected={categoriaToShow}
           />
         </Form.Group>
 

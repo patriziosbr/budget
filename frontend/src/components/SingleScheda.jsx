@@ -27,7 +27,7 @@ import {
   getSchedaSpese,
   updateSchedaSpese,
   deleteSchedaSpese,
-  reset
+  reset,
 } from "../features/schedaSpese/schedaSpeseSlice";
 import { deleteNotaSpese } from "../features/notaSpese/notaSpeseSlice";
 import EmailShareList from "./utils/EmailShareList";
@@ -166,8 +166,8 @@ function SingleScheda({ scheda }) {
   const updateSchedataTitolo = async () => {
     const updatePayload = { titolo: titolo };
     if (scheda.titolo === titolo) {
-      setlongPressCount(0)
-      return
+      setlongPressCount(0);
+      return;
     }
     await dispatch(
       updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
@@ -326,7 +326,6 @@ function SingleScheda({ scheda }) {
     dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
 
-
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
@@ -356,8 +355,6 @@ function SingleScheda({ scheda }) {
                       onClick={() => goToDettagolioScheda(scheda._id)}
                       style={{ cursor: "pointer" }}
                     >
-
-
                       {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
@@ -374,14 +371,13 @@ function SingleScheda({ scheda }) {
                       <h5
                         style={{
                           textTransform: "Capitalize",
-                          // textDecoration: "underline",
+                          textDecoration: "underline",
                         }}
                         role="button"
                         className="ms-2 mb-0 w-100 hover"
                       >
                         {scheda.titolo}
                       </h5>
-
                     </div>
                   </div>
                   <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
@@ -473,7 +469,7 @@ function SingleScheda({ scheda }) {
               )}
             </div>
           </div>
-          <div className="card-body">
+          <div className="card-body px-0">
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
                 <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
@@ -487,28 +483,26 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between px-0 mb-2 border-radius-lg border-bottom"
+                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg border-bottom"
                         >
                           <div className="d-flex align-items-center ">
                             <div className="d-flex align-items-center">
-                              {/* <i className="material-symbols-rounded text-lg">priority_high</i> */}
                               <RandomColorCircle
                                 letter={notaSpesa.inserimentoUser?.email}
                                 tooltip={notaSpesa.inserimentoUser?.email}
                                 email={notaSpesa.inserimentoUser?.email}
                               />
-                              {/* {notaSpesa.inserimentoUser?.name} {notaSpesa.inserimentoUser?.id === user._id ? "(you)" : ""} */}
                             </div>
-                            {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id
+                              className={`d-flex flex-column pe-3 ${
+                                notaSpesa?.inserimentoUser?.id === user?._id
                                   ? ""
                                   : ""
-                                }`}
+                              }`}
                               onClick={
                                 notaSpesa.testo &&
-                                  notaSpesa.inserimentoUser?.id === user?._id
+                                notaSpesa.inserimentoUser?.id === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }
@@ -522,13 +516,21 @@ function SingleScheda({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
-                              <div>
-                                {notaSpesa.categoria !== "" && (
-                                  <span className="badge bg-light text-dark" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
-                                    {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
-                                  </span>
-                                )}
-                              </div>
+                            <div>
+                              {notaSpesa.categoria !== "" && (
+                                <span
+                                  className="badge bg-light text-dark"
+                                  style={{
+                                    fontSize: "0.7rem",
+                                    alignSelf: "flex-start",
+                                  }}
+                                >
+                                  {categories.find(
+                                    (cat) => cat._id === notaSpesa.categoria
+                                  )?.name || "Uncategorized"}
+                                </span>
+                              )}
+                            </div>
                           </div>
                           <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
                             € {notaSpesa?.importo?.toFixed(2)}
@@ -538,24 +540,27 @@ function SingleScheda({ scheda }) {
                   )}
                 </>
               )}
-              <li className="list-group-item border-0 d-flex justify-content-end px-0 mt-3 border-radius-lg">
-                {scheda.notaSpese.length > 0 && (
-                  <div
-                    className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 px-4"
-                    onClick={() => goToDettagolioScheda(scheda._id)}
-                  >
-                    <p className="mb-0 text-nowrap">See all</p>
-                  </div>
-                )}
-                <div
-                  className="btn bg-gradient-dark btn-sm mb-0 px-4"
-                  onClick={() => handleShow("creaNotaModal")}
-                >
-                  <p className="mb-0">Add note</p>
-                </div>
-              </li>
             </ul>
           </div>
+          <div className="row pt-0 p-3">
+            <div className="col-12 d-flex justify-content-end">
+              {scheda.notaSpese.length > 0 && (
+                <div
+                  className="d-flex justify-content-center align-items-center text-dark btn btn-outline-dark btn-sm mb-0 me-3 px-4"
+                  onClick={() => goToDettagolioScheda(scheda._id)}
+                >
+                  <p className="mb-0 text-nowrap">See all</p>
+                </div>
+              )}
+              <div
+                className="btn bg-gradient-dark btn-sm mb-0 px-4"
+                onClick={() => handleShow("creaNotaModal")}
+              >
+                <p className="mb-0">Add note</p>
+              </div>
+            </div>
+          </div>
+
           {scheda.notaSpese.length > 0 && (
             <>
               {/* se aggiunta la row sotto rimovere mb-2 qui sotto  */}
