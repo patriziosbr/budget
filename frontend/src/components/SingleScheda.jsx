@@ -329,7 +329,6 @@ function SingleScheda({ scheda }) {
 
   const [categories, setCategories] = useState([]);
 
-  // Add this useEffect near your other useEffects
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -342,6 +341,7 @@ function SingleScheda({ scheda }) {
 
     fetchCategories();
   }, [dispatch]);
+
   return (
     <>
       <div>
@@ -377,7 +377,7 @@ function SingleScheda({ scheda }) {
                           // textDecoration: "underline",
                         }}
                         role="button"
-                        className="ms-2 mb-0 w-100"
+                        className="ms-2 mb-0 w-100 hover"
                       >
                         {scheda.titolo}
                       </h5>
@@ -523,8 +523,8 @@ function SingleScheda({ scheda }) {
                               </span>
                             </div>
                               <div>
-                                {notaSpesa.categoria && (
-                                  <span className="badge bg-light text-dark mt-1" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
+                                {notaSpesa.categoria !== "" && (
+                                  <span className="badge bg-light text-dark" style={{ fontSize: '0.7rem', alignSelf: 'flex-start' }}>
                                     {categories.find(cat => cat._id === notaSpesa.categoria)?.name || 'Uncategorized'}
                                   </span>
                                 )}

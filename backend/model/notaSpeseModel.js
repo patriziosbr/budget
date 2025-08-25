@@ -20,7 +20,7 @@ const notaSpeseSchema = mongoose.Schema(
         },
         categoria: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true,
+        required: false,
         ref: 'Categoria'
         },
         inserimentoUser: {

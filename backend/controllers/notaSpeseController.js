@@ -15,7 +15,7 @@ const getNotaSpese = asyncHandler(async (req, res) => {
 //@route POST /api/goals
 //@access Private
 const setNotaSpese = asyncHandler(async (req, res) => {
-  console.log(req.body, "req.body ------------------- controller");
+  // console.log(req.body, "req.body ------------------- controller");
 
   if (!req.body.testo) {
     // return res.status(400).json({data: "add text in body"}) //soluzione mia con return
@@ -31,7 +31,7 @@ const setNotaSpese = asyncHandler(async (req, res) => {
       testo: req.body.testo,
       inserimentoData: req.body.inserimentoData,
       importo: req.body.importo,
-      categoria: req.body.categoria,
+      categoria: req.body.categoria === "" ? null : req.body.categoria,
       user: req.user.id,
       inserimentoUser: {
         id: req.user._id,
