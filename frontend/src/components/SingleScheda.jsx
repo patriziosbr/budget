@@ -358,16 +358,35 @@ function SingleScheda({ scheda }) {
                       {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
-                            <div style={{ height: "", width: "15px" }}>
-                              <RandomColorCircle
-                                letter={sharedEl?.email}
-                                tooltip={sharedEl?.email}
-                                email={sharedEl?.email}
-                                className={"circle-small"}
-                              />
-                            </div>
+                            {/* QUI MOSTRO GLI UTENTI SOLO GLI UTENTI CONDIVISI MA NON IL LOGGATO */}
+                            {sharedEl.email !== user.email && (
+                              <>
+                                <div style={{ height: "", width: "15px" }}>
+                                  <RandomColorCircle
+                                    letter={sharedEl?.email}
+                                    tooltip={sharedEl?.email}
+                                    email={sharedEl?.email}
+                                    className={"circle-small"}
+                                  />
+                                </div>
+                              </>
+                            )}
                           </>
                         ))}
+                      {/* QUI MOSTRO IL PROPIETARIO DELLA SCHEDA PER GLI SHARED SEMPRE */}
+                      {userById[scheda.user]?._id !== user._id && (
+                        <>
+                          <div style={{ height: "", width: "15px" }}>
+                            <RandomColorCircle
+                              letter={userById[scheda.user]?.email}
+                              tooltip={userById[scheda.user]?.email}
+                              email={userById[scheda.user]?.email}
+                              className={"circle-small"}
+                            />
+                          </div>
+                        </>
+                      )}
+
                       <h5
                         style={{
                           textTransform: "Capitalize",
@@ -381,7 +400,6 @@ function SingleScheda({ scheda }) {
                     </div>
                   </div>
                   <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
-                    {/* <div className='col-6 col-md-4 col-lg-3 col-xl-2 col-xxl-1'> */}
                     <div
                       style={{
                         gridTemplateColumns:
@@ -497,7 +515,7 @@ function SingleScheda({ scheda }) {
                               role="button"
                               className={`d-flex flex-column pe-3 ${
                                 notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? ""
+                                  ? "was-underline"
                                   : ""
                               }`}
                               onClick={

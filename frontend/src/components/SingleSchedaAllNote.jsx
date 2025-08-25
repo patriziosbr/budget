@@ -371,7 +371,7 @@ function SingleSchedaAllNote({ scheda }) {
                 <>
                   <div className="col-6">
                     <div className="d-flex text-dark-emphasis">
-                      {scheda?.condivisoConList?.length > 0 &&
+                      {/* {scheda?.condivisoConList?.length > 0 &&
                         scheda?.condivisoConList?.map((sharedEl) => (
                           <>
                             <div style={{ height: "", width: "15px" }}>
@@ -383,7 +383,7 @@ function SingleSchedaAllNote({ scheda }) {
                               />
                             </div>
                           </>
-                        ))}
+                        ))} */}
                       <h5
                         style={{
                           textTransform: "Capitalize",

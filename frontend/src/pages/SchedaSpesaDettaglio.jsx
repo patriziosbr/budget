@@ -7,11 +7,12 @@ import { FaArrowLeft } from "react-icons/fa";
 import Spinner from "../components/utils/Spinner";
 import SingleSchedaAllNote from "../components/SingleSchedaAllNote";
 
+import StackedBarChart from "../components/charts/StackedBarChart";
+
 function SchedaSpesaDettaglio() {
   const { id } = useParams();
   const dispatch = useDispatch();
 
-  // Get the singleSchedaSpese from the Redux store
   const singleScheda = useSelector(
     (state) => state.schedaSpese.singleSchedaSpese
   );
@@ -24,6 +25,7 @@ function SchedaSpesaDettaglio() {
           console.error("Error fetching single scheda:", error)
         );
     }
+    if (singleScheda) console.log(singleScheda, "xxxxxxxxxxxxxxxx");
   }, [id, dispatch]);
 
   const navigateBack = () => {
@@ -47,11 +49,16 @@ function SchedaSpesaDettaglio() {
             <div>
               {singleScheda ? (
                 <>
-                  <SingleSchedaAllNote key={singleScheda._id} scheda={singleScheda} />
+                  <SingleSchedaAllNote
+                    key={singleScheda._id}
+                    scheda={singleScheda}
+                  />
+
+                  <StackedBarChart singleScheda={singleScheda} />
                 </>
               ) : (
                 <>
-                  <Spinner/>
+                  <Spinner />
                 </>
               )}
             </div>
