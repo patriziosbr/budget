@@ -392,8 +392,7 @@ function SingleScheda({ scheda }) {
                           textTransform: "Capitalize",
                           // textDecoration: "underline",
                         }}
-                        role="button"
-                        className="ms-2 mb-0 w-100 hover"
+                        className="ms-2 mb-0 w-100 hover text-primary-emphasis"
                       >
                         {scheda.titolo}
                       </h5>
@@ -501,7 +500,11 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg"
+                          className={`list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg ${
+                                notaSpesa?.inserimentoUser?.id === user?._id
+                                  ? "bg-light"
+                                  : ""
+                              }`}
                         >
                           <div className="d-flex align-items-center ">
                             <div className="d-flex align-items-center">
@@ -515,7 +518,7 @@ function SingleScheda({ scheda }) {
                               role="button"
                               className={`d-flex flex-column pe-3 ${
                                 notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? "was-underline"
+                                  ? "was-text-decoration-underline"
                                   : ""
                               }`}
                               onClick={
@@ -537,7 +540,7 @@ function SingleScheda({ scheda }) {
                             <div>
                               {notaSpesa.categoria !== "" && (
                                 <span
-                                  className="badge bg-light text-dark"
+                                  className="badge bg-light text-dark border"
                                   style={{
                                     fontSize: "0.7rem",
                                     alignSelf: "flex-start",

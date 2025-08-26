@@ -1,4 +1,4 @@
-@import "../src/style/dashboard.css"; 
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css"; 
 @import "../src/style/material-dashboard.css"; 
 @import "../src/style/Spinner.css"; 
 

@@ -17,6 +17,7 @@ import RandomColorCircle from "../utils/RandomColorCircle.js";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Container from "react-bootstrap/Container";
+import logo from '../../../src/assets/budget_logo_b.svg';
 
 function Header() {
   const navigate = useNavigate();
@@ -50,14 +51,17 @@ function Header() {
             </ul>
           </div>
           {/* da fare un componente di breadcrumbs */}
-          <nav aria-label="breadcrumb">
-            {/* <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-0 px-0">
+          {/* <nav aria-label="breadcrumb">
+            <ol className="breadcrumb bg-transparent mb-0 pb-0 pt-0 px-0">
             <li className="breadcrumb-item text-sm">
               <NavLink className="text-decoration-none opacity-5 text-dark" to='/'>Home</NavLink>
             </li>
-          </ol> */}
-          </nav>
+          </ol> 
+          </nav>*/}
           {/* da fare un componente di breadcrumbs */}
+          <div style={{height:"30px"}}>
+            <img className="img h-100" src={logo} alt="" />
+          </div>
           <div>
             <ul className="navbar-nav d-flex flex-row">
               <li

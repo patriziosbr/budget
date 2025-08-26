@@ -36,7 +36,7 @@ const Aside = () => {
                         <>
                         <NavLink className="navbar-brand px-4 py-3 m-0 border boder-bottom-1" to={`/`} onClick={()=> dispatch(closeMenu())}>
                             <FaHome className="mr-1" />
-                            <span className="ms-1 text-sm text-dark"> Budget</span>
+                            <span className="ms-1 text-sm text-dark"> Home</span>
                         </NavLink>
                         </>
                     )}
