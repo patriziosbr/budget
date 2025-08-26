@@ -365,7 +365,7 @@ function SingleSchedaAllNote({ scheda }) {
     <>
       <div>
         <div className="card h-100 pb-2 mb-2">
-          <div className="card-header py-2 px-3">
+          <div className="card-header border-0 bg-white py-2 px-3">
             <div className="row">
               {longPressCount < 1 && (
                 <>
@@ -389,7 +389,7 @@ function SingleSchedaAllNote({ scheda }) {
                           textTransform: "Capitalize",
                           cursor: "default",
                         }}
-                        className="ms-2 mb-0 w-100"
+                        className="mb-0 w-100"
                       >
                         {scheda.titolo}
                       </h5>
@@ -487,7 +487,7 @@ function SingleSchedaAllNote({ scheda }) {
           <div className="card-body px-0">
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
-                <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
+                <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3">
                   <p className="text-small mb-0">Aww this list is empty</p>
                 </li>
               ) : (
@@ -497,7 +497,11 @@ function SingleSchedaAllNote({ scheda }) {
                       notaSpesa && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg border-bottom"
+                          className={`list-group-item border-0 d-flex justify-content-between mb-2 ${
+                                notaSpesa?.inserimentoUser?.id === user?._id
+                                  ? "bg-light"
+                                  : ""
+                              }`}
                         >
                           <div className="d-flex align-items-center">
                             <div className="d-flex align-items-center">
@@ -512,11 +516,7 @@ function SingleSchedaAllNote({ scheda }) {
                             {/* <div role="button" className="d-flex flex-column" onClick={() => editNota("editNotaModal", notaSpesa)}> */}
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? ""
-                                  : ""
-                              }`}
+                              className={`d-flex flex-column pe-3`}
                               onClick={
                                 notaSpesa.testo &&
                                 notaSpesa.inserimentoUser?.id === user?._id

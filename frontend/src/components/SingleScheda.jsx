@@ -349,7 +349,7 @@ function SingleScheda({ scheda }) {
             <div className="row">
               {longPressCount < 1 && (
                 <>
-                  <div className="col-6">
+                  <div className="col-4">
                     <div
                       className="d-flex text-dark-emphasis"
                       onClick={() => goToDettagolioScheda(scheda._id)}
@@ -392,13 +392,13 @@ function SingleScheda({ scheda }) {
                           textTransform: "Capitalize",
                           // textDecoration: "underline",
                         }}
-                        className="ms-2 mb-0 w-100 hover text-primary-emphasis"
+                        className="ms-3 pb-2 mb-0 w-100 hover border-bottom"
                       >
                         {scheda.titolo}
                       </h5>
                     </div>
                   </div>
-                  <div className="col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
+                  <div className="offset-2 col-6 d-flex justify-content-end align-items-center text-dark-emphasis">
                     <div
                       style={{
                         gridTemplateColumns:
@@ -489,7 +489,7 @@ function SingleScheda({ scheda }) {
           <div className="card-body px-0">
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
-                <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3 border-radius-lg">
+                <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3">
                   <p className="text-small mb-0">Aww this list is empty</p>
                 </li>
               ) : (
@@ -500,7 +500,7 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className={`list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg ${
+                          className={`list-group-item border-0 d-flex justify-content-between mb-2 ${
                                 notaSpesa?.inserimentoUser?.id === user?._id
                                   ? "bg-light"
                                   : ""
