@@ -45,7 +45,7 @@ function Header() {
                 onClick={() => dispatch(toggleMenu())}
               >
                 <FaBars size="18" className="text-body p-0" />
-                <small>Menu</small>
+                {/* <small>Menu</small> */}
               </li>
             </ul>
           </div>

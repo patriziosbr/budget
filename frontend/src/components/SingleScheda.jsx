@@ -345,7 +345,7 @@ function SingleScheda({ scheda }) {
     <>
       <div>
         <div className="card h-100 pb-2 mb-2">
-          <div className="card-header py-2 px-3">
+          <div className="card-header border-0 bg-white py-2 px-3">
             <div className="row">
               {longPressCount < 1 && (
                 <>
@@ -390,7 +390,7 @@ function SingleScheda({ scheda }) {
                       <h5
                         style={{
                           textTransform: "Capitalize",
-                          textDecoration: "underline",
+                          // textDecoration: "underline",
                         }}
                         role="button"
                         className="ms-2 mb-0 w-100 hover"
@@ -501,7 +501,7 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg border-bottom"
+                          className="list-group-item border-0 d-flex justify-content-between mb-2 border-radius-lg"
                         >
                           <div className="d-flex align-items-center ">
                             <div className="d-flex align-items-center">
@@ -559,6 +559,20 @@ function SingleScheda({ scheda }) {
                 </>
               )}
             </ul>
+          <div className="row pt-0 px-3">
+            <div className="col-12 d-flex">
+              <div className="d-flex align-items-center">
+                <div className="">
+                  <small className="text-dark-emphasis">
+                    Showing 5 of {scheda.notaSpese.length}
+                    {/* <a href="" onClick={() => goToDettagolioScheda(scheda._id)}>
+                      Visualizza
+                    </a> */}
+                  </small>
+                </div>
+              </div>
+            </div>
+          </div>
           </div>
           <div className="row pt-0 p-3">
             <div className="col-12 d-flex justify-content-end">
