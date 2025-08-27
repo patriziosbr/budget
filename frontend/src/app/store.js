@@ -3,7 +3,7 @@ import authReducer from '../features/auth/authSlice'
 import notaSpeseReducer from '../features/notaSpese/notaSpeseSlice'
 import schedaSpeseReducer from '../features/schedaSpese/schedaSpeseSlice'
 import menuShowReducer from '../features/utils/menuSlice'
-import circleColorReducer from '../features/utils/circleColorSlice';
+import categorieReducer from '../features/categorie/categorieSlice'
 
 
 
@@ -13,7 +13,7 @@ export const store = configureStore({
     notaSpese: notaSpeseReducer,
     schedaSpese: schedaSpeseReducer,
     menuShow: menuShowReducer,
-    circleColor: circleColorReducer,
+    categorie: categorieReducer 
     // matches: matchReducer,
     // matchBets: matchesReducer,
     // overAll: overall,

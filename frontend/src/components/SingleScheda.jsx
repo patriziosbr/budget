@@ -608,7 +608,7 @@ function SingleScheda({ scheda }) {
                         <b>{maxExpencer?.userName ?? maxExpencer}</b>
                       </span>
                       <hr className="horizontal dark my-1" />
-                      <h5 className="mb-0">€ {maxExpencer?.totalExp}</h5>
+                      <h5 className="mb-0">€ {maxExpencer?.totalExp.toFixed(2)}</h5>
                     </div>
                   </div>
                 </div>

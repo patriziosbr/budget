@@ -3,13 +3,13 @@ import {
   FaPlus,
   FaRegCheckCircle,
   FaRegTimesCircle,
-} from "react-icons/fa";
-import {
   FaTrash,
   FaArrowRight,
   FaUserFriends,
   FaUserPlus,
   FaEye,
+  FaCaretDown,
+  FaCaretUp,
 } from "react-icons/fa";
 import { useEffect } from "react";
 import Form from "react-bootstrap/Form";
@@ -21,6 +21,8 @@ import Table from "react-bootstrap/Table";
 import React from "react";
 import Dropdown from "react-bootstrap/Dropdown";
 import useLongPress from "./utils/useLongPress.js";
+import Spinner from "../components/utils/Spinner";
+
 import { useSelector, useDispatch } from "react-redux";
 import RandomColorCircle from "./utils/RandomColorCircle.js";
 import {
@@ -36,10 +38,11 @@ import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
 import { getAllCategories } from "../features/categorie/categorieSlice";
 
-function SingleSchedaAllNote({ scheda }) {
+function SingleSchedaAllNote({ scheda, categorie }) {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { userById } = useSelector((state) => state.auth);
+
   const [modalState, setModalState] = useState({
     creaNotaModal: false,
     shareModal: false,
@@ -75,7 +78,7 @@ function SingleSchedaAllNote({ scheda }) {
         { mail: userMail.email, mailId: userMail._id },
       ],
     }));
-    // debugger
+
     setIsFormModified(true);
   };
 
@@ -234,10 +237,6 @@ function SingleSchedaAllNote({ scheda }) {
     return importoSummed?.toFixed(2);
   };
 
-  const goToDettagolioScheda = (schedaID) => {
-    navigate(`/note-spese/${schedaID}`);
-  };
-
   const [refSchedaId, SetRefSchedaId] = useState(null);
   const closeCreateEditModal = (schedaID) => {
     handleClose("editNotaModal");
@@ -346,23 +345,77 @@ function SingleSchedaAllNote({ scheda }) {
     findExpencersWithTotals(scheda);
     dispatch(getUserById(scheda.user));
   }, [scheda.notaSpese]);
-  const [categories, setCategories] = useState([]);
+  // const [categories, setCategories] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchCategories = async () => {
+  //     try {
+  //       const res = await dispatch(getAllCategories()).unwrap();
+  //       setCategories(res);
+  //     } catch (error) {
+  //       console.error("Error loading categories:", error);
+  //     }
+  //   };
+
+  //   fetchCategories();
+  // }, [dispatch]);
+
+  const [categoriesPerFilters, setCategoriesPerFilters] = useState([]);
+
+  const filterCat = () => {
+    const noteCatID = scheda?.notaSpese?.map((nota) => nota.categoria);
+
+    const uniqueCats = noteCatID
+      .filter((val, id, array) => array.indexOf(val) === id)
+      .map((val) => (val === null ? "nocat" : val));
+
+    const res = uniqueCats
+      .map((uniq) => {
+        if (uniq === "nocat") {
+          return {
+            _id: "nocat",
+            name: "Uncategorized",
+            value: "Uncategorized",
+            label: "Uncategorized",
+          };
+        }
+        return categorie.find((cat) => cat._id === uniq);
+      })
+      .filter(Boolean);
+    setCategoriesPerFilters(res);
+    console.log(res, "res");
+  };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await dispatch(getAllCategories()).unwrap();
-        setCategories(res);
-      } catch (error) {
-        console.error("Error loading categories:", error);
-      }
-    };
+    filterCat();
+  }, []);
 
-    fetchCategories();
-  }, [dispatch]);
+  // possible stat "asc" "desc" null
+  const [orderState, setOrderState] = useState({
+    userOrder: null,
+    categoryOrder: null,
+    priceOrder: null,
+    dateOrder: "desc",
+  });
+
+  const onChangeOder = (orderType) => {
+    setOrderState((prevState) => {
+      const newOrderState = Object.keys(prevState).reduce((acc, key) => {
+        acc[key] =
+          key === orderType
+            ? prevState[key] === "desc"
+              ? "asc"
+              : "desc"
+            : null;
+        return acc;
+      }, {});
+      return newOrderState;
+    });
+  };
 
   return (
     <>
+      {JSON.stringify(orderState)}
       <div>
         <div className="card h-100 pb-2 mb-2">
           <div className="card-header border-0 bg-white py-2 px-3">
@@ -485,6 +538,207 @@ function SingleSchedaAllNote({ scheda }) {
             </div>
           </div>
           <div className="card-body px-0">
+            <div className="row">
+              <div className="col-12 px-3">
+                <div className="py-2 px-3 d-flex">
+                  <div
+                    role="button"
+                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                      orderState.userOrder === "asc" ||
+                      orderState.userOrder === "desc"
+                        ? "border-2"
+                        : ""
+                    }`}
+                    style={{
+                      fontSize: "0.7rem",
+                    }}
+                    onClick={() => onChangeOder("userOrder")}
+                  >
+                    <p className="sm m-0 me-2 form-label ">User</p>
+                    <div className="d-flex flex-column">
+                      <FaCaretUp
+                        className={`${
+                          orderState.userOrder === "desc"
+                            ? "text-black"
+                            : orderState.userOrder === "asc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                      <FaCaretDown
+                        className={`${
+                          orderState.userOrder === "asc"
+                            ? "text-black"
+                            : orderState.userOrder === "desc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                    </div>
+                  </div>
+                  <div
+                    role="button"
+                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                      orderState.categoryOrder === "asc" ||
+                      orderState.categoryOrder === "desc"
+                        ? "border-2"
+                        : ""
+                    }`}
+                    style={{
+                      fontSize: "0.7rem",
+                    }}
+                    onClick={() => onChangeOder("categoryOrder")}
+                  >
+                    <p className="sm m-0 me-2 form-label ">Category</p>
+                    <div className="d-flex flex-column">
+                      <FaCaretUp
+                        className={`${
+                          orderState.categoryOrder === "desc"
+                            ? "text-black"
+                            : orderState.categoryOrder === "asc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                      <FaCaretDown
+                        className={`${
+                          orderState.categoryOrder === "asc"
+                            ? "text-black"
+                            : orderState.categoryOrder === "desc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    role="button"
+                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                      orderState.dateOrder === "asc" ||
+                      orderState.dateOrder === "desc"
+                        ? "border-2"
+                        : ""
+                    }`}
+                    style={{
+                      fontSize: "0.7rem",
+                    }}
+                    onClick={() => onChangeOder("dateOrder")}
+                  >
+                    <p className="sm m-0 me-2 form-label ">Date</p>
+                    <div className="d-flex flex-column">
+                      <FaCaretUp
+                        className={`${
+                          orderState.dateOrder === "desc"
+                            ? "text-black"
+                            : orderState.dateOrder === "asc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                      <FaCaretDown
+                        className={`${
+                          orderState.dateOrder === "asc"
+                            ? "text-black"
+                            : orderState.dateOrder === "desc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                    </div>
+                  </div>
+
+                  <div
+                    role="button"
+                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                      orderState.priceOrder === "asc" ||
+                      orderState.priceOrder === "desc"
+                        ? "border-2"
+                        : ""
+                    }`}
+                    style={{
+                      fontSize: "0.7rem",
+                    }}
+                    onClick={() => onChangeOder("priceOrder")}
+                  >
+                    <p className="sm m-0 me-2 form-label ">Price</p>
+                    <div className="d-flex flex-column">
+                      <FaCaretUp
+                        className={`${
+                          orderState.priceOrder === "desc"
+                            ? "text-black"
+                            : orderState.priceOrder === "asc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                      <FaCaretDown
+                        className={`${
+                          orderState.priceOrder === "asc"
+                            ? "text-black"
+                            : orderState.priceOrder === "desc"
+                            ? "text-secondary"
+                            : "text-secondary"
+                        }`}
+                      />
+                    </div>
+                  </div>
+                  {/* questo e il blocco sotto potrebbe essere utile per filtri/ordinamento avanzato    */}
+                  {/* {categoriesPerFilters.map((cat) => (
+                    <>
+                      <div
+                        role="button"
+                        className="badge badge-upper bg-light border text-dark me-2 mb-2 p-2"
+                        style={{
+                          fontSize: "0.7rem",
+                          alignSelf: "flex-start",
+                        }}
+                      >
+                        {cat.name}
+                      </div>
+                    </>
+                  ))} */}
+                </div>
+              </div>
+              {/* <div className="col-12 px-3">
+                <div className="mb-4 px-3">
+                  <h6>Users:</h6>
+                  {userById[scheda.user]?._id === user._id && (
+                    <>
+                      <div
+                        role="button"
+                        className="badge bg-light border text-dark me-2 mb-2 p-2"
+                        style={{
+                          fontSize: "0.7rem",
+                          alignSelf: "flex-start",
+                        }}
+                      >
+                        {userById[scheda.user]?.email}
+                      </div>
+                    </>
+                  )}
+                  {scheda?.condivisoConList?.length > 0 &&
+                    scheda?.condivisoConList?.map((sharedEl) => (
+                      <>
+                        {sharedEl.email !== user.email && (
+                          <>
+                            <div
+                              role="button"
+                              className="badge bg-light border text-dark me-2 mb-2 p-2"
+                              style={{
+                                fontSize: "0.7rem",
+                                alignSelf: "flex-start",
+                              }}
+                            >
+                              {sharedEl?.email}
+                            </div>
+                          </>
+                        )}
+                      </>
+                    ))}
+                </div>
+              </div> */}
+            </div>
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
                 <li className="list-group-item border-0 d-flex justify-content-between px-0 mt-3">
@@ -498,10 +752,10 @@ function SingleSchedaAllNote({ scheda }) {
                         <li
                           key={notaSpesa._id}
                           className={`list-group-item border-0 d-flex justify-content-between mb-2 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? "bg-light"
-                                  : ""
-                              }`}
+                            notaSpesa?.inserimentoUser?.id === user?._id
+                              ? "bg-light"
+                              : ""
+                          }`}
                         >
                           <div className="d-flex align-items-center">
                             <div className="d-flex align-items-center">
@@ -542,7 +796,7 @@ function SingleSchedaAllNote({ scheda }) {
                                     alignSelf: "flex-start",
                                   }}
                                 >
-                                  {categories.find(
+                                  {categorie.find(
                                     (cat) => cat._id === notaSpesa.categoria
                                   )?.name || "Uncategorized"}
                                 </span>
@@ -580,7 +834,9 @@ function SingleSchedaAllNote({ scheda }) {
                         <b>{maxExpencer?.userName ?? maxExpencer}</b>
                       </span>
                       <hr className="horizontal dark my-1" />
-                      <h5 className="mb-0">€ {maxExpencer?.totalExp}</h5>
+                      <h5 className="mb-0">
+                        € {maxExpencer?.totalExp.toFixed(2)}
+                      </h5>
                     </div>
                   </div>
                 </div>
@@ -605,7 +861,7 @@ function SingleSchedaAllNote({ scheda }) {
                         <h6>Users totals</h6>
                         {expencersWithTotals.map((item) => (
                           <p className="mb-0 text-sm" key={item.userId}>
-                            {item.userName}: <b>€ {item.totalExp}</b>
+                            {item.userName}: <b>€ {item.totalExp.toFixed(2)}</b>
                           </p>
                         ))}
                       </div>

@@ -2,6 +2,7 @@ import { useParams } from "react-router";
 import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { singleSchedaSpeseGet } from "../features/schedaSpese/schedaSpeseSlice";
+import { getAllCategories } from "../features/categorie/categorieSlice";
 import { FaArrowLeft } from "react-icons/fa";
 
 import Spinner from "../components/utils/Spinner";
@@ -17,16 +18,38 @@ function SchedaSpesaDettaglio() {
     (state) => state.schedaSpese.singleSchedaSpese
   );
 
-  useEffect(() => {
+  const { categorie } = useSelector((state) => state.categorie);
+  
+
+  useEffect(async () => {
     if (id) {
       dispatch(singleSchedaSpeseGet(id))
         .unwrap()
         .catch((error) =>
           console.error("Error fetching single scheda:", error)
         );
+                try {
+          await dispatch(getAllCategories()).unwrap();
+          // setCategories(res);
+        } catch (error) {
+          console.error("Error loading categories:", error);
+        }
     }
-    if (singleScheda) console.log(singleScheda, "xxxxxxxxxxxxxxxx");
+    // if (singleScheda) console.log(singleScheda, "xxxxxxxxxxxxxxxx");
   }, [id, dispatch]);
+
+    // useEffect(() => {
+    //   const fetchCategories = async () => {
+    //     try {
+    //       const res = await dispatch(getAllCategories()).unwrap();
+    //       // setCategories(res);
+    //     } catch (error) {
+    //       console.error("Error loading categories:", error);
+    //     }
+    //   };
+  
+    //   fetchCategories();
+    // }, [dispatch]);
 
   const navigateBack = () => {
     window.history.back();
@@ -47,11 +70,12 @@ function SchedaSpesaDettaglio() {
             </div>
 
             <div>
-              {singleScheda ? (
+              {singleScheda && categorie? (
                 <>
                   <SingleSchedaAllNote
                     key={singleScheda._id}
                     scheda={singleScheda}
+                    categorie={categorie}
                   />
 
                   <StackedBarChart singleScheda={singleScheda} />

@@ -20,8 +20,11 @@ const singleSchedaSpeseGet = asyncHandler(async (req, res) => {
         return NotaSpese.findById(notaId);
         })
     );
+    // Standard order: by inserimentoData DESC (newest first)
     schedaSpese.notaSpese = noteSpeseResolved.sort((a, b) => new Date(b?.inserimentoData) - new Date(a?.inserimentoData));
-    // console.log('noteSpeseResolved noteSpeseResolved ------------------- controller', schedaSpese);
+    // Order by inserimentoData (ASC)
+    // schedaSpese.notaSpese = noteSpeseResolved.sort((a, b) => new Date(a?.inserimentoData) - new Date(b?.inserimentoData));
+
 
     // da fare paginazione e filtri
 
