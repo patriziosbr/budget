@@ -7,16 +7,19 @@ const API_URL = process.env.REACT_APP_NODE_ENV === 'production' ? process.env.RE
 
 
 // Get single scheda spese
-const singleSchedaSpeseGet = async (schedaId, token) => {
+const singleSchedaSpeseGet = async (param, token) => {
+  console.log(param, token, "kkkkkkkkkkkkkk");
+  const paramUrl = param.schedaId ?? param 
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
     },
-  }
+    params: param,
+  };
 
-  const response = await axios.get(API_URL+ schedaId, config)
+  const response = await axios.get(API_URL + paramUrl, config);
 
-  return response.data
+  return response.data;
 }
 // Get
 const getSchedaSpese = async (token) => {

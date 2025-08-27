@@ -394,11 +394,11 @@ function SingleSchedaAllNote({ scheda, categorie }) {
   const [orderState, setOrderState] = useState({
     userOrder: null,
     categoryOrder: null,
-    priceOrder: null,
     dateOrder: "desc",
+    priceOrder: null,
   });
 
-  const onChangeOder = (orderType) => {
+  const onChangeOder = async (orderType) => {
     setOrderState((prevState) => {
       const newOrderState = Object.keys(prevState).reduce((acc, key) => {
         acc[key] =
@@ -411,11 +411,35 @@ function SingleSchedaAllNote({ scheda, categorie }) {
       }, {});
       return newOrderState;
     });
+    const param = {
+      "schedaId": scheda._id,
+      "orderKind": orderType,
+      "orderState": orderState[orderType]
+    }
+    // fetchData(param);
   };
 
+
+useEffect(() => {
+  // Find which orderType is active
+  const activeOrderType = Object.keys(orderState).find(
+    (key) => orderState[key] !== null
+  );
+  if (!activeOrderType) return; // Don't fetch if nothing is selected
+
+  const param = {
+    schedaId: scheda._id,
+    orderKind: activeOrderType,
+    orderState: orderState[activeOrderType],
+  };
+  fetchData(param);
+}, [orderState]);
+  
+const fetchData = async (param) => {
+  await dispatch(singleSchedaSpeseGet(param)).unwrap();
+};
   return (
     <>
-      {JSON.stringify(orderState)}
       <div>
         <div className="card h-100 pb-2 mb-2">
           <div className="card-header border-0 bg-white py-2 px-3">
@@ -543,10 +567,10 @@ function SingleSchedaAllNote({ scheda, categorie }) {
                 <div className="py-2 px-3 d-flex">
                   <div
                     role="button"
-                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                    className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border  ${
                       orderState.userOrder === "asc" ||
                       orderState.userOrder === "desc"
-                        ? "border-2"
+                        ? "border-4"
                         : ""
                     }`}
                     style={{
@@ -578,7 +602,7 @@ function SingleSchedaAllNote({ scheda, categorie }) {
                   </div>
                   <div
                     role="button"
-                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                    className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.categoryOrder === "asc" ||
                       orderState.categoryOrder === "desc"
                         ? "border-2"
@@ -614,7 +638,7 @@ function SingleSchedaAllNote({ scheda, categorie }) {
 
                   <div
                     role="button"
-                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                    className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.dateOrder === "asc" ||
                       orderState.dateOrder === "desc"
                         ? "border-2"
@@ -650,7 +674,7 @@ function SingleSchedaAllNote({ scheda, categorie }) {
 
                   <div
                     role="button"
-                    className={`d-flex align-items-center badge bg-light me-2 mb-2 p-2 border ${
+                    className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.priceOrder === "asc" ||
                       orderState.priceOrder === "desc"
                         ? "border-2"
