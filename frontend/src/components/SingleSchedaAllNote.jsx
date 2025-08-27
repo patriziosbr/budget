@@ -42,7 +42,7 @@ function SingleSchedaAllNote({ scheda, categorie }) {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { userById } = useSelector((state) => state.auth);
-
+  const [isDisabled, setisDisabled] = useState(false);
   const [modalState, setModalState] = useState({
     creaNotaModal: false,
     shareModal: false,
@@ -416,7 +416,6 @@ function SingleSchedaAllNote({ scheda, categorie }) {
       "orderKind": orderType,
       "orderState": orderState[orderType]
     }
-    // fetchData(param);
   };
 
 
@@ -436,7 +435,14 @@ useEffect(() => {
 }, [orderState]);
   
 const fetchData = async (param) => {
-  await dispatch(singleSchedaSpeseGet(param)).unwrap();
+  setisDisabled(true)
+  try {
+    await dispatch(singleSchedaSpeseGet(param)).unwrap();
+  } catch (error) {
+    console.log(error)
+  } finally {
+    setisDisabled(false)
+  }
 };
   return (
     <>
@@ -565,7 +571,7 @@ const fetchData = async (param) => {
             <div className="row">
               <div className="col-12 px-3">
                 <div className="py-2 px-3 d-flex">
-                  <div
+                  <button
                     role="button"
                     className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border  ${
                       orderState.userOrder === "asc" ||
@@ -577,6 +583,7 @@ const fetchData = async (param) => {
                       fontSize: "0.7rem",
                     }}
                     onClick={() => onChangeOder("userOrder")}
+                    disabled={isDisabled}
                   >
                     <p className="sm m-0 me-2 form-label ">User</p>
                     <div className="d-flex flex-column">
@@ -599,8 +606,8 @@ const fetchData = async (param) => {
                         }`}
                       />
                     </div>
-                  </div>
-                  <div
+                  </button>
+                  <button
                     role="button"
                     className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.categoryOrder === "asc" ||
@@ -612,6 +619,7 @@ const fetchData = async (param) => {
                       fontSize: "0.7rem",
                     }}
                     onClick={() => onChangeOder("categoryOrder")}
+                    disabled={isDisabled}
                   >
                     <p className="sm m-0 me-2 form-label ">Category</p>
                     <div className="d-flex flex-column">
@@ -634,9 +642,9 @@ const fetchData = async (param) => {
                         }`}
                       />
                     </div>
-                  </div>
+                  </button>
 
-                  <div
+                  <button
                     role="button"
                     className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.dateOrder === "asc" ||
@@ -648,6 +656,7 @@ const fetchData = async (param) => {
                       fontSize: "0.7rem",
                     }}
                     onClick={() => onChangeOder("dateOrder")}
+                    disabled={isDisabled}
                   >
                     <p className="sm m-0 me-2 form-label ">Date</p>
                     <div className="d-flex flex-column">
@@ -670,9 +679,9 @@ const fetchData = async (param) => {
                         }`}
                       />
                     </div>
-                  </div>
+                  </button>
 
-                  <div
+                  <button
                     role="button"
                     className={`btn btn-round d-flex align-items-center badge bg-light me-2 mb-2 px-3 border ${
                       orderState.priceOrder === "asc" ||
@@ -684,6 +693,7 @@ const fetchData = async (param) => {
                       fontSize: "0.7rem",
                     }}
                     onClick={() => onChangeOder("priceOrder")}
+                    disabled={isDisabled}
                   >
                     <p className="sm m-0 me-2 form-label ">Price</p>
                     <div className="d-flex flex-column">
@@ -706,7 +716,7 @@ const fetchData = async (param) => {
                         }`}
                       />
                     </div>
-                  </div>
+                  </button>
                   {/* questo e il blocco sotto potrebbe essere utile per filtri/ordinamento avanzato    */}
                   {/* {categoriesPerFilters.map((cat) => (
                     <>
