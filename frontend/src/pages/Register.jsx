@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FaUser } from "react-icons/fa";
 import { register, reset } from "../features/auth/authSlice";
 import Spinner from "../components/utils/Spinner";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Add this import
 
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -20,9 +21,10 @@ function Register() {
     email: "",
     password: "",
     password2: "",
+    termsCheck: false
   });
 
-  const { name, email, password, password2 } = formData;
+  const { name, email, password, password2, termsCheck } = formData;
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -49,9 +51,23 @@ function Register() {
       [e.target.name]: e.target.value,
     }));
   };
+  
+  const onChangeTermsCheck = (e) => {
+    setFormData((prevState) => (
+      {
+      ...prevState,
+      [e.target.name]: !prevState[e.target.name],
+    }));
+  };
+
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if(!formData["termsCheck"]) {
+      toast.error("Accept terms and codition");
+      return
+    }
+    if(!lengthValidator(formData)) return
 
     if (password !== password2) {
       toast.error("Passwords do not match");
@@ -66,6 +82,25 @@ function Register() {
     }
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
+  const lengthValidator = (form) => {
+    console.log(form, "formform");
+    for (const property in form) {
+      console.log(`${property}: ${form[property]}`);
+      if(form[property].length < 3) {
+        toast.error(`Please fill the field "${property}"`)
+        return false
+      }
+    }
+  }
+
+
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -73,6 +108,7 @@ function Register() {
   return (
     <>
       <div className="container my-auto mt-5">
+          <p className="mb-5">{JSON.stringify(formData)}</p>
         <div className="row">
           <div className="col-lg-6 col-md-8 col-12 mx-auto">
             <div className="card z-index-0 fadeIn3 fadeInBottom">
@@ -103,7 +139,7 @@ function Register() {
               <div className="card-body">
                 <Form className="mb-3" onSubmit={onSubmit}>
                   <Form.Group className="mb-3">
-                    <Form.Label>Name</Form.Label>
+                    <Form.Label>Name *</Form.Label>
                     <Form.Control
                       type="text"
                       id="name"
@@ -114,7 +150,7 @@ function Register() {
                     />
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>Email</Form.Label>
+                    <Form.Label>Email *</Form.Label>
                     <Form.Control
                       type="email"
                       id="email"
@@ -124,19 +160,31 @@ function Register() {
                       onChange={onChange}
                     />
                   </Form.Group>
-                  <Form.Group className="mb-3">
-                    <Form.Label>Password</Form.Label>
+                  <Form.Group className="mb-3" style={{ position: "relative" }}>
+                    <Form.Label>Password *</Form.Label>
                     <Form.Control
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       id="password"
                       name="password"
                       value={password}
                       placeholder="Password"
                       onChange={onChange}
                     />
+                    <span
+                      onClick={togglePasswordVisibility}
+                      style={{
+                        position: "absolute",
+                        right: "10px",
+                        top: "38px",
+                        cursor: "pointer",
+                        zIndex: 2,
+                      }}
+                    >
+                      {showPassword ? <FaEyeSlash /> : <FaEye />}
+                    </span>
                   </Form.Group>
                   <Form.Group className="mb-3">
-                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Label>Confirm Password *</Form.Label>
                     <Form.Control
                       type="password2"
                       id="password2"
@@ -144,15 +192,17 @@ function Register() {
                       value={password2}
                       placeholder="Confirm password"
                       onChange={onChange}
+                      autoCapitalize="none"
                     />
                   </Form.Group>
-
                   <div className="form-check form-check-info text-start ps-0">
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      value=""
                       id="flexCheckDefault"
+                      name="termsCheck"
+                      value={termsCheck}
+                      onChange={onChangeTermsCheck}
                     />
                     <label className="form-check-label" for="flexCheckDefault">
                       I agree the{" "}
