@@ -67,7 +67,10 @@ function Register() {
       toast.error("Accept terms and codition");
       return
     }
-    if(!lengthValidator(formData)) return
+    if(!lengthValidator(formData)){
+      toast.error("Esploded");
+      return
+    } 
 
     if (password !== password2) {
       toast.error("Passwords do not match");
@@ -96,6 +99,7 @@ function Register() {
         toast.error(`Please fill the field "${property}"`)
         return false
       }
+      return true
     }
   }
 
