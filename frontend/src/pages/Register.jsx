@@ -68,7 +68,7 @@ function Register() {
       return
     }
     if(!lengthValidator(formData)){
-      toast.error("Esploded");
+      toast.error("Form validation failed");
       return
     } 
 
@@ -112,7 +112,7 @@ function Register() {
   return (
     <>
       <div className="container my-auto mt-5">
-          <p className="mb-5">{JSON.stringify(formData)}</p>
+          {/* <p className="mb-5">{JSON.stringify(formData)}</p> */}
         <div className="row">
           <div className="col-lg-6 col-md-8 col-12 mx-auto">
             <div className="card z-index-0 fadeIn3 fadeInBottom">
