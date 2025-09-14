@@ -131,7 +131,7 @@ useEffect(() => {
       <Form className="mb-3" onSubmit={onSubmit}>
 
         <Form.Group className="mb-3">
-          <Form.Label>Inserimento Data</Form.Label>
+          <Form.Label>Date</Form.Label>
           <Form.Control
             type="date"
             id="inserimentoData"
@@ -142,7 +142,7 @@ useEffect(() => {
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Testo</Form.Label>
+          <Form.Label>Title</Form.Label>
           <Form.Control
             type="text"
             id="testo"
@@ -151,11 +151,12 @@ useEffect(() => {
             placeholder="Enter text"
             onChange={onChange}
             required
+            maxLength={50}
           />
         </Form.Group>
 
         <Form.Group className="mb-3">
-          <Form.Label>Importo</Form.Label>
+          <Form.Label>Amount</Form.Label>
           <Form.Control
             type="number"
             id="importo"

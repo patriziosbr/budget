@@ -537,7 +537,7 @@ function SingleScheda({ scheda }) {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
-                            <div>
+                            <div className="pe-4">
                               {notaSpesa.categoria !== "" && (
                                 <span
                                   className="badge bg-light text-dark border"
@@ -546,14 +546,16 @@ function SingleScheda({ scheda }) {
                                     alignSelf: "flex-start",
                                   }}
                                 >
-                                  {categories.find(
-                                    (cat) => cat._id === notaSpesa.categoria
-                                  )?.name || "Uncategorized"}
+                                  <small className="mb-0 text-wrap">
+                                    {categories.find(
+                                      (cat) => cat._id === notaSpesa.categoria
+                                    )?.name || "Uncategorized"}
+                                  </small>
                                 </span>
                               )}
                             </div>
                           </div>
-                          <div className="d-flex align-items-center text-dark text-sm font-weight-bold">
+                          <div className="d-flex align-items-center text-dark text-sm font-weight-bold text-nowrap">
                             € {notaSpesa?.importo?.toFixed(2)}
                           </div>
                         </li>
