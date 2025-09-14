@@ -821,18 +821,20 @@ const fetchData = async (param) => {
                                 {parseDate(notaSpesa?.inserimentoData)}
                               </span>
                             </div>
-                            <div>
+                                                        <div className="pe-4">
                               {notaSpesa.categoria !== "" && (
                                 <span
-                                  className="badge bg-light text-dark"
+                                  className="badge bg-light text-dark border"
                                   style={{
                                     fontSize: "0.7rem",
                                     alignSelf: "flex-start",
                                   }}
                                 >
-                                  {categorie.find(
-                                    (cat) => cat._id === notaSpesa.categoria
-                                  )?.name || "Uncategorized"}
+                                  <small className="mb-0 text-wrap">
+                                    {categorie.find(
+                                      (cat) => cat._id === notaSpesa.categoria
+                                    )?.name || "Uncategorized"}
+                                  </small>
                                 </span>
                               )}
                             </div>
