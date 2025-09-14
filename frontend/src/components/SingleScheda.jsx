@@ -500,11 +500,10 @@ function SingleScheda({ scheda }) {
                       i < 5 && (
                         <li
                           key={notaSpesa._id}
-                          className={`list-group-item border-0 d-flex justify-content-between mb-2 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
-                                  ? "bg-light"
-                                  : ""
-                              }`}
+                          className={`list-group-item border-0 d-flex justify-content-between mb-2 ${notaSpesa?.inserimentoUser?.id === user?._id
+                              ? "bg-light"
+                              : ""
+                            }`}
                         >
                           <div className="d-flex align-items-center ">
                             <div className="d-flex align-items-center">
@@ -516,14 +515,13 @@ function SingleScheda({ scheda }) {
                             </div>
                             <div
                               role="button"
-                              className={`d-flex flex-column pe-3 ${
-                                notaSpesa?.inserimentoUser?.id === user?._id
+                              className={`d-flex flex-column pe-3 ${notaSpesa?.inserimentoUser?.id === user?._id
                                   ? "was-text-decoration-underline"
                                   : ""
-                              }`}
+                                }`}
                               onClick={
                                 notaSpesa.testo &&
-                                notaSpesa.inserimentoUser?.id === user?._id
+                                  notaSpesa.inserimentoUser?.id === user?._id
                                   ? () => editNota("editNotaModal", notaSpesa)
                                   : undefined
                               }
@@ -564,20 +562,20 @@ function SingleScheda({ scheda }) {
                 </>
               )}
             </ul>
-          <div className="row pt-0 px-3">
-            <div className="col-12 d-flex">
-              <div className="d-flex align-items-center">
-                <div className="">
-                  <small className="text-dark-emphasis">
-                    Showing 5 of {scheda.notaSpese.length}
-                    {/* <a href="" onClick={() => goToDettagolioScheda(scheda._id)}>
+            <div className="row pt-0 px-3">
+              <div className="col-12 d-flex">
+                <div className="d-flex align-items-center">
+                  <div className="">
+                    <small className="text-dark-emphasis">
+                      Showing 5 of {scheda.notaSpese.length}
+                      {/* <a href="" onClick={() => goToDettagolioScheda(scheda._id)}>
                       Visualizza
                     </a> */}
-                  </small>
+                    </small>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
           </div>
           <div className="row pt-0 p-3">
             <div className="col-12 d-flex justify-content-end">
@@ -603,7 +601,23 @@ function SingleScheda({ scheda }) {
               {/* se aggiunta la row sotto rimovere mb-2 qui sotto  */}
               <div className="row px-3">
                 <div className="col-md-6 col-6">
-                  <div className="card">
+                  {expencersDiff[0] &&
+                    expencersDiff[0]?.userHigh !== "Users spent equal" && (
+                      <div className="col-12 my-2">
+                        <div className="card">
+                          <div className="card-body">
+                            <h6>Compair</h6>
+                            {expencersDiff.map((item, index) => (
+                              <p className="mb-0 text-sm" key={index}>
+                                <b>{item.userHigh}</b> VS <b>{item.userLess}</b>{" "}
+                                spent over <b>€ {item.diff}</b>
+                              </p>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  {/* <div className="card">
                     <div className="card-body text-center">
                       <h6 className="text-center mb-0">Higher expence</h6>
                       <span className="text-xs">
@@ -612,7 +626,7 @@ function SingleScheda({ scheda }) {
                       <hr className="horizontal dark my-1" />
                       <h5 className="mb-0">€ {maxExpencer?.totalExp.toFixed(2)}</h5>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
 
                 <div className="col-md-6 col-6">
