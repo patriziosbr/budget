@@ -817,6 +817,25 @@ const fetchData = async (param) => {
           {scheda.notaSpese.length > 0 && (
             <>
               <div className="row px-3">
+
+                                {expencersDiff[0] &&
+                  expencersDiff[0]?.userHigh !== "Users spent equal" && (
+                    <div className="col-12 my-2">
+                      <div className="card">
+                        <div className="card-body">
+                          <h6>Compair</h6>
+                          {expencersDiff.map((item, index) => (
+                            <p className="mb-0 text-sm" key={index}>
+                              <b>{item.userHigh}</b> VS <b>{item.userLess}</b>{" "}
+                              spent over <b>€ {item.diff}</b>
+                            </p>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+
                 <div className="col-md-6 col-6">
                   <div className="card">
                     <div className="card-body text-center">
@@ -859,23 +878,6 @@ const fetchData = async (param) => {
                     </div>
                   </div>
                 )}
-
-                {expencersDiff[0] &&
-                  expencersDiff[0]?.userHigh !== "Users spent equal" && (
-                    <div className="col-12 my-2">
-                      <div className="card">
-                        <div className="card-body">
-                          <h6>Compair</h6>
-                          {expencersDiff.map((item, index) => (
-                            <p className="mb-0 text-sm" key={index}>
-                              <b>{item.userHigh}</b> VS <b>{item.userLess}</b>{" "}
-                              spent over <b>€ {item.diff}</b>
-                            </p>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  )}
               </div>
             </>
           )}
