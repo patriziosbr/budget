@@ -1,100 +1,10 @@
 @import "../src/style/material-dashboard.css"; 
 @import "../src/style/Spinner.css"; 
 
-/* -------------------header */
-
-/* .header-container {
-  display: grid;
-  grid-template-rows: auto;
-  position: fixed;
-  width: 100%;
-  z-index: 999;
-  background-color: var(--bs-body-bg);
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-} */
-
-/* @media (min-width: 768px) {
-  .header-container {
-    top: 0;
-    bottom: auto;
-  }
-  
-  .nav-item {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-  
-  .nav-item svg {
-    margin-right: 5px;
-  }
-} */
-
-/* Mobile styles */
-/* @media (max-width: 767px) {
-  .header-container {
-    top: auto;
-    bottom: 0;
-    padding-bottom: 10px;
-    padding-top: 5px;
-  }
-  
-  .nav-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-  
-  .nav-item svg {
-    margin-bottom: 5px;
-    font-size: 1.2rem;
-  }
-  
-  .mobile-nav {
-    width: 100%;
-    display: flex;
-    justify-content: space-around;
-    margin-top: 5px;
-  }
-} */
-
-/* -------------------header */
-
 .active {
   border-bottom: 1px solid; 
 }
 
-/* .loadingSpinnerContainer {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 5000;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.loadingSpinner {
-  width: 64px;
-  height: 64px;
-  border: 8px solid;
-  border-color: #000 transparent #555 transparent;
-  border-radius: 50%;
-  animation: spin 1.2s linear infinite;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-} */
 
 .threedots:after {
   content: "\2807";
@@ -127,4 +37,13 @@ a:has(.threedots) {
 .circle-large {
   width: 80px !important;
   height: 80px !important;
+}
+
+
+/* When stuck (floating) */
+.fixed {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10;
 }

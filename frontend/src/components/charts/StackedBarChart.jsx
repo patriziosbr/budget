@@ -2,73 +2,63 @@ import Chart from "../charts/Chart";
 import { parseDate } from "../utils/dateParser";
 
 const StackedBarChart = ({ singleScheda }) => {
-  const getCurrentWeek = () => {
-    let curr = new Date();
-    let week = [];
-    let labels = ["Mon", "Tue", "Wen", "Thu", "Fri", "Sat", "Sun"];
-
-    for (let i = 1; i <= 7; i++) {
-      let first = curr.getDate() - curr.getDay() + i;
-      let day = new Date(curr.setDate(first)).toISOString().slice(0, 10);
-      week.push(parseDate(day));
+  // Extract the color generation function from RandomColorCircle
+  const stringToColor = (string) => {
+    let hash = 0;
+    for (let i = 0; i < string?.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
     }
-    return week;
+    // Use hash to generate HSL values for matte color
+    const hue = Math.abs(hash) % 360;
+    const saturation = 45; // matte: low saturation
+    const lightness = 45;  // matte: mid-low lightness
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
   };
 
-  const getWeekRange = () => {
-    const curr = new Date();
-    const first = curr.getDate() - curr.getDay() + 1; // Monday
-    const last = first + 6; // Sunday
-    const monday = new Date(curr.setDate(first));
-    const sunday = new Date(curr.setDate(last));
-    // Remove time part
-    monday.setHours(0, 0, 0, 0);
-    sunday.setHours(23, 59, 59, 999);
-    return [monday, sunday];
-  };
-
-  // Helper to get day index (0=Mon, 6=Sun)
-  const getDayIndex = (dateStr) => {
-    const date = new Date(dateStr);
-    // getDay: 0=Sun, 1=Mon, ..., 6=Sat
-    // We want 0=Mon, ..., 6=Sun
-    let idx = date.getDay();
-    return idx === 0 ? 6 : idx - 1;
-  };
-  const [weekStart, weekEnd] = getWeekRange();
-
-  // Get all unique users
-  const users = [
-    ...new Set(
-      singleScheda?.notaSpese
-        .filter((e) => {
-          const d = new Date(e.inserimentoData);
-          return d >= weekStart && d <= weekEnd;
-        })
-        .map((e) => e.inserimentoUser.name)
-    ),
-  ];
-
-  // Prepare data for each user, only for current week
-  const weekData = users.map((user) => {
-    const data = Array(7).fill(0);
-    singleScheda?.notaSpese.forEach((e) => {
+  // Get all unique users with their emails
+  const usersMap = new Map();
+  singleScheda?.notaSpese
+    .filter((e) => {
       const d = new Date(e.inserimentoData);
-      if (e.inserimentoUser.name === user && d >= weekStart && d <= weekEnd) {
-        const dayIdx = getDayIndex(e.inserimentoData);
-        data[dayIdx] += e.importo;
+      return d;
+    })
+    .forEach((e) => {
+      if (!usersMap.has(e.inserimentoUser.name)) {
+        usersMap.set(e.inserimentoUser.name, e.inserimentoUser.email);
       }
     });
+
+  const users = Array.from(usersMap.keys());
+
+  // Prepare data for each user
+  const uniqueDates = [...new Set(
+    singleScheda?.notaSpese.map(e => parseDate(e.inserimentoData))
+  )].sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
+
+  const weekData = users.map((user) => {
+    const data = uniqueDates.map(() => 0);
+    
+    singleScheda?.notaSpese.forEach((e) => {
+      if (e.inserimentoUser.name === user) {
+        const dateStr = parseDate(e.inserimentoData);
+        const dateIdx = uniqueDates.indexOf(dateStr);
+        if (dateIdx !== -1) {
+          data[dateIdx] += e.importo;
+        }
+      }
+    });
+    
+    const userEmail = usersMap.get(user);
+    
     return {
       label: user,
       data,
-      backgroundColor: user === "puccio" ? "#43A047" : "#1E88E5",
+      backgroundColor: stringToColor(userEmail), // Use email for consistent color
       barThickness: "flex",
     };
   });
 
-  // Labels for the week
-  const weekLabels = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+  const weekLabels = uniqueDates;
 
   const barChartData = {
     labels: weekLabels,
@@ -116,9 +106,9 @@ const StackedBarChart = ({ singleScheda }) => {
         <div className="card h-100 pb-2 mb-2">
           <div className="card-header py-2 px-3">
             <small>
-              {getCurrentWeek()[0]} - {getCurrentWeek()[6]}
+              {parseDate(singleScheda.notaSpese[0].inserimentoData)} - {parseDate(singleScheda.notaSpese[singleScheda.notaSpese.length - 1].inserimentoData)}
             </small>
-            <h5 className="mb-0">This week</h5>
+            <h6 className="mb-0">Chart <i><b>{singleScheda.titolo}</b></i></h6>
           </div>
           <div className="chart ps-0 p-3">
             <Chart type="bar" data={barChartData} options={barChartOptions} />

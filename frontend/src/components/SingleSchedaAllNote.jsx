@@ -11,22 +11,15 @@ import {
   FaCaretDown,
   FaCaretUp,
 } from "react-icons/fa";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import NotaSpeseFormAllNote from "../components/NotaSpeseFormAllNote";
-import Table from "react-bootstrap/Table";
-import React from "react";
-import Dropdown from "react-bootstrap/Dropdown";
-import useLongPress from "./utils/useLongPress.js";
-import Spinner from "../components/utils/Spinner";
 
 import { useSelector, useDispatch } from "react-redux";
 import RandomColorCircle from "./utils/RandomColorCircle.js";
 import {
-  getSchedaSpese,
   updateSchedaSpese,
   deleteSchedaSpese,
   singleSchedaSpeseGet,
@@ -36,7 +29,6 @@ import EmailShareList from "./utils/EmailShareList";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getUserById } from "../features/auth/authSlice";
-import { getAllCategories } from "../features/categorie/categorieSlice";
 
 function SingleSchedaAllNote({ scheda, categorie }) {
   const navigate = useNavigate();
@@ -734,44 +726,6 @@ const fetchData = async (param) => {
                   ))} */}
                 </div>
               </div>
-              {/* <div className="col-12 px-3">
-                <div className="mb-4 px-3">
-                  <h6>Users:</h6>
-                  {userById[scheda.user]?._id === user._id && (
-                    <>
-                      <div
-                        role="button"
-                        className="badge bg-light border text-dark me-2 mb-2 p-2"
-                        style={{
-                          fontSize: "0.7rem",
-                          alignSelf: "flex-start",
-                        }}
-                      >
-                        {userById[scheda.user]?.email}
-                      </div>
-                    </>
-                  )}
-                  {scheda?.condivisoConList?.length > 0 &&
-                    scheda?.condivisoConList?.map((sharedEl) => (
-                      <>
-                        {sharedEl.email !== user.email && (
-                          <>
-                            <div
-                              role="button"
-                              className="badge bg-light border text-dark me-2 mb-2 p-2"
-                              style={{
-                                fontSize: "0.7rem",
-                                alignSelf: "flex-start",
-                              }}
-                            >
-                              {sharedEl?.email}
-                            </div>
-                          </>
-                        )}
-                      </>
-                    ))}
-                </div>
-              </div> */}
             </div>
             <ul className="list-group">
               {scheda.notaSpese.length === 0 ? (
@@ -852,13 +806,14 @@ const fetchData = async (param) => {
           <div className="row pt-0 p-3">
             <div className="col-12 d-flex justify-content-end">
               <div
-                className="btn bg-gradient-dark btn-sm mb-0 px-4"
+                className="btn bg-gradient-dark btn-sm mb-0 px-4 fixed"
                 onClick={() => handleShow("creaNotaModal")}
               >
                 <p className="mb-0">Add note</p>
               </div>
             </div>
           </div>
+
           {scheda.notaSpese.length > 0 && (
             <>
               <div className="row px-3">

@@ -72,13 +72,12 @@ function SchedaSpesaDettaglio() {
             <div>
               {singleScheda && categorie? (
                 <>
-                  <SingleSchedaAllNote
-                    key={singleScheda._id}
-                    scheda={singleScheda}
-                    categorie={categorie}
-                  />
-
-                  <StackedBarChart singleScheda={singleScheda} />
+                <StackedBarChart singleScheda={singleScheda} />
+                <SingleSchedaAllNote
+                  key={singleScheda._id}
+                  scheda={singleScheda}
+                  categorie={categorie}
+                />
                 </>
               ) : (
                 <>
