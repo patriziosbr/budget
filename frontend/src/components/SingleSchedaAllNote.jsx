@@ -844,7 +844,7 @@ const fetchData = async (param) => {
                 </div>
               </div>
 
-              <div className="row px-3">
+              <div className="row px-3 mb-5">
                 {expencersWithTotals && expencersWithTotals.length > 1 && (
                   <div className="col-12 mt-2">
                     <div className="card">
