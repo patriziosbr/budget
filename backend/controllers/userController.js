@@ -7,7 +7,8 @@ const NotaSpese = require("../model/notaSpeseModel");
 const SchedaSpese = require("../model/schedaSpeseModel");
 const { Types } = require("mongoose");
 const ObjectId = Types.ObjectId;
-
+const sgMail = require('@sendgrid/mail')
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 //@desc Register new User
 //@route POST /api/users
 //@access Public
@@ -102,17 +103,17 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
         : "https://budget-fe.onrender.com/"
     }reset-password?token=${token}`;
 
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true, // true for 465, false for other ports
-      auth: {
-        user: "tommasoversetto@gmail.com",
-        pass: process.env.GOOGLE_SMTP_PASS,
-      },
-    });
+    // const transporter = nodemailer.createTransport({
+    //   host: "smtp.gmail.com",
+    //   port: 465,
+    //   secure: true, // true for 465, false for other ports
+    //   auth: {
+    //     user: "tommasoversetto@gmail.com",
+    //     pass: process.env.GOOGLE_SMTP_PASS,
+    //   },
+    // });
 
-    const mailOptions = {
+    const msg  = {
       to: user.email,
       from: process.env.EMAIL,
       subject: "Reset Your Password",
@@ -132,8 +133,7 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
 
 <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
     <!--100% body table-->
-    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
-
+    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8">
         <tr>
             <td>
                 <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"
@@ -204,10 +204,21 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+  await  sgMail
+    .send(msg)
+    .then((res) => {
+      console.log(res, 'Email sent')
+    })
+    .catch((error) => {
+      console.error(error, "up")
+      console.error(error.response.body, "up")
+    })
+
+    // await transporter.sendMail(mailOptions);
 
     res.status(200).json({ message: "Password reset link sent" });
   } catch (error) {
+    console.error(error, "low")
     res.status(500).json({ message: "Something went wrong" });
   }
 });
