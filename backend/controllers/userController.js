@@ -9,6 +9,9 @@ const { Types } = require("mongoose");
 const ObjectId = Types.ObjectId;
 const sgMail = require('@sendgrid/mail')
 sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+const Mailgun = require('mailgun.js');
+const mailgun = new Mailgun(FormData);
 //@desc Register new User
 //@route POST /api/users
 //@access Public
@@ -103,6 +106,7 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
         : "https://budget-fe.onrender.com/"
     }reset-password?token=${token}`;
 
+    sendSimpleMessage(user.email)
     // const transporter = nodemailer.createTransport({
     //   host: "smtp.gmail.com",
     //   port: 465,
@@ -204,15 +208,15 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
       `,
     };
 
-  await  sgMail
-    .send(msg)
-    .then((res) => {
-      console.log(res, 'Email sent')
-    })
-    .catch((error) => {
-      console.error(error, "up")
-      console.error(error.response.body, "up")
-    })
+  // await  sgMail
+  //   .send(msg)
+  //   .then((res) => {
+  //     console.log(res, 'Email sent')
+  //   })
+  //   .catch((error) => {
+  //     console.error(error, "up")
+  //     console.error(error.response.body, "up")
+  //   })
 
     // await transporter.sendMail(mailOptions);
 
@@ -354,6 +358,28 @@ module.exports = {
   updateUser,
   deleteUser,
 };
+
+async function sendSimpleMessage(reciever) {
+  const mg = mailgun.client({
+    username: "api",
+    key: process.env.MAIL_GUN,
+    // When you have an EU-domain, you must specify the endpoint:
+    // url: "https://api.eu.mailgun.net"
+  });
+  try {
+    const data = await mg.messages.create("sandbox72e29d1eb9824457b9201164086ecb2f.mailgun.org", {
+      from: "Mailgun Sandbox <postmaster@sandbox72e29d1eb9824457b9201164086ecb2f.mailgun.org>",
+      to: [`sbrozzi.patrizio@gmail.com`],
+      // to: [`puccio <${reciever}>`],
+      subject: "Hello tommasoversetto",
+      text: "Congratulations tommasoversetto, you just sent an email with Mailgun! You are truly awesome!",
+    });
+
+    console.log(data); // logs response data
+  } catch (error) {
+    console.log(error); //logs any error
+  }
+}
 
 // ESEMPI BASE PER TESTARE LE ROTTE IN POSTMAN
 // //@desc Authenticate a User
