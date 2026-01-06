@@ -31,7 +31,7 @@
     "mongoose": "^7.2.3",
     "node-cron": "^3.0.3",
     "nodemailer": "^7.0.2",
-    "resend": "^6.4.2"
+    "resend": "^3.5.0"
   },
   "browser": {
     "child_process": false
