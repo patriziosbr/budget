@@ -9,6 +9,7 @@ import Spinner from "../components/utils/Spinner";
 import SingleSchedaAllNote from "../components/SingleSchedaAllNote";
 
 import StackedBarChart from "../components/charts/StackedBarChart";
+import SingleSchedaAllNoteNew from "../components/SingleSchedaAllNote.refactored";
 
 function SchedaSpesaDettaglio() {
   const { id } = useParams();
@@ -73,7 +74,7 @@ function SchedaSpesaDettaglio() {
               {singleScheda && categorie? (
                 <>
                 <StackedBarChart singleScheda={singleScheda} />
-                <SingleSchedaAllNote
+                <SingleSchedaAllNoteNew
                   key={singleScheda._id}
                   scheda={singleScheda}
                   categorie={categorie}

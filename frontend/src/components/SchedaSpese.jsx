@@ -7,6 +7,7 @@ import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import { logout } from "../features/auth/authSlice";
 import Spinner from "./utils/Spinner";
+import SingleSchedaNew from "./SingleScheda.refactored";
 
 const GestioneError = {
   message: "Cannot read properties of null (reading 'token')",
@@ -59,7 +60,7 @@ function SchedaSpese({ handleShow }) {
           >
             <u>login</u>
           </span>{" "}
-          to continue
+          to continue xxx
         </span>
       </div>
     );
@@ -125,7 +126,7 @@ function SchedaSpese({ handleShow }) {
               }}
               key={scheda._id}
             >
-              <SingleScheda key={scheda._id} scheda={scheda} />
+              <SingleSchedaNew key={scheda._id} scheda={scheda} />
             </div>
           ))
         ) : (

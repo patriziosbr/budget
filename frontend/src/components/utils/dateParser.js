@@ -4,7 +4,8 @@
         const month = String(date.getUTCMonth() + 1).padStart(2, '0'); 
         const year = date.getUTCFullYear();
         const formattedDate = `${day}/${month}/${year}`;
-        return formattedDate
+        const cleanResult = formattedDate.includes("NaN")  ? '' : formattedDate; 
+        return cleanResult
     }
 
 

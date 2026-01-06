@@ -7,8 +7,9 @@ const NotaSpese = require("../model/notaSpeseModel");
 const SchedaSpese = require("../model/schedaSpeseModel");
 const { Types } = require("mongoose");
 const ObjectId = Types.ObjectId;
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+
+const { Resend } = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 //@desc Register new User
 //@route POST /api/users
 //@access Public
@@ -103,122 +104,60 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
         : "https://budget-fe.onrender.com/"
     }reset-password?token=${token}`;
 
-    // const transporter = nodemailer.createTransport({
-    //   host: "smtp.gmail.com",
-    //   port: 465,
-    //   secure: true, // true for 465, false for other ports
-    //   auth: {
-    //     user: "tommasoversetto@gmail.com",
-    //     pass: process.env.GOOGLE_SMTP_PASS,
-    //   },
-    // });
-
-    const msg  = {
+    await resend.emails.send({
+      from: 'onboarding@resend.dev', // Free tier domain
       to: user.email,
-      from: process.env.EMAIL,
       subject: "Reset Your Password",
       html: `
-
 <!doctype html>
 <html lang="en-US">
-
 <head>
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-
     <meta name="description" content="Reset Password Email Template.">
     <style type="text/css">
         a:hover {text-decoration: underline !important;}
     </style>
 </head>
-
 <body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
-    <!--100% body table-->
     <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8">
         <tr>
             <td>
-                <table style="background-color: #f2f3f8; max-width:670px;  margin:0 auto;" width="100%" border="0"
-                    align="center" cellpadding="0" cellspacing="0">
-                    <tr>
-                        <td style="height:80px;">&nbsp;</td>
-                    </tr>
-                    <tr>
-                        <td style="text-align:center;">
-                          <a href="https://rakeshmandal.com" title="logo" target="_blank">
-<!--                             <img width="60" src="https://i.ibb.co/hL4XZp2/android-chrome-192x192.png" title="logo" alt="logo"> -->
-                          </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height:20px;">&nbsp;</td>
-                    </tr>
+                <table style="background-color: #f2f3f8; max-width:670px; margin:0 auto;" width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                    <tr><td style="height:80px;">&nbsp;</td></tr>
+                    <tr><td style="height:20px;">&nbsp;</td></tr>
                     <tr>
                         <td>
                             <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0"
                                 style="max-width:670px;background:#fff; border-radius:3px; text-align:center;-webkit-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);-moz-box-shadow:0 6px 18px 0 rgba(0,0,0,.06);box-shadow:0 6px 18px 0 rgba(0,0,0,.06);">
-                                <tr>
-                                    <td style="height:40px;">&nbsp;</td>
-                                </tr>
+                                <tr><td style="height:40px;">&nbsp;</td></tr>
                                 <tr>
                                     <td style="padding:0 35px;">
-                                        <h3 style="color:#1e1e2d; font-weight:500; margin:0;font-family:'Rubik',sans-serif;">Hello ${
-                                          user.name || ""
-                                        }</h3>
-                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have
-                                            requested to reset your password</h1>
-                                        <span
-                                            style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
+                                        <h3 style="color:#1e1e2d; font-weight:500; margin:0;font-family:'Rubik',sans-serif;">Hello ${user.name || ""}</h3>
+                                        <h1 style="color:#1e1e2d; font-weight:500; margin:0;font-size:32px;font-family:'Rubik',sans-serif;">You have requested to reset your password</h1>
+                                        <span style="display:inline-block; vertical-align:middle; margin:29px 0 26px; border-bottom:1px solid #cecece; width:100px;"></span>
                                         <p style="color:#455056; font-size:15px;line-height:24px; margin:0;">
-                                            We cannot simply send you your old password. A unique link to reset your
-                                            password has been generated for you. To reset your password, click the
-                                            following link and follow the instructions.
+                                            We cannot simply send you your old password. A unique link to reset your password has been generated for you. To reset your password, click the following link and follow the instructions.
                                         </p>
-                                        <a href="${resetURL}"
-                                            style="background:rgb(38,38,38);text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset
-                                            Password</a>
+                                        <a href="${resetURL}" style="background:rgb(38,38,38);text-decoration:none !important; font-weight:500; margin-top:35px; color:#fff; font-size:14px;padding:10px 24px;display:inline-block;border-radius:50px;">Reset Password</a>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td style="height:40px;">&nbsp;</td>
-                                </tr>
+                                <tr><td style="height:40px;">&nbsp;</td></tr>
                             </table>
                         </td>
-                    <tr>
-                        <td style="height:20px;">&nbsp;</td>
                     </tr>
-                    <tr>
-                        <td style="text-align:center;">
-
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style="height:80px;">&nbsp;</td>
-                    </tr>
+                    <tr><td style="height:80px;">&nbsp;</td></tr>
                 </table>
             </td>
         </tr>
     </table>
-    <!--/100% body table-->
 </body>
-
 </html>
       `,
-    };
-
-  await  sgMail
-    .send(msg)
-    .then((res) => {
-      console.log(res, 'Email sent')
-    })
-    .catch((error) => {
-      console.error(error, "up")
-      console.error(error.response.body, "up")
-    })
-
-    // await transporter.sendMail(mailOptions);
+    });
 
     res.status(200).json({ message: "Password reset link sent" });
   } catch (error) {
-    console.error(error, "low")
+    console.error(error);
     res.status(500).json({ message: "Something went wrong" });
   }
 });

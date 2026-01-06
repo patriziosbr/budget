@@ -2,6 +2,10 @@ import Chart from "../charts/Chart";
 import { parseDate } from "../utils/dateParser";
 
 const StackedBarChart = ({ singleScheda }) => {
+  if (singleScheda?.notaSpese.length === 0) {
+    return <></>;
+  }
+
   // Extract the color generation function from RandomColorCircle
   const stringToColor = (string) => {
     let hash = 0;
@@ -19,7 +23,7 @@ const StackedBarChart = ({ singleScheda }) => {
   const usersMap = new Map();
   singleScheda?.notaSpese
     .filter((e) => {
-      const d = new Date(e.inserimentoData);
+      const d = e?.inserimentoData ? new Date(e?.inserimentoData) : null;
       return d;
     })
     .forEach((e) => {
@@ -32,7 +36,7 @@ const StackedBarChart = ({ singleScheda }) => {
 
   // Prepare data for each user
   const uniqueDates = [...new Set(
-    singleScheda?.notaSpese.map(e => parseDate(e.inserimentoData))
+    singleScheda?.notaSpese.map(e => parseDate(e?.inserimentoData))
   )].sort((a, b) => new Date(a.split('/').reverse().join('-')) - new Date(b.split('/').reverse().join('-')));
 
   const weekData = users.map((user) => {
@@ -40,7 +44,7 @@ const StackedBarChart = ({ singleScheda }) => {
     
     singleScheda?.notaSpese.forEach((e) => {
       if (e.inserimentoUser.name === user) {
-        const dateStr = parseDate(e.inserimentoData);
+        const dateStr = parseDate(e?.inserimentoData);
         const dateIdx = uniqueDates.indexOf(dateStr);
         if (dateIdx !== -1) {
           data[dateIdx] += e.importo;
@@ -100,13 +104,15 @@ const StackedBarChart = ({ singleScheda }) => {
     },
   };
 
+
+
   return (
     <div className="row mb-5">
       <div className="col-12">
         <div className="card h-100 pb-2 mb-2">
           <div className="card-header py-2 px-3">
             <small>
-              {parseDate(singleScheda.notaSpese[0].inserimentoData)} - {parseDate(singleScheda.notaSpese[singleScheda.notaSpese.length - 1].inserimentoData)}
+              {parseDate(singleScheda.notaSpese[0]?.inserimentoData)} - {parseDate(singleScheda.notaSpese[singleScheda.notaSpese.length - 1]?.inserimentoData)}
             </small>
             <h6 className="mb-0">Chart <i><b>{singleScheda.titolo}</b></i></h6>
           </div>
