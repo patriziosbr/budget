@@ -2,7 +2,7 @@
   "name": "mern-tutorial",
   "version": "1.0.0",
   "engines": {
-    "node": "18.15.0"
+    "node": "20.19.6"
   },
   "description": "",
   "main": "server.js",
@@ -31,8 +31,7 @@
     "mongoose": "^7.2.3",
     "node-cron": "^3.0.3",
     "nodemailer": "^7.0.2",
-    "react-dom": "^18.2.0",
-    "resend": "^3.5.0"
+    "resend": "^6.4.2"
   },
   "browser": {
     "child_process": false
