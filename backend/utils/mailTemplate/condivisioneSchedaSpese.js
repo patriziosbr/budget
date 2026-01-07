@@ -1,42 +1,30 @@
-const nodemailer = require("nodemailer");
-const sgMail = require('@sendgrid/mail')
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+// Email service - using Mailjet HTTP API (works on Render free tier)
+const Mailjet = require('node-mailjet');
+const mailjet = new Mailjet({
+    apiKey: process.env.MAILJET_API_KEY,
+    apiSecret: process.env.MAILJET_SECRET_KEY
+});
 
 const condivisioneSchedaSpese = async (req, userModel, emailList, baseUrl) => {
-    console.log("emailList: ", emailList); // Debugging
-    // Create a test account or replace with real credentials.
-    // const transporter = nodemailer.createTransport({
-    //     host: "smtp.gmail.com",
-    //     port: 465,
-    //     secure: true, // true for 465, false for other ports
-    //     auth: {
-    //         user: "tommasoversetto@gmail.com",
-    //         pass:  process.env.GOOGLE_SMTP_PASS,
-    //     },
-    // });
-    // Get the sender's full user information to access their email
+    console.log(emailList, '--------------condivisioneSchedaSpese emailList'); // Debugging
 
     const emailLsitCleaned = []
     emailList.map((email) => emailLsitCleaned.push(email.email));
     try {
-        const info = {
-            to: emailLsitCleaned,  // Array of emails joined by commas
-            from: process.env.EMAIL,
-            subject: "Shared Expense Sheet - Invitation",
-            html: `An expense sheet "${req.body.titolo}" has been shared with you. Sei stato aggiunto a alla scheda spese "${req.body.titolo}"<br/><b>Registrati: <a href="${baseUrl}/register">Registrati</a><br>Accedi: <a href="${baseUrl}/login">Accedi</a></b>`,
-        };
-
-        await sgMail
-            .send(info)
-            .then((res) => {
-                console.log(res, 'Email sent')
-            })
-            .catch((error) => {
-                console.error(error, "up")
-                console.error(error.response.body, "up low")
-            })
-
-        console.log("Message sent condivisioneSchedaSpese:", info.messageId);
+        await mailjet.post('send', { version: 'v3.1' }).request({
+            Messages: [
+                {
+                    From: {
+                        Email: process.env.MAILJET_FROM_EMAIL || 'noreply@yourdomain.com',
+                        Name: 'Budget App'
+                    },
+                    To: emailLsitCleaned.map(email => ({ Email: email })),
+                    Subject: "Shared Expense Sheet - Invitation",
+                    HTMLPart: `An expense sheet "${req.body.titolo}" has been shared with you. You have been added to the expense sheet "${req.body.titolo}"<br/><b>Register: <a href="${baseUrl}/register">Register</a><br>Login: <a href="${baseUrl}/login">Login</a></b>`,
+                }
+            ]
+        });
+        console.log("Message sent condivisioneSchedaSpese:");
     } catch (error) {
         console.error("Error sending email condivisioneSchedaSpese: ", error);
     }
@@ -48,23 +36,20 @@ const rimossoSchedaSpese = async (req, userModel, emailList) => {
     console.log(emailList, '--------------rimossoSchedaSpese emailList'); // Debugging
 
     try {
-        const info = {
-            from: process.env.EMAIL, 
-            to: emailList,  
-            subject: "Shared Expense Sheet - Removed",
-            html: `An expense sheet "${req.schedaSpesa.titolo}" has been shared with you. Sei stato rimosso dalla scheda spese "${req.schedaSpesa.titolo}" <br/> <p>Conttatta <a href="mailto:${req.user.email}">${req.user.email}</a> per info</p>`,
-        };
-
-      await  sgMail.send(info)
-    .then((res) => {
-      console.log(res, 'Email sent')
-    })
-    .catch((error) => {
-      console.error(error, "up")
-      console.error(error.response.body, "up")
-    })
-
-        console.log("Message sent rimossoSchedaSpese:", info.messageId);
+        await mailjet.post('send', { version: 'v3.1' }).request({
+            Messages: [
+                {
+                    From: {
+                        Email: process.env.MAILJET_FROM_EMAIL || 'noreply@yourdomain.com',
+                        Name: 'Budget App'
+                    },
+                    To: emailList.map(email => ({ Email: email })),
+                    Subject: "Shared Expense Sheet - Removed",
+                    HTMLPart: `An expense sheet "${req.schedaSpesa.titolo}" has been shared with you. You have been removed from the expense sheet "${req.schedaSpesa.titolo}" <br/> <p>Contact <a href="mailto:${req.user.email}">${req.user.email}</a> for more information</p>`,
+                }
+            ]
+        });
+        console.log("Message sent rimossoSchedaSpese:");
     } catch (error) {
         console.error("Error sending email rimossoSchedaSpese:", error);
     }

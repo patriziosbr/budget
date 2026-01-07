@@ -2,7 +2,7 @@ const asyncHandler = require("express-async-handler");
 const SchedaSpese = require("../model/schedaSpeseModel");
 const User = require("../model/userModel");
 const NotaSpese = require("../model/notaSpeseModel");
-// const nodemailer = require("nodemailer");
+
 const { Types } = require("mongoose");
 const ObjectId = Types.ObjectId;
 const { all } = require("axios");

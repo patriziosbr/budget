@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const asyncHandler = require("express-async-handler");
 const User = require("../model/userModel");
-const nodemailer = require("nodemailer");
 const NotaSpese = require("../model/notaSpeseModel");
 const SchedaSpese = require("../model/schedaSpeseModel");
 const { Types } = require("mongoose");
