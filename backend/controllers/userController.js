@@ -8,8 +8,12 @@ const SchedaSpese = require("../model/schedaSpeseModel");
 const { Types } = require("mongoose");
 const ObjectId = Types.ObjectId;
 
-const { Resend } = require('resend');
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Email service - using Mailjet HTTP API (works on Render free tier)
+const Mailjet = require('node-mailjet');
+const mailjet = new Mailjet({
+  apiKey: process.env.MAILJET_API_KEY,
+  apiSecret: process.env.MAILJET_SECRET_KEY
+});
 //@desc Register new User
 //@route POST /api/users
 //@access Public
@@ -104,11 +108,16 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
         : "https://budget-fe.onrender.com/"
     }reset-password?token=${token}`;
 
-    await resend.emails.send({
-      from: 'onboarding@resend.dev', // Free tier domain
-      to: user.email,
-      subject: "Reset Your Password",
-      html: `
+    await mailjet.post('send', { version: 'v3.1' }).request({
+      Messages: [
+        {
+          From: {
+            Email: process.env.MAILJET_FROM_EMAIL || 'noreply@yourdomain.com',
+            Name: 'Budget App'
+          },
+          To: [{ Email: user.email, Name: user.name || '' }],
+          Subject: 'Reset Your Password',
+          HTMLPart: `
 <!doctype html>
 <html lang="en-US">
 <head>
@@ -152,7 +161,9 @@ const requestPasswordReset = asyncHandler(async (req, res, next) => {
     </table>
 </body>
 </html>
-      `,
+      `
+        }
+      ]
     });
 
     res.status(200).json({ message: "Password reset link sent" });
