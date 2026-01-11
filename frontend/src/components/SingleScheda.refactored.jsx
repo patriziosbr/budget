@@ -144,7 +144,7 @@ function SingleSchedaNew({ scheda }) {
             onShare={() => handleShow("shareModal")}
             onDelete={() => handleShow("deleteModal")}
             onTitleClick={() => goToDettagolioScheda(scheda._id)}
-            showSharedAvatars={true}
+            showSharedAvatars={scheda?.condivisoConList?.length > 0}
             titleColClass="col-8"
             actionsColClass="col-4"
           />

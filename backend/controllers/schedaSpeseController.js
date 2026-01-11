@@ -209,9 +209,10 @@ const updateSchedaSpese = asyncHandler(async (req, res) => {
   }
 
   // 1. Remove emails if needed
+  console.log("Removed Emails req.body:", req.body);
   if (removedEmails.length > 0) {
     const removedIds = removedEmails.map((e) => e.mailId);
-    const removedEmailsClean = removedEmails.map((e) => e.email);
+    const removedEmailsClean = removedEmails.map((e) => e.mail);
     await SchedaSpese.updateOne(
       { _id: schedaId },
       {

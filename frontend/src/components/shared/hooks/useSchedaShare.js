@@ -72,7 +72,7 @@ export const useSchedaShare = (scheda, onRefresh, onClose) => {
       condivisoConList: sharedUserUpdateForm.condivisoConList,
       removedEmails: sharedUserUpdateForm.removedEmails,
     };
-
+debugger
     try {
       await dispatch(
         updateSchedaSpese({ schedaId: scheda._id, ...updatePayload })
